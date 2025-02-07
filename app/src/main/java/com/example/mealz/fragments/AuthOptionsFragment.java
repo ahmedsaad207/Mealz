@@ -7,17 +7,16 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import com.example.mealz.R;
-import com.example.mealz.activities.HomeActivity;
-import com.example.mealz.activities.LoginActivity;
-import com.example.mealz.activities.RegisterActivity;
+import com.example.mealz.databinding.FragmentAuthOptionsBinding;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -35,6 +34,7 @@ public class AuthOptionsFragment extends Fragment {
     private static final String TAG = "AuthOptionsFragment";
 
     FirebaseAuth mAuth;
+    FragmentAuthOptionsBinding binding;
     GoogleSignInClient googleSignInClient;
 
     @Override
@@ -45,8 +45,8 @@ public class AuthOptionsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_auth_options, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_auth_options, container, false);
+        return binding.getRoot();
     }
 
     @Override
@@ -54,8 +54,7 @@ public class AuthOptionsFragment extends Fragment {
         super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
-            Intent intent = new Intent(requireActivity(), HomeActivity.class);
-            startActivity(intent);
+            Navigation.findNavController(getView()).navigate(AuthOptionsFragmentDirections.actionAuthOptionsFragmentToHomeFragment());
             Toast.makeText(requireActivity(), "User Found", Toast.LENGTH_SHORT).show();
         }
     }
@@ -63,9 +62,6 @@ public class AuthOptionsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Button btnSignUpWithEmail = view.findViewById(R.id.btn_sign_up_email);
-        Button btnLogin = view.findViewById(R.id.btn_login);
-        Button btnSignUpGoogle = view.findViewById(R.id.btn_sign_up_google);
 
         GoogleSignInOptions options = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -74,18 +70,15 @@ public class AuthOptionsFragment extends Fragment {
 
         googleSignInClient = GoogleSignIn.getClient(requireActivity(), options);
 
-
-        btnSignUpWithEmail.setOnClickListener(v -> {
-            Intent intent = new Intent(requireActivity(), RegisterActivity.class);
-            requireActivity().startActivity(intent);
+        binding.btnSignUpEmail.setOnClickListener(v -> {
+            Navigation.findNavController(v).navigate(AuthOptionsFragmentDirections.actionAuthOptionsFragmentToRegisterFragment());
         });
 
-        btnLogin.setOnClickListener(v -> {
-            Intent intent = new Intent(requireActivity(), LoginActivity.class);
-            requireActivity().startActivity(intent);
+        binding.btnLogin.setOnClickListener(v -> {
+            Navigation.findNavController(v).navigate(AuthOptionsFragmentDirections.actionAuthOptionsFragmentToLoginFragment());
         });
 
-        btnSignUpGoogle.setOnClickListener(v -> {
+        binding.btnSignUpGoogle.setOnClickListener(v -> {
             Intent intent = googleSignInClient.getSignInIntent();
             startActivityForResult(intent, 100);
         });
@@ -116,8 +109,7 @@ public class AuthOptionsFragment extends Fragment {
                     mAuth.signOut();
                     googleSignInClient.signOut();
                     Toast.makeText(requireActivity(), "success", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(requireActivity(), HomeActivity.class);
-                    startActivity(intent);
+                    Navigation.findNavController(getView()).navigate(AuthOptionsFragmentDirections.actionAuthOptionsFragmentToHomeFragment());
                 } else {
                     Toast.makeText(requireActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                 }
