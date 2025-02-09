@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
@@ -37,8 +38,8 @@ public class LoginFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
 
         binding.btnLogin.setOnClickListener(v -> {
-            String email = binding.edtEmail.getText().toString().trim();
-            String password = binding.edtPassword.getText().toString().trim();
+            String email = binding.edtEmail.getEditText().getText().toString().trim();
+            String password = binding.edtPassword.getEditText().getText().toString().trim();
             mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
@@ -53,7 +54,10 @@ public class LoginFragment extends Fragment {
             });
         });
 
+        ((AppCompatActivity) requireActivity()).getSupportActionBar().hide();
+
         binding.txtSignUp.setOnClickListener(v -> Navigation.findNavController(v).navigate(LoginFragmentDirections.actionLoginFragmentToRegisterFragment()));
+        binding.txtGuest.setOnClickListener(v -> Navigation.findNavController(v).navigate(LoginFragmentDirections.actionLoginFragmentToHomeFragment()));
 
     }
 }

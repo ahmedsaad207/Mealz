@@ -36,10 +36,10 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
 
-        binding.btnSignOut.setOnClickListener(v -> {
-            if (mAuth.getCurrentUser() != null) {
-                mAuth.signOut();
-            }
-        });
+//        binding.btnSignOut.setOnClickListener(v -> {
+//            if (mAuth.getCurrentUser() != null) {
+//                mAuth.signOut();
+//            }
+//        });
     }
 }

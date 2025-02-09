@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
@@ -63,6 +64,8 @@ public class AuthOptionsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        ((AppCompatActivity) requireActivity()).getSupportActionBar().hide();
+
         GoogleSignInOptions options = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -74,13 +77,17 @@ public class AuthOptionsFragment extends Fragment {
             Navigation.findNavController(v).navigate(AuthOptionsFragmentDirections.actionAuthOptionsFragmentToRegisterFragment());
         });
 
-        binding.btnLogin.setOnClickListener(v -> {
+        binding.txtLogin.setOnClickListener(v -> {
             Navigation.findNavController(v).navigate(AuthOptionsFragmentDirections.actionAuthOptionsFragmentToLoginFragment());
         });
 
-        binding.btnSignUpGoogle.setOnClickListener(v -> {
+        binding.btnContinueWithGoogle.setOnClickListener(v -> {
             Intent intent = googleSignInClient.getSignInIntent();
             startActivityForResult(intent, 100);
+        });
+
+        binding.btnContinueAsGuest.setOnClickListener(v -> {
+            Navigation.findNavController(v).navigate(AuthOptionsFragmentDirections.actionAuthOptionsFragmentToHomeFragment());
         });
     }
 

@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
@@ -37,9 +38,11 @@ public class RegisterFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
 
-        binding.btnSignUp.setOnClickListener(v -> {
-            String email = binding.edtEmail.getText().toString().trim();
-            String password = binding.edtPassword.getText().toString().trim();
+        ((AppCompatActivity) requireActivity()).getSupportActionBar().hide();
+
+        binding.btnRegister.setOnClickListener(v -> {
+            String email = binding.edtEmail.getEditText().getText().toString().trim();
+            String password = binding.edtPassword.getEditText().getText().toString().trim();
             mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     mAuth.signOut();
@@ -49,6 +52,7 @@ public class RegisterFragment extends Fragment {
                 }
             });
         });
+
         binding.txtLogin.setOnClickListener(v -> {
             Navigation.findNavController(view).navigate(RegisterFragmentDirections.actionRegisterFragmentToLoginFragment());
         });
