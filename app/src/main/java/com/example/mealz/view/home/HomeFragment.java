@@ -2,6 +2,8 @@ package com.example.mealz.view.home;
 
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +23,7 @@ import com.example.mealz.databinding.FragmentHomeBinding;
 import com.example.mealz.model.Area;
 import com.example.mealz.model.Meal;
 import com.example.mealz.model.MealzResponse;
+import com.example.mealz.view.MealAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
@@ -56,26 +59,85 @@ public class HomeFragment extends Fragment {
         meals = new ArrayList<>();
 
         MealzApiService service = MealzRetrofit.getService();
-        Callback<MealzResponse> categoriesCallback = new Callback<>() {
+        displayDailyInspiration(view, service);
+        displayCategories(view, service);
+        displayAreas(view, service);
+
+
+        binding.searchEditText.getEditText().addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String key = s.toString().trim();
+                Log.i("TAG", "afterTextChanged: key: " + key);
+
+                service.searchByCategory(key).enqueue(new Callback<MealzResponse>() {
+                    @Override
+                    public void onResponse(@NonNull Call<MealzResponse> call, @NonNull Response<MealzResponse> response) {
+                        if (response.body() != null && response.body().meals != null && !response.body().meals.isEmpty()) {
+                            List<Meal> mealList = response.body().meals;
+//                            binding.homeData.setVisibility(View.GONE);
+//                            binding.rvMealsSearch.setVisibility(View.VISIBLE);
+                        } else {
+//                            binding.homeData.setVisibility(View.VISIBLE);
+//                            binding.rvMealsSearch.setVisibility(View.GONE);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<MealzResponse> call, @NonNull Throwable t) {
+//                        binding.homeData.setVisibility(View.GONE);
+//                        binding.rvMealsSearch.setVisibility(View.GONE);
+                    }
+                });
+            }
+        });
+
+
+        /*
+        binding.btnSignOut.setOnClickListener(v -> {
+            if (mAuth.getCurrentUser() != null) {
+                mAuth.signOut();
+            }
+        });
+        */
+    }
+
+    private void displayAreas(@NonNull View view, MealzApiService service) {
+        service.getAreas().enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<MealzResponse> call, Response<MealzResponse> response) {
-                if (response.body() != null && !response.body().categories.isEmpty()) {
-                    categoryAdapter = new CategoryAdapter();
-                    binding.rvCategories.setAdapter(categoryAdapter);
-                    categoryAdapter.submitList(response.body().categories);
-
-                    // Tried to init adapter outside onResponse method but when submitList called here. no data get displayed
-                    categoryAdapter.setOnItemClickListener(categoryName -> {
-                        Navigation.findNavController(view).navigate(HomeFragmentDirections.actionHomeFragmentToMealsListFragment(categoryName, true));
+                if (response.body() != null && !response.body().meals.isEmpty()) {
+                    List<Meal> meals = response.body().meals;
+                    List<Area> areas = createAreasList(meals);
+                    areaAdapter = new AreaAdapter(areaName -> {
+                        Navigation.findNavController(view).navigate(
+                                HomeFragmentDirections.actionHomeFragmentToMealsListFragment(areaName, false)
+                        );
                     });
+                    binding.rvAreas.setAdapter(areaAdapter);
+                    areaAdapter.submitList(areas);
                 }
+
             }
 
             @Override
             public void onFailure(Call<MealzResponse> call, Throwable t) {
-                Toast.makeText(requireActivity(), "onFailure" + t.getMessage(), Toast.LENGTH_SHORT).show();
+
             }
-        };
+        });
+    }
+
+    private void displayDailyInspiration(@NonNull View view, MealzApiService service) {
         Callback<MealzResponse> dailyInspirationCallback = new Callback<>() {
             @Override
             public void onResponse(Call<MealzResponse> call, Response<MealzResponse> response) {
@@ -101,48 +163,34 @@ public class HomeFragment extends Fragment {
                 Toast.makeText(requireActivity(), "onFailure" + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         };
-        service.getCategories().enqueue(categoriesCallback);
         service.getRandomMeal().enqueue(dailyInspirationCallback);
         service.getRandomMeal().enqueue(dailyInspirationCallback);
         service.getRandomMeal().enqueue(dailyInspirationCallback);
         service.getRandomMeal().enqueue(dailyInspirationCallback);
         service.getRandomMeal().enqueue(dailyInspirationCallback);
+    }
 
-        service.getAreas().enqueue(new Callback<>() {
+    private void displayCategories(@NonNull View view, MealzApiService service) {
+        service.getCategories().enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<MealzResponse> call, Response<MealzResponse> response) {
-                if (response.body() != null && !response.body().meals.isEmpty()) {
-                    List<Meal> meals = response.body().meals;
-                    Log.i("TAG", "onResponse: meals size: " + meals.size());
-                    List<Area> areas = createAreasList(meals);
-                    areaAdapter = new AreaAdapter(areaName -> {
-                        Navigation.findNavController(view).navigate(
-                                HomeFragmentDirections.actionHomeFragmentToMealsListFragment(areaName, false)
-                        );
+                if (response.body() != null && !response.body().categories.isEmpty()) {
+                    categoryAdapter = new CategoryAdapter();
+                    binding.rvCategories.setAdapter(categoryAdapter);
+                    categoryAdapter.submitList(response.body().categories);
+
+                    // Tried to init adapter outside onResponse method but when submitList called here. no data get displayed
+                    categoryAdapter.setOnItemClickListener(categoryName -> {
+                        Navigation.findNavController(view).navigate(HomeFragmentDirections.actionHomeFragmentToMealsListFragment(categoryName, true));
                     });
-                    binding.rvAreas.setAdapter(areaAdapter);
-                    areaAdapter.submitList(areas);
-                    
-                    Log.i("TAG", "onResponse: areas size: " + areas.size());
-
                 }
-
             }
 
             @Override
             public void onFailure(Call<MealzResponse> call, Throwable t) {
-
+                Toast.makeText(requireActivity(), "onFailure" + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-
-
-        /*
-        binding.btnSignOut.setOnClickListener(v -> {
-            if (mAuth.getCurrentUser() != null) {
-                mAuth.signOut();
-            }
-        });
-        */
     }
 
     public List<Area> createAreasList(List<Meal> meals) {
