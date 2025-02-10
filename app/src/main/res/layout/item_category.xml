@@ -12,15 +12,13 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:backgroundTint="#2D2D2D"
-        app:cardCornerRadius="10dp"
-        app:cardElevation="6dp">
+        android:layout_margin="4dp"
+        android:backgroundTint="@color/brownish_gray"
+        app:cardCornerRadius="20dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="8dp">
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/categoryImage"
@@ -36,13 +34,15 @@
 
             <TextView
                 android:id="@+id/categoryName"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
+                android:layout_marginStart="8dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/roboto_medium"
+                android:maxLines="3"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="@id/categoryImage"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/categoryImage"
                 tools:text="Beef" />
@@ -54,6 +54,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
                 android:ellipsize="end"
+                android:fontFamily="@font/roboto_medium"
                 android:maxLines="3"
                 android:textColor="#9C9C9C"
                 android:textSize="14sp"
