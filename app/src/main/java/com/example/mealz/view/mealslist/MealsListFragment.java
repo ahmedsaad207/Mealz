@@ -17,6 +17,7 @@ import com.example.mealz.data.api.MealzApiService;
 import com.example.mealz.data.api.MealzRetrofit;
 import com.example.mealz.databinding.FragmentMealsListBinding;
 import com.example.mealz.model.MealzResponse;
+import com.example.mealz.view.MealAdapter;
 
 import retrofit2.Call;
 import retrofit2.Callback;

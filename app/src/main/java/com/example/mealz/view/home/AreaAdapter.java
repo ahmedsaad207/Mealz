@@ -37,7 +37,6 @@ public class AreaAdapter extends ListAdapter<Area, AreaAdapter.AreaViewHolder> {
     @NonNull
     @Override
     public AreaViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Log.i("TAG", "onCreateViewHolder: ");
         return AreaViewHolder.create(parent);
     }
 

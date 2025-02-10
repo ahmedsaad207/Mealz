@@ -1,5 +1,6 @@
-package com.example.mealz.view.mealslist;
+package com.example.mealz.view;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +17,6 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.mealz.R;
 import com.example.mealz.model.Meal;
-import com.example.mealz.view.OnMealItemClickListener;
 
 public class MealAdapter extends ListAdapter<Meal, MealAdapter.MealViewHolder> {
     OnMealItemClickListener onMealItemClickListener;
@@ -37,9 +37,14 @@ public class MealAdapter extends ListAdapter<Meal, MealAdapter.MealViewHolder> {
         this.onMealItemClickListener = onMealItemClickListener;
     }
 
+    public MealAdapter(){
+        this(null);
+    }
+
     @NonNull
     @Override
     public MealViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        Log.i("TAG", "onCreateViewHolder: ");
         return MealViewHolder.create(parent);
     }
 
