@@ -12,13 +12,19 @@ public interface MealzApiService {
     Call<MealzResponse> getCategories();
 
     @GET("filter.php")
-    Call<MealzResponse> getMealzByCategory(@Query("c") String category);
+    Call<MealzResponse> getMealsByCategory(@Query("c") String category);
 
     @GET("lookup.php")
     Call<MealzResponse> getMealById(@Query("i") long id);
 
     @GET("list.php?i=list")
     Call<MealzResponse> getIngredients();
+
+    @GET("filter.php")
+    Call<MealzResponse> getMealsByArea(@Query("a") String area);
+
+    @GET("list.php?a=list")
+    Call<MealzResponse> getAreas();
 
     @GET("random.php")
     Call<MealzResponse> getRandomMeal();
@@ -31,4 +37,5 @@ public interface MealzApiService {
 
     @GET("filter.php")
     Call<MealzResponse> searchByArea(@Query("a") String area);
+
 }
