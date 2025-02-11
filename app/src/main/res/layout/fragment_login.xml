@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/brownish_gray">
+
+        <!--        Image-->
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_percent=".5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/image_gradient"
+                android:scaleType="centerCrop"
+                android:src="@drawable/background_food" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/image_gradient" />
+
+        </FrameLayout>
+
+        <!--        Two Edit Text  and Remember Password-->
+        <LinearLayout
+            android:id="@+id/login_container"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <!--            Email Address Edit Text-->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edt_email"
+                style="@style/TextInputLayoutStyle"
+                android:hint="@string/email_address"
+                app:hintTextColor="@color/white">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_mail"
+                    android:drawablePadding="16dp"
+                    android:inputType="textEmailAddress"
+                    android:textColor="@color/white" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!--            Password Edit Text-->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edt_password"
+                style="@style/TextInputLayoutStyle"
+                android:hint="@string/password"
+                app:endIconTint="@color/white"
+                app:endIconMode="password_toggle"
+                app:hintTextColor="@color/white">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_lock"
+                    android:drawablePadding="16dp"
+                    android:inputType="textPassword"
+                    android:textColor="@color/white" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
+        <!--        Remember Me CheckBox-->
+        <CheckBox
+            android:id="@+id/checkbox_remember_me"
+            style="@style/TextStyle_14sp_White"
+            android:layout_marginStart="12dp"
+            android:text="@string/remember_me"
+            app:layout_constraintStart_toStartOf="@id/login_container"
+            app:layout_constraintTop_toBottomOf="@id/login_container" />
+
+        <!--        button login-->
+        <Button
+            android:id="@+id/btn_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_ripple_rounded_red"
+            android:drawableEnd="@drawable/ic_arrow"
+            android:text="Login"
+            android:layout_marginTop="16dp"
+            android:textSize="18sp"
+            app:backgroundTint="@color/reddish_orange"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/checkbox_remember_me" />
+
+        <!--        Don’t have an account? Sign up-->
+        <TextView
+            android:id="@+id/auth_txt_dont_have_account"
+            style="@style/TextStyle_14sp_White"
+            android:layout_marginTop="40dp"
+            android:text="@string/dont_have_an_account"
+            app:layout_constraintEnd_toStartOf="@id/txt_sign_up"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_login" />
+
+        <TextView
+            android:id="@+id/txt_sign_up"
+            style="@style/TextStyle_14sp_White"
+            android:layout_marginStart="4dp"
+            android:text="@string/sign_up"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/auth_txt_dont_have_account"
+            app:layout_constraintTop_toTopOf="@id/auth_txt_dont_have_account"
+
+            />
+
+        <!--        Or, Login as a Guest-->
+        <TextView
+            android:id="@+id/auth_txt_or_login_as"
+            style="@style/TextStyle_14sp_White"
+            android:layout_marginTop="16dp"
+            android:text="@string/or_login_as"
+            app:layout_constraintEnd_toStartOf="@id/txt_guest"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/auth_txt_dont_have_account" />
+
+        <TextView
+            android:id="@+id/txt_guest"
+            style="@style/TextStyle_14sp_White"
+            android:layout_marginStart="4dp"
+            android:text="@string/guest"
+            app:layout_constraintBottom_toBottomOf="@id/auth_txt_or_login_as"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/auth_txt_or_login_as"
+            app:layout_constraintTop_toTopOf="@id/auth_txt_or_login_as" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

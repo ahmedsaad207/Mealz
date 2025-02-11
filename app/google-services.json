@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "229069737713",
+    "project_id": "mealz-40b6d",
+    "storage_bucket": "mealz-40b6d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:229069737713:android:6dcc7a72e9ddb7307e6350",
+        "android_client_info": {
+          "package_name": "com.example.mealz"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "229069737713-k6hk07c681c1hsfmkdk0l160nje4cmii.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.mealz",
+            "certificate_hash": "38c26edac5aa16783bd6e2e08986b1490800ba08"
+          }
+        },
+        {
+          "client_id": "229069737713-8arm6la425gt5o9us2p2pktbmvpc1eag.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYHPtjQ-H0BAtRC7iKy5oT_otOmS0vdgA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "229069737713-8arm6la425gt5o9us2p2pktbmvpc1eag.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/brownish_gray"
+        android:padding="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="64dp"
+                android:text="Hello, Adam!"
+                android:textColor="#9C9C9C" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="48dp"
+                android:text="Ready to plan \nyour week?"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/background_search"
+                android:drawableEnd="@drawable/ic_search"
+                android:ellipsize="end"
+                android:hint="Search by categories, areas or ingredients"
+                android:inputType="text"
+                android:maxLines="1"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:textColorHint="#9C9C9C" />
+
+            <TextView
+                style="@style/RecyclerViewTitleStyle"
+                android:text="Daily Inspiration" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_daily_inspiration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layoutManager="com.google.android.material.carousel.CarouselLayoutManager"
+                tools:itemCount="3"
+                tools:listitem="@layout/item_category" />
+
+            <TextView
+                style="@style/RecyclerViewTitleStyle"
+                android:text="@string/countries" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_areas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_area" />
+
+            <TextView
+                style="@style/RecyclerViewTitleStyle"
+                android:text="@string/categories" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvCategories"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:spanCount="4"
+                tools:listitem="@layout/item_category" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</layout>
