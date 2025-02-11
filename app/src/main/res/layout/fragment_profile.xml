@@ -3,13 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.splash.SplashFragment">
+    android:background="@color/brownish_gray"
+    tools:context=".view.profile.ProfileFragment">
 
     <TextView
-        android:textSize="24sp"
         android:layout_gravity="center"
+        android:textSize="24sp"
+        android:textColor="@color/white"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello from Splash" />
+        android:text="Hello From Profile" />
 
 </FrameLayout>

@@ -73,7 +73,6 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableTint="@color/white"
                     android:drawableStart="@drawable/ic_prof"
                     android:drawablePadding="16dp"
                     android:inputType="textPersonName"

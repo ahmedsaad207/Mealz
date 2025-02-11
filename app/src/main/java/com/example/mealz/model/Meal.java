@@ -119,9 +119,6 @@ public class Meal {
     @SerializedName("strMeasure20")
     private String mealMeasure20;
 
-
-
-
     public long getMealId() {
         return mealId;
     }

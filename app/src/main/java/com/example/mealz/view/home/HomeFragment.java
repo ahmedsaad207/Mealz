@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
@@ -23,7 +24,6 @@ import com.example.mealz.databinding.FragmentHomeBinding;
 import com.example.mealz.model.Area;
 import com.example.mealz.model.Meal;
 import com.example.mealz.model.MealzResponse;
-import com.example.mealz.view.MealAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
@@ -53,15 +53,16 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+//        ((AppCompatActivity) requireActivity()).getSupportActionBar().hide();
         mAuth = FirebaseAuth.getInstance();
         binding.rvCategories.setHasFixedSize(true);
         binding.rvDailyInspiration.setHasFixedSize(true);
         meals = new ArrayList<>();
 
         MealzApiService service = MealzRetrofit.getService();
-        displayDailyInspiration(view, service);
-        displayCategories(view, service);
-        displayAreas(view, service);
+        displayDailyInspiration(service);
+        displayCategories(service);
+        displayAreas(service);
 
 
         binding.searchEditText.getEditText().addTextChangedListener(new TextWatcher() {
@@ -112,7 +113,7 @@ public class HomeFragment extends Fragment {
         */
     }
 
-    private void displayAreas(@NonNull View view, MealzApiService service) {
+    private void displayAreas(MealzApiService service) {
         service.getAreas().enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<MealzResponse> call, Response<MealzResponse> response) {
@@ -120,7 +121,7 @@ public class HomeFragment extends Fragment {
                     List<Meal> meals = response.body().meals;
                     List<Area> areas = createAreasList(meals);
                     areaAdapter = new AreaAdapter(areaName -> {
-                        Navigation.findNavController(view).navigate(
+                        Navigation.findNavController(binding.rvAreas).navigate(
                                 HomeFragmentDirections.actionHomeFragmentToMealsListFragment(areaName, false)
                         );
                     });
@@ -137,7 +138,7 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    private void displayDailyInspiration(@NonNull View view, MealzApiService service) {
+    private void displayDailyInspiration(MealzApiService service) {
         Callback<MealzResponse> dailyInspirationCallback = new Callback<>() {
             @Override
             public void onResponse(Call<MealzResponse> call, Response<MealzResponse> response) {
@@ -147,7 +148,7 @@ public class HomeFragment extends Fragment {
 
                     if (dailyInspirationAdapter == null) {
                         dailyInspirationAdapter = new DailyInspirationAdapter(mealId -> {
-                            Navigation.findNavController(view).navigate(
+                            Navigation.findNavController(binding.rvDailyInspiration).navigate(
                                     HomeFragmentDirections.actionHomeFragmentToMealDetailsFragment(mealId));
                         });
                     }
@@ -170,7 +171,7 @@ public class HomeFragment extends Fragment {
         service.getRandomMeal().enqueue(dailyInspirationCallback);
     }
 
-    private void displayCategories(@NonNull View view, MealzApiService service) {
+    private void displayCategories(MealzApiService service) {
         service.getCategories().enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<MealzResponse> call, Response<MealzResponse> response) {
@@ -181,7 +182,7 @@ public class HomeFragment extends Fragment {
 
                     // Tried to init adapter outside onResponse method but when submitList called here. no data get displayed
                     categoryAdapter.setOnItemClickListener(categoryName -> {
-                        Navigation.findNavController(view).navigate(HomeFragmentDirections.actionHomeFragmentToMealsListFragment(categoryName, true));
+                        Navigation.findNavController(binding.rvCategories).navigate(HomeFragmentDirections.actionHomeFragmentToMealsListFragment(categoryName, true));
                     });
                 }
             }

@@ -1,4 +1,4 @@
-package com.example.mealz.fragments;
+package com.example.mealz.view.splash;
 
 import android.os.Bundle;
 

@@ -1,9 +1,10 @@
-package com.example.mealz.fragments;
+package com.example.mealz.view.register;
 
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
@@ -16,9 +17,6 @@ import android.widget.Toast;
 
 import com.example.mealz.R;
 import com.example.mealz.databinding.FragmentRegisterBinding;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class RegisterFragment extends Fragment {
@@ -38,7 +36,11 @@ public class RegisterFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
 
-        ((AppCompatActivity) requireActivity()).getSupportActionBar().hide();
+        ActionBar actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.show();
+            actionBar.setTitle("Register");
+        }
 
         binding.btnRegister.setOnClickListener(v -> {
             String email = binding.edtEmail.getEditText().getText().toString().trim();
@@ -46,7 +48,7 @@ public class RegisterFragment extends Fragment {
             mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     mAuth.signOut();
-                    Navigation.findNavController(view).navigate(RegisterFragmentDirections.actionRegisterFragmentToLoginFragment());
+                    Navigation.findNavController(v).navigate(RegisterFragmentDirections.actionRegisterFragmentToLoginFragment());
                 } else {
                     Toast.makeText(requireActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -54,7 +56,10 @@ public class RegisterFragment extends Fragment {
         });
 
         binding.txtLogin.setOnClickListener(v -> {
-            Navigation.findNavController(view).navigate(RegisterFragmentDirections.actionRegisterFragmentToLoginFragment());
+            Navigation.findNavController(v).navigate(RegisterFragmentDirections.actionRegisterFragmentToLoginFragment());
         });
     }
+
+
+
 }

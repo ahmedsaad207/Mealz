@@ -1,7 +1,8 @@
-package com.example.mealz.fragments;
+package com.example.mealz.view.authoptions;
 
 import static android.app.Activity.RESULT_OK;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
@@ -38,6 +40,16 @@ public class AuthOptionsFragment extends Fragment {
     FragmentAuthOptionsBinding binding;
     GoogleSignInClient googleSignInClient;
 
+    OnLoginSuccessListener onLoginSuccessListener;
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof OnLoginSuccessListener) {
+            onLoginSuccessListener = (OnLoginSuccessListener) context;
+        }
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,7 +67,7 @@ public class AuthOptionsFragment extends Fragment {
         super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
-            Navigation.findNavController(getView()).navigate(AuthOptionsFragmentDirections.actionAuthOptionsFragmentToHomeFragment());
+            navigateToHome();
             Toast.makeText(requireActivity(), "User Found", Toast.LENGTH_SHORT).show();
         }
     }
@@ -64,7 +76,10 @@ public class AuthOptionsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ((AppCompatActivity) requireActivity()).getSupportActionBar().hide();
+        ActionBar actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.hide();
+        }
 
         GoogleSignInOptions options = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -87,7 +102,7 @@ public class AuthOptionsFragment extends Fragment {
         });
 
         binding.btnContinueAsGuest.setOnClickListener(v -> {
-            Navigation.findNavController(v).navigate(AuthOptionsFragmentDirections.actionAuthOptionsFragmentToHomeFragment());
+            navigateToHome();
         });
     }
 
@@ -115,13 +130,25 @@ public class AuthOptionsFragment extends Fragment {
                 if (task.isSuccessful()) {
                     mAuth.signOut();
                     googleSignInClient.signOut();
+                    navigateToHome();
                     Toast.makeText(requireActivity(), "success", Toast.LENGTH_SHORT).show();
-                    Navigation.findNavController(getView()).navigate(AuthOptionsFragmentDirections.actionAuthOptionsFragmentToHomeFragment());
                 } else {
                     Toast.makeText(requireActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
+    }
+
+    private void navigateToHome() {
+        if (onLoginSuccessListener != null) {
+            onLoginSuccessListener.onLoginSuccess();
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        onLoginSuccessListener = null;
     }
 }
