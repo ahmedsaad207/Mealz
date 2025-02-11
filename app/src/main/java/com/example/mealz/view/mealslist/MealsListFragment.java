@@ -41,16 +41,17 @@ public class MealsListFragment extends Fragment {
         MealzApiService service = MealzRetrofit.getService();
 
         MealsListFragmentArgs args = MealsListFragmentArgs.fromBundle(getArguments());
-        String name = args.getMealName();
+        String name = args.getName();
         boolean isCategory = args.getIsCategory();
 
         if (isCategory) {
+            requireActivity().setTitle(name + " Meals");
             service.getMealsByCategory(name).enqueue(new Callback<>() {
                 @Override
                 public void onResponse(@NonNull Call<MealzResponse> call, @NonNull Response<MealzResponse> response) {
                     if (response.body() != null && !response.body().meals.isEmpty()) {
                         adapter = new MealAdapter(id -> {
-                            Navigation.findNavController(view).navigate(MealsListFragmentDirections.actionMealsListFragmentToMealDetailsFragment(id));
+                            Navigation.findNavController(binding.rvMeals).navigate(MealsListFragmentDirections.actionMealsListFragmentToMealDetailsFragment(id));
                         });
                         adapter.submitList(response.body().meals);
                         binding.rvMeals.setAdapter(adapter);
@@ -63,12 +64,13 @@ public class MealsListFragment extends Fragment {
                 }
             });
         } else {
+            requireActivity().setTitle("Popular Meals in " + name);
             service.getMealsByArea(name).enqueue(new Callback<>() {
                 @Override
                 public void onResponse(@NonNull Call<MealzResponse> call, @NonNull Response<MealzResponse> response) {
                     if (response.body() != null && !response.body().meals.isEmpty()) {
                         adapter = new MealAdapter(id -> {
-                            Navigation.findNavController(view).navigate(MealsListFragmentDirections.actionMealsListFragmentToMealDetailsFragment(id));
+                            Navigation.findNavController(binding.rvMeals).navigate(MealsListFragmentDirections.actionMealsListFragmentToMealDetailsFragment(id));
                         });
                         adapter.submitList(response.body().meals);
                         binding.rvMeals.setAdapter(adapter);
@@ -81,8 +83,6 @@ public class MealsListFragment extends Fragment {
                 }
             });
         }
-
-
 
 
     }

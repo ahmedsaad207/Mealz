@@ -7,11 +7,15 @@
     </data>
 
     <FrameLayout
+        android:background="@color/brownish_gray"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".fragments.MealPlanFragment">
+        tools:context=".view.mealplan.MealPlanFragment">
 
         <TextView
+            android:gravity="center"
+            android:textSize="24sp"
+            android:textColor="@color/white"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="Meal Plan Fragment" />

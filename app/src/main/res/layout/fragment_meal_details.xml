@@ -12,17 +12,12 @@
         android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:background="@color/brownish_gray"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline_left"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:orientation="vertical" />
-
             <ImageView
+                android:layout_marginTop="?attr/actionBarSize"
                 android:id="@+id/mealImage"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -36,7 +31,7 @@
                 android:id="@+id/mealCategoryTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="@id/guideline_left"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/mealImage"
                 tools:text="meal Category" />
 
@@ -44,7 +39,7 @@
                 android:id="@+id/mealNameTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="@id/guideline_left"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/mealImage"
                 tools:text="meal Name" />
 

@@ -109,6 +109,7 @@
 
             <androidx.appcompat.widget.AppCompatButton
                 android:drawableStart="@drawable/ic_prof"
+                android:drawableTint="@color/black"
                 android:id="@+id/btn_continue_as_guest"
                 style="@style/ButtonRect"
                 android:layout_width="match_parent"

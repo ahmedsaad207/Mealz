@@ -1,5 +1,6 @@
-package com.example.mealz.fragments;
+package com.example.mealz.view.login;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
@@ -15,16 +17,23 @@ import androidx.navigation.Navigation;
 
 import com.example.mealz.R;
 import com.example.mealz.databinding.FragmentLoginBinding;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
+import com.example.mealz.view.authoptions.OnLoginSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class LoginFragment extends Fragment {
     FirebaseAuth mAuth;
     FragmentLoginBinding binding;
 
+    OnLoginSuccessListener listener;
 
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof OnLoginSuccessListener) {
+            listener = (OnLoginSuccessListener) context;
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -40,24 +49,30 @@ public class LoginFragment extends Fragment {
         binding.btnLogin.setOnClickListener(v -> {
             String email = binding.edtEmail.getEditText().getText().toString().trim();
             String password = binding.edtPassword.getEditText().getText().toString().trim();
-            mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    if (task.isSuccessful()) {
-                        Toast.makeText(requireActivity(), "login success", Toast.LENGTH_SHORT).show();
-                        mAuth.signOut();
-                        Navigation.findNavController(v).navigate(LoginFragmentDirections.actionLoginFragmentToHomeFragment());
-                    } else {
-                        Toast.makeText(requireActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                    }
+            mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    Toast.makeText(requireActivity(), "login success", Toast.LENGTH_SHORT).show();
+                    mAuth.signOut();
+                    navigateToHome();
+                } else {
+                    Toast.makeText(requireActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
         });
 
-        ((AppCompatActivity) requireActivity()).getSupportActionBar().hide();
+        ActionBar actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.show();
+            actionBar.setTitle("Login");
+        }
 
+        binding.txtGuest.setOnClickListener(v -> navigateToHome());
         binding.txtSignUp.setOnClickListener(v -> Navigation.findNavController(v).navigate(LoginFragmentDirections.actionLoginFragmentToRegisterFragment()));
-        binding.txtGuest.setOnClickListener(v -> Navigation.findNavController(v).navigate(LoginFragmentDirections.actionLoginFragmentToHomeFragment()));
+    }
 
+    private void navigateToHome() {
+        if (listener != null) {
+            listener.onLoginSuccess();
+        }
     }
 }
