@@ -8,6 +8,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
@@ -37,15 +39,17 @@ public class MealsListFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        requireActivity().findViewById(R.id.bottomNavigationView).setVisibility(View.GONE);
+        ActionBar actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
 
         MealzApiService service = MealzRetrofit.getService();
 
         MealsListFragmentArgs args = MealsListFragmentArgs.fromBundle(getArguments());
         String name = args.getName();
         boolean isCategory = args.getIsCategory();
-
+        String title;
         if (isCategory) {
-            requireActivity().setTitle(name + " Meals");
+            title =(name + " Meals");
             service.getMealsByCategory(name).enqueue(new Callback<>() {
                 @Override
                 public void onResponse(@NonNull Call<MealzResponse> call, @NonNull Response<MealzResponse> response) {
@@ -64,7 +68,7 @@ public class MealsListFragment extends Fragment {
                 }
             });
         } else {
-            requireActivity().setTitle("Popular Meals in " + name);
+            title = "Popular Meals in " + name;
             service.getMealsByArea(name).enqueue(new Callback<>() {
                 @Override
                 public void onResponse(@NonNull Call<MealzResponse> call, @NonNull Response<MealzResponse> response) {
@@ -82,6 +86,9 @@ public class MealsListFragment extends Fragment {
                     Toast.makeText(requireActivity(), "onFailure: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
+        }
+        if (actionBar != null) {
+            actionBar.setTitle(title);
         }
 
 

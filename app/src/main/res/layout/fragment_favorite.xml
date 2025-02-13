@@ -7,13 +7,28 @@
 
     </data>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_fav_meals"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/brownish_gray"
-        android:padding="4dp"
-        tools:listitem="@layout/item_meal"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:spanCount="2" />
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:visibility="gone"
+            android:id="@+id/rv_fav_meals"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/brownish_gray"
+            android:padding="4dp"
+            tools:listitem="@layout/item_meal"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="2" />
+
+        <ImageView
+            android:id="@+id/img_test"
+            android:layout_gravity="center"
+            android:scaleType="centerCrop"
+            android:layout_width="300dp"
+            android:layout_height="300dp"/>
+    </FrameLayout>
+
+
 </layout>

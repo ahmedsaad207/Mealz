@@ -12,7 +12,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
@@ -22,7 +21,7 @@ import com.example.mealz.data.api.MealzApiService;
 import com.example.mealz.data.api.MealzRetrofit;
 import com.example.mealz.databinding.FragmentHomeBinding;
 import com.example.mealz.model.Area;
-import com.example.mealz.model.Meal;
+import com.example.mealz.model.NetworkMeal;
 import com.example.mealz.model.MealzResponse;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -40,7 +39,7 @@ public class HomeFragment extends Fragment {
     CategoryAdapter categoryAdapter;
     DailyInspirationAdapter dailyInspirationAdapter;
 
-    ArrayList<Meal> meals;
+    ArrayList<NetworkMeal> networkMeals;
     AreaAdapter areaAdapter;
 
     @Override
@@ -53,11 +52,11 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-//        ((AppCompatActivity) requireActivity()).getSupportActionBar().hide();
+        requireActivity().findViewById(R.id.bottomNavigationView).setVisibility(View.VISIBLE);
         mAuth = FirebaseAuth.getInstance();
         binding.rvCategories.setHasFixedSize(true);
         binding.rvDailyInspiration.setHasFixedSize(true);
-        meals = new ArrayList<>();
+        networkMeals = new ArrayList<>();
 
         MealzApiService service = MealzRetrofit.getService();
         displayDailyInspiration(service);
@@ -73,7 +72,11 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                if (s.toString().trim().isEmpty()) {
+                    binding.homeData.setVisibility(View.VISIBLE);
+                } else {
+                    binding.homeData.setVisibility(View.INVISIBLE);
+                }
             }
 
             @Override
@@ -85,7 +88,7 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onResponse(@NonNull Call<MealzResponse> call, @NonNull Response<MealzResponse> response) {
                         if (response.body() != null && response.body().meals != null && !response.body().meals.isEmpty()) {
-                            List<Meal> mealList = response.body().meals;
+                            List<NetworkMeal> networkMealList = response.body().meals;
 //                            binding.homeData.setVisibility(View.GONE);
 //                            binding.rvMealsSearch.setVisibility(View.VISIBLE);
                         } else {
@@ -118,8 +121,8 @@ public class HomeFragment extends Fragment {
             @Override
             public void onResponse(Call<MealzResponse> call, Response<MealzResponse> response) {
                 if (response.body() != null && !response.body().meals.isEmpty()) {
-                    List<Meal> meals = response.body().meals;
-                    List<Area> areas = createAreasList(meals);
+                    List<NetworkMeal> networkMeals = response.body().meals;
+                    List<Area> areas = createAreasList(networkMeals);
                     areaAdapter = new AreaAdapter(areaName -> {
                         Navigation.findNavController(binding.rvAreas).navigate(
                                 HomeFragmentDirections.actionHomeFragmentToMealsListFragment(areaName, false)
@@ -142,9 +145,9 @@ public class HomeFragment extends Fragment {
         Callback<MealzResponse> dailyInspirationCallback = new Callback<>() {
             @Override
             public void onResponse(Call<MealzResponse> call, Response<MealzResponse> response) {
-                if (response.body() != null && !response.body().meals.isEmpty()) {
-                    Meal meal = response.body().meals.get(0);
-                    meals.add(meal);
+                if (response.body() != null && response.body().meals != null && !response.body().meals.isEmpty()) {
+                    NetworkMeal networkMeal = response.body().meals.get(0);
+                    networkMeals.add(networkMeal);
 
                     if (dailyInspirationAdapter == null) {
                         dailyInspirationAdapter = new DailyInspirationAdapter(mealId -> {
@@ -154,7 +157,7 @@ public class HomeFragment extends Fragment {
                     }
 
                     binding.rvDailyInspiration.setAdapter(dailyInspirationAdapter);
-                    dailyInspirationAdapter.submitList(meals);
+                    dailyInspirationAdapter.submitList(networkMeals);
                 }
 
             }
@@ -194,13 +197,13 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    public List<Area> createAreasList(List<Meal> meals) {
+    public List<Area> createAreasList(List<NetworkMeal> networkMeals) {
         ArrayList<Area> areas = new ArrayList<>();
 
-        for (Meal meal : meals) {
-            int imageResource = getDrawableResourceForCountry(meal.getMealArea());
+        for (NetworkMeal networkMeal : networkMeals) {
+            int imageResource = getDrawableResourceForCountry(networkMeal.getMealArea());
             if (imageResource != 0) {
-                areas.add(new Area(meal.getMealArea(), imageResource));
+                areas.add(new Area(networkMeal.getMealArea(), imageResource));
             }
         }
 
