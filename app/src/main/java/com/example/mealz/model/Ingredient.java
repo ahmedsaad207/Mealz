@@ -23,4 +23,6 @@ public class Ingredient {
     public String getImageUrl() {
         return imageUrl;
     }
+
+
 }

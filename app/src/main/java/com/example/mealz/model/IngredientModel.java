@@ -8,30 +8,30 @@ public class IngredientModel {
 
     List<Ingredient> ingredients;
 
-    public IngredientModel(Meal meal) {
+    public IngredientModel(NetworkMeal networkMeal) {
         String[] ingredientNames = {
-                meal.getMealIngredient1(),
-                meal.getMealIngredient2(),
-                meal.getMealIngredient3(),
-                meal.getMealIngredient4(),
-                meal.getMealIngredient5(),
-                meal.getMealIngredient6(),
-                meal.getMealIngredient7(),
-                meal.getMealIngredient8(),
-                meal.getMealIngredient9(),
-                meal.getMealIngredient10()
+                networkMeal.getMealIngredient1(),
+                networkMeal.getMealIngredient2(),
+                networkMeal.getMealIngredient3(),
+                networkMeal.getMealIngredient4(),
+                networkMeal.getMealIngredient5(),
+                networkMeal.getMealIngredient6(),
+                networkMeal.getMealIngredient7(),
+                networkMeal.getMealIngredient8(),
+                networkMeal.getMealIngredient9(),
+                networkMeal.getMealIngredient10()
         };
         String[] ingredientMeasures = {
-                meal.getMealMeasure1(),
-                meal.getMealMeasure2(),
-                meal.getMealMeasure3(),
-                meal.getMealMeasure4(),
-                meal.getMealMeasure5(),
-                meal.getMealMeasure6(),
-                meal.getMealMeasure7(),
-                meal.getMealMeasure8(),
-                meal.getMealMeasure9(),
-                meal.getMealMeasure10()
+                networkMeal.getMealMeasure1(),
+                networkMeal.getMealMeasure2(),
+                networkMeal.getMealMeasure3(),
+                networkMeal.getMealMeasure4(),
+                networkMeal.getMealMeasure5(),
+                networkMeal.getMealMeasure6(),
+                networkMeal.getMealMeasure7(),
+                networkMeal.getMealMeasure8(),
+                networkMeal.getMealMeasure9(),
+                networkMeal.getMealMeasure10()
         };
         ingredients = new ArrayList<>();
 

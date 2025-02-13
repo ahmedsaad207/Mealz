@@ -20,7 +20,6 @@
             android:layout_weight="1">
 
 
-
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/navHostFragmentHome"
                 android:name="androidx.navigation.fragment.NavHostFragment"
@@ -28,17 +27,20 @@
                 android:layout_height="match_parent"
                 app:defaultNavHost="true"
                 app:navGraph="@navigation/nav_graph_home" />
-
+            <!--            #66262121-->
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar_home"
-                android:background="#66262121"
-                app:titleTextColor="@color/white"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
                 app:navigationIcon="@drawable/ic_arrow_back"
-                android:layout_height="wrap_content"/>
+                app:titleTextColor="@color/white" />
         </FrameLayout>
 
         <View
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="8dp"
             android:background="@color/brownish_gray" />

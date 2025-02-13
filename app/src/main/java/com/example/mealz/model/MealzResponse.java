@@ -4,6 +4,6 @@ import java.util.ArrayList;
 
 public class MealzResponse {
     public ArrayList<Category> categories;
-    public ArrayList<Meal> meals;
+    public ArrayList<NetworkMeal> meals;
 
 }

@@ -15,9 +15,9 @@
             android:background="@color/brownish_gray"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+<!--                android:layout_marginTop="?attr/actionBarSize"-->
 
             <ImageView
-                android:layout_marginTop="?attr/actionBarSize"
                 android:id="@+id/mealImage"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -33,7 +33,7 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/mealImage"
-                tools:text="meal Category" />
+                tools:text="networkMeal Category" />
 
             <TextView
                 android:id="@+id/mealNameTextView"
@@ -41,13 +41,13 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/mealImage"
-                tools:text="meal Name" />
+                tools:text="networkMeal Name" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvIngredients"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
+                tools:listitem="@layout/item_ingredient"
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintStart_toStartOf="parent"
@@ -68,7 +68,7 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/web_view"
-                tools:text="meal Instructions" />
+                tools:text="networkMeal Instructions" />
 
             <TextView
                 android:id="@+id/mealAreaTextView"
@@ -76,7 +76,7 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/mealInstructionsTextView"
-                tools:text="meal Area" />
+                tools:text="networkMeal Area" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
