@@ -24,7 +24,7 @@ public interface MealDao {
     Completable deleteMeal(Meal meal);
 
     @Query("SELECT * FROM meals_table WHERE date == 0 AND userId == :userId")
-    Observable<List<Meal>> getFavoriteMealsByUserId(String userId);
+    Observable<List<Meal>> getFavoriteMeals(String userId);
 
     @Query("SELECT * FROM meals_table WHERE date > 0 AND userId == :userId")
     Observable<List<Meal>> getPlannedMeals(String userId);

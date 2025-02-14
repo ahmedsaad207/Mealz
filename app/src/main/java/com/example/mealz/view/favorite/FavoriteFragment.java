@@ -41,7 +41,7 @@ public class FavoriteFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Disposable disposable = MealsDatabase.getInstance(requireActivity()).getMealDao().getFavoriteMealsByUserId("ahmed")
+        Disposable disposable = MealsDatabase.getInstance(requireActivity()).getMealDao().getFavoriteMeals("ahmed")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(meals -> {

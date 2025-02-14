@@ -1,14 +1,13 @@
 package com.example.mealz.view.home;
 
-import android.content.res.Resources;
+import static com.example.mealz.utils.MealMapper.mapMealsToAreas;
+
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,33 +16,32 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.example.mealz.R;
-import com.example.mealz.data.api.MealzApiService;
-import com.example.mealz.data.api.MealzRetrofit;
+import com.example.mealz.data.MealsRepositoryImpl;
+import com.example.mealz.data.file.MealFileDataSource;
+import com.example.mealz.data.local.MealsLocalDataSourceImpl;
+import com.example.mealz.data.remote.MealsRemoteDataSourceImpl;
 import com.example.mealz.databinding.FragmentHomeBinding;
 import com.example.mealz.model.Area;
-import com.example.mealz.model.NetworkMeal;
-import com.example.mealz.model.MealzResponse;
+import com.example.mealz.model.Category;
+import com.example.mealz.model.Meal;
+import com.example.mealz.presenter.home.HomePresenterImpl;
+import com.example.mealz.presenter.home.HomeView;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements HomeView {
     FirebaseAuth mAuth;
     FragmentHomeBinding binding;
 
     CategoryAdapter categoryAdapter;
     DailyInspirationAdapter dailyInspirationAdapter;
-
-    ArrayList<NetworkMeal> networkMeals;
     AreaAdapter areaAdapter;
+    HomePresenterImpl presenter;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false);
         return binding.getRoot();
@@ -56,13 +54,17 @@ public class HomeFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         binding.rvCategories.setHasFixedSize(true);
         binding.rvDailyInspiration.setHasFixedSize(true);
-        networkMeals = new ArrayList<>();
+        presenter = new HomePresenterImpl(
+                MealsRepositoryImpl.getInstance(
+                        MealsRemoteDataSourceImpl.getInstance(),
+                        MealsLocalDataSourceImpl.getInstance(requireActivity()),
+                        MealFileDataSource.getInstance(requireActivity())),
+                this
+        );
 
-        MealzApiService service = MealzRetrofit.getService();
-        displayDailyInspiration(service);
-        displayCategories(service);
-        displayAreas(service);
-
+        presenter.getRandomMeal();
+        presenter.getCategories();
+        presenter.getAreas();
 
         binding.searchEditText.getEditText().addTextChangedListener(new TextWatcher() {
             @Override
@@ -81,32 +83,9 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                String key = s.toString().trim();
-                Log.i("TAG", "afterTextChanged: key: " + key);
 
-                service.searchByCategory(key).enqueue(new Callback<MealzResponse>() {
-                    @Override
-                    public void onResponse(@NonNull Call<MealzResponse> call, @NonNull Response<MealzResponse> response) {
-                        if (response.body() != null && response.body().meals != null && !response.body().meals.isEmpty()) {
-                            List<NetworkMeal> networkMealList = response.body().meals;
-//                            binding.homeData.setVisibility(View.GONE);
-//                            binding.rvMealsSearch.setVisibility(View.VISIBLE);
-                        } else {
-//                            binding.homeData.setVisibility(View.VISIBLE);
-//                            binding.rvMealsSearch.setVisibility(View.GONE);
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<MealzResponse> call, @NonNull Throwable t) {
-//                        binding.homeData.setVisibility(View.GONE);
-//                        binding.rvMealsSearch.setVisibility(View.GONE);
-                    }
-                });
             }
         });
-
-
         /*
         binding.btnSignOut.setOnClickListener(v -> {
             if (mAuth.getCurrentUser() != null) {
@@ -116,105 +95,42 @@ public class HomeFragment extends Fragment {
         */
     }
 
-    private void displayAreas(MealzApiService service) {
-        service.getAreas().enqueue(new Callback<>() {
-            @Override
-            public void onResponse(Call<MealzResponse> call, Response<MealzResponse> response) {
-                if (response.body() != null && !response.body().meals.isEmpty()) {
-                    List<NetworkMeal> networkMeals = response.body().meals;
-                    List<Area> areas = createAreasList(networkMeals);
-                    areaAdapter = new AreaAdapter(areaName -> {
-                        Navigation.findNavController(binding.rvAreas).navigate(
-                                HomeFragmentDirections.actionHomeFragmentToMealsListFragment(areaName, false)
-                        );
-                    });
-                    binding.rvAreas.setAdapter(areaAdapter);
-                    areaAdapter.submitList(areas);
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<MealzResponse> call, Throwable t) {
-
-            }
-        });
+    @Override
+    public void displayCategories(ArrayList<Category> categories) {
+        if (categories == null || categories.isEmpty()) {
+            // TODO Empty List
+            return;
+        }
+        categoryAdapter = new CategoryAdapter();
+        binding.rvCategories.setAdapter(categoryAdapter);
+        categoryAdapter.submitList(categories);
+        categoryAdapter.setOnItemClickListener(categoryName -> Navigation.findNavController(binding.rvCategories).navigate(HomeFragmentDirections.actionHomeFragmentToMealsListFragment(categoryName, true)));
     }
 
-    private void displayDailyInspiration(MealzApiService service) {
-        Callback<MealzResponse> dailyInspirationCallback = new Callback<>() {
-            @Override
-            public void onResponse(Call<MealzResponse> call, Response<MealzResponse> response) {
-                if (response.body() != null && response.body().meals != null && !response.body().meals.isEmpty()) {
-                    NetworkMeal networkMeal = response.body().meals.get(0);
-                    networkMeals.add(networkMeal);
-
-                    if (dailyInspirationAdapter == null) {
-                        dailyInspirationAdapter = new DailyInspirationAdapter(mealId -> {
-                            Navigation.findNavController(binding.rvDailyInspiration).navigate(
-                                    HomeFragmentDirections.actionHomeFragmentToMealDetailsFragment(mealId));
-                        });
-                    }
-
-                    binding.rvDailyInspiration.setAdapter(dailyInspirationAdapter);
-                    dailyInspirationAdapter.submitList(networkMeals);
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<MealzResponse> call, Throwable t) {
-                Toast.makeText(requireActivity(), "onFailure" + t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        };
-        service.getRandomMeal().enqueue(dailyInspirationCallback);
-        service.getRandomMeal().enqueue(dailyInspirationCallback);
-        service.getRandomMeal().enqueue(dailyInspirationCallback);
-        service.getRandomMeal().enqueue(dailyInspirationCallback);
-        service.getRandomMeal().enqueue(dailyInspirationCallback);
+    @Override
+    public void displayAreas(List<Meal> meals) {
+        if (meals == null || meals.isEmpty()) {
+            // TODO Empty List
+            return;
+        }
+        List<Area> areas = mapMealsToAreas(meals, requireActivity());
+        areaAdapter = new AreaAdapter(areaName -> Navigation.findNavController(binding.rvAreas).navigate(
+                HomeFragmentDirections.actionHomeFragmentToMealsListFragment(areaName, false)
+        ));
+        binding.rvAreas.setAdapter(areaAdapter);
+        areaAdapter.submitList(areas);
     }
 
-    private void displayCategories(MealzApiService service) {
-        service.getCategories().enqueue(new Callback<>() {
-            @Override
-            public void onResponse(Call<MealzResponse> call, Response<MealzResponse> response) {
-                if (response.body() != null && !response.body().categories.isEmpty()) {
-                    categoryAdapter = new CategoryAdapter();
-                    binding.rvCategories.setAdapter(categoryAdapter);
-                    categoryAdapter.submitList(response.body().categories);
+    @Override
+    public void displayDailyInspiration(List<Meal> meals) {
+//        networkMeals.add(meal);
 
-                    // Tried to init adapter outside onResponse method but when submitList called here. no data get displayed
-                    categoryAdapter.setOnItemClickListener(categoryName -> {
-                        Navigation.findNavController(binding.rvCategories).navigate(HomeFragmentDirections.actionHomeFragmentToMealsListFragment(categoryName, true));
-                    });
-                }
-            }
-
-            @Override
-            public void onFailure(Call<MealzResponse> call, Throwable t) {
-                Toast.makeText(requireActivity(), "onFailure" + t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    public List<Area> createAreasList(List<NetworkMeal> networkMeals) {
-        ArrayList<Area> areas = new ArrayList<>();
-
-        for (NetworkMeal networkMeal : networkMeals) {
-            int imageResource = getDrawableResourceForCountry(networkMeal.getMealArea());
-            if (imageResource != 0) {
-                areas.add(new Area(networkMeal.getMealArea(), imageResource));
-            }
+        if (dailyInspirationAdapter == null) {
+            dailyInspirationAdapter = new DailyInspirationAdapter(mealId -> Navigation.findNavController(binding.rvDailyInspiration).navigate(
+                    HomeFragmentDirections.actionHomeFragmentToMealDetailsFragment(mealId)));
         }
 
-        return areas;
-    }
-
-    private int getDrawableResourceForCountry(String countryName) {
-        Resources resources = getResources();
-        return resources.getIdentifier(
-                countryName.toLowerCase(),
-                "drawable",
-                requireActivity().getPackageName());
+        binding.rvDailyInspiration.setAdapter(dailyInspirationAdapter);
+        dailyInspirationAdapter.submitList(meals);
     }
 }
