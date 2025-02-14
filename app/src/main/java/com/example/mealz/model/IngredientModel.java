@@ -6,7 +6,7 @@ import java.util.List;
 public class IngredientModel {
     String url = "https://www.themealdb.com/images/ingredients/";
 
-    List<Ingredient> ingredients;
+    static List<Ingredient> ingredients;
 
     public IngredientModel(NetworkMeal networkMeal) {
         String[] ingredientNames = {
@@ -46,7 +46,8 @@ public class IngredientModel {
 
     }
 
-    public List<Ingredient> getIngredients() {
+    public static List<Ingredient> getIngredients(NetworkMeal networkMeal) {
+        new IngredientModel(networkMeal);
         return ingredients;
     }
 }

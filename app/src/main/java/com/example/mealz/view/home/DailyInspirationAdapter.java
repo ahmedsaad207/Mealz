@@ -12,23 +12,24 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.mealz.R;
 import com.example.mealz.databinding.ItemDailyInspirationBinding;
+import com.example.mealz.model.Meal;
 import com.example.mealz.model.NetworkMeal;
 import com.example.mealz.view.OnMealItemClickListener;
 
-public class DailyInspirationAdapter extends ListAdapter<NetworkMeal, DailyInspirationAdapter.DailyInspirationViewHolder> {
+public class DailyInspirationAdapter extends ListAdapter<Meal, DailyInspirationAdapter.DailyInspirationViewHolder> {
 
     OnMealItemClickListener onMealItemClickListener;
 
     public DailyInspirationAdapter(OnMealItemClickListener onMealItemClickListener) {
-        super(new DiffUtil.ItemCallback<NetworkMeal>() {
+        super(new DiffUtil.ItemCallback<>() {
             @Override
-            public boolean areItemsTheSame(@NonNull NetworkMeal oldItem, @NonNull NetworkMeal newItem) {
-                return oldItem.getMealId() == newItem.getMealId();
+            public boolean areItemsTheSame(@NonNull Meal oldItem, @NonNull Meal newItem) {
+                return oldItem.getNetworkId() == newItem.getNetworkId();
             }
 
             @Override
-            public boolean areContentsTheSame(@NonNull NetworkMeal oldItem, @NonNull NetworkMeal newItem) {
-                return oldItem.getMealId() == newItem.getMealId();
+            public boolean areContentsTheSame(@NonNull Meal oldItem, @NonNull Meal newItem) {
+                return oldItem.getNetworkId() == newItem.getNetworkId();
             }
         });
         this.onMealItemClickListener = onMealItemClickListener;
@@ -42,8 +43,8 @@ public class DailyInspirationAdapter extends ListAdapter<NetworkMeal, DailyInspi
 
     @Override
     public void onBindViewHolder(@NonNull DailyInspirationViewHolder holder, int position) {
-        NetworkMeal currentNetworkMeal = getItem(position);
-        holder.bind(currentNetworkMeal, onMealItemClickListener);
+        Meal currentMeal = getItem(position);
+        holder.bind(currentMeal, onMealItemClickListener);
     }
 
     static class DailyInspirationViewHolder extends RecyclerView.ViewHolder {
@@ -63,12 +64,12 @@ public class DailyInspirationAdapter extends ListAdapter<NetworkMeal, DailyInspi
             ));
         }
 
-        public void bind(NetworkMeal networkMeal, OnMealItemClickListener onMealItemClickListener) {
+        public void bind(Meal networkMeal, OnMealItemClickListener onMealItemClickListener) {
             Glide
                     .with(binding.imageViewDailyInspiration.getContext())
-                    .load(networkMeal.getMealImage())
+                    .load(networkMeal.getUrlImage())
                     .into(binding.imageViewDailyInspiration);
-            itemView.setOnClickListener(v -> onMealItemClickListener.onclick(networkMeal.getMealId()));
+            itemView.setOnClickListener(v -> onMealItemClickListener.onclick(networkMeal.getNetworkId()));
         }
     }
 

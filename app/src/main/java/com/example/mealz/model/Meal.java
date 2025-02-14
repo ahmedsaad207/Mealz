@@ -1,6 +1,7 @@
 package com.example.mealz.model;
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import java.util.List;
@@ -19,6 +20,9 @@ public class Meal {
     private String category;
     private String instructions;
     private String area;
+
+    @Ignore
+    private String youtubeUrl;
 
     private List<Ingredient> ingredients;
 
@@ -102,5 +106,11 @@ public class Meal {
         this.networkId = networkId;
     }
 
+    public String getYoutubeUrl() {
+        return youtubeUrl;
+    }
 
+    public void setYoutubeUrl(String youtubeUrl) {
+        this.youtubeUrl = youtubeUrl;
+    }
 }

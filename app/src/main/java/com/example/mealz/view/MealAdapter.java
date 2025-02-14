@@ -15,29 +15,26 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.mealz.R;
+import com.example.mealz.model.Meal;
 import com.example.mealz.model.NetworkMeal;
 
-public class MealAdapter extends ListAdapter<NetworkMeal, MealAdapter.MealViewHolder> {
+public class MealAdapter extends ListAdapter<Meal, MealAdapter.MealViewHolder> {
     OnMealItemClickListener onMealItemClickListener;
 
     public MealAdapter(OnMealItemClickListener onMealItemClickListener) {
         super(new DiffUtil.ItemCallback<>() {
 
             @Override
-            public boolean areItemsTheSame(@NonNull NetworkMeal oldItem, @NonNull NetworkMeal newItem) {
-                return oldItem.getMealName().equals(newItem.getMealName());
+            public boolean areItemsTheSame(@NonNull Meal oldItem, @NonNull Meal newItem) {
+                return false;
             }
 
             @Override
-            public boolean areContentsTheSame(@NonNull NetworkMeal oldItem, @NonNull NetworkMeal newItem) {
-                return oldItem.getMealName().equals(newItem.getMealName());
+            public boolean areContentsTheSame(@NonNull Meal oldItem, @NonNull Meal newItem) {
+                return false;
             }
         });
         this.onMealItemClickListener = onMealItemClickListener;
-    }
-
-    public MealAdapter() {
-        this(null);
     }
 
     @NonNull
@@ -48,8 +45,8 @@ public class MealAdapter extends ListAdapter<NetworkMeal, MealAdapter.MealViewHo
 
     @Override
     public void onBindViewHolder(@NonNull MealViewHolder holder, int position) {
-        NetworkMeal currentNetworkMeal = getItem(position);
-        holder.bind(currentNetworkMeal, onMealItemClickListener);
+        Meal currentMeal = getItem(position);
+        holder.bind(currentMeal, onMealItemClickListener);
     }
 
     static class MealViewHolder extends RecyclerView.ViewHolder {
@@ -67,13 +64,13 @@ public class MealAdapter extends ListAdapter<NetworkMeal, MealAdapter.MealViewHo
             return new MealViewHolder(view);
         }
 
-        public void bind(NetworkMeal networkMeal, OnMealItemClickListener onMealItemClickListener) {
-            mealNameTextView.setText(networkMeal.getMealName());
+        public void bind(Meal meal, OnMealItemClickListener onMealItemClickListener) {
+            mealNameTextView.setText(meal.getName());
             Glide.with(mealImageView.getContext())
-                    .load(networkMeal.getMealImage())
+                    .load(meal.getUrlImage())
                     .apply(RequestOptions.bitmapTransform(new RoundedCorners(30)))
                     .into(mealImageView);
-            itemView.setOnClickListener(v -> onMealItemClickListener.onclick(networkMeal.getMealId()));
+            itemView.setOnClickListener(v -> onMealItemClickListener.onclick(meal.getNetworkId()));
         }
     }
 }
