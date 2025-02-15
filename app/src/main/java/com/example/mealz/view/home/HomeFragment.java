@@ -17,7 +17,7 @@ import androidx.navigation.Navigation;
 
 import com.example.mealz.R;
 import com.example.mealz.data.MealsRepositoryImpl;
-import com.example.mealz.data.file.MealFileDataSource;
+import com.example.mealz.data.file.MealFileDataSourceImpl;
 import com.example.mealz.data.local.MealsLocalDataSourceImpl;
 import com.example.mealz.data.remote.MealsRemoteDataSourceImpl;
 import com.example.mealz.databinding.FragmentHomeBinding;
@@ -41,8 +41,7 @@ public class HomeFragment extends Fragment implements HomeView {
     HomePresenterImpl presenter;
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false);
         return binding.getRoot();
     }
@@ -54,13 +53,7 @@ public class HomeFragment extends Fragment implements HomeView {
         mAuth = FirebaseAuth.getInstance();
         binding.rvCategories.setHasFixedSize(true);
         binding.rvDailyInspiration.setHasFixedSize(true);
-        presenter = new HomePresenterImpl(
-                MealsRepositoryImpl.getInstance(
-                        MealsRemoteDataSourceImpl.getInstance(),
-                        MealsLocalDataSourceImpl.getInstance(requireActivity()),
-                        MealFileDataSource.getInstance(requireActivity())),
-                this
-        );
+        presenter = new HomePresenterImpl(MealsRepositoryImpl.getInstance(MealsRemoteDataSourceImpl.getInstance(), MealsLocalDataSourceImpl.getInstance(requireActivity()), MealFileDataSourceImpl.getInstance(requireActivity())), this);
 
         presenter.getRandomMeal();
         presenter.getCategories();
@@ -114,20 +107,15 @@ public class HomeFragment extends Fragment implements HomeView {
             return;
         }
         List<Area> areas = mapMealsToAreas(meals, requireActivity());
-        areaAdapter = new AreaAdapter(areaName -> Navigation.findNavController(binding.rvAreas).navigate(
-                HomeFragmentDirections.actionHomeFragmentToMealsListFragment(areaName, false)
-        ));
+        areaAdapter = new AreaAdapter(areaName -> Navigation.findNavController(binding.rvAreas).navigate(HomeFragmentDirections.actionHomeFragmentToMealsListFragment(areaName, false)));
         binding.rvAreas.setAdapter(areaAdapter);
         areaAdapter.submitList(areas);
     }
 
     @Override
     public void displayDailyInspiration(List<Meal> meals) {
-//        networkMeals.add(meal);
-
         if (dailyInspirationAdapter == null) {
-            dailyInspirationAdapter = new DailyInspirationAdapter(mealId -> Navigation.findNavController(binding.rvDailyInspiration).navigate(
-                    HomeFragmentDirections.actionHomeFragmentToMealDetailsFragment(mealId)));
+            dailyInspirationAdapter = new DailyInspirationAdapter(meal -> Navigation.findNavController(binding.rvDailyInspiration).navigate(HomeFragmentDirections.actionHomeFragmentToMealDetailsFragment(meal)));
         }
 
         binding.rvDailyInspiration.setAdapter(dailyInspirationAdapter);

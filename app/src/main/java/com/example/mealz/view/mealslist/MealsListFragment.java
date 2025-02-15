@@ -14,7 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.example.mealz.R;
-import com.example.mealz.data.file.MealFileDataSource;
+import com.example.mealz.data.file.MealFileDataSourceImpl;
 import com.example.mealz.data.MealsRepositoryImpl;
 import com.example.mealz.data.local.MealsLocalDataSourceImpl;
 import com.example.mealz.data.remote.MealsRemoteDataSourceImpl;
@@ -48,7 +48,7 @@ public class MealsListFragment extends Fragment implements MealsListView {
         presenter = new MealsListPresenterImpl(
                 MealsRepositoryImpl.getInstance(MealsRemoteDataSourceImpl.getInstance(),
                         MealsLocalDataSourceImpl.getInstance(requireActivity()),
-                        MealFileDataSource.getInstance(requireActivity())
+                        MealFileDataSourceImpl.getInstance(requireActivity())
                 ), this);
 
         MealsListFragmentArgs args = MealsListFragmentArgs.fromBundle(getArguments());

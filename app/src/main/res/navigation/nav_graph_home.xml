@@ -28,9 +28,10 @@
         android:id="@+id/mealDetailsFragment"
         android:name="com.example.mealz.view.mealdetails.MealDetailsFragment"
         android:label="MealDetailsFragment" >
+
         <argument
-            android:name="id"
-            app:argType="long" />
+            android:name="meal"
+            app:argType="com.example.mealz.model.Meal" />
     </fragment>
     <fragment
         android:id="@+id/mealPlanFragment"

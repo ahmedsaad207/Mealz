@@ -1,6 +1,6 @@
 package com.example.mealz.data;
 
-import com.example.mealz.data.file.MealFileDataSource;
+import com.example.mealz.data.file.MealFileDataSourceImpl;
 import com.example.mealz.data.local.MealsLocalDataSource;
 import com.example.mealz.data.remote.MealsRemoteDataSource;
 import com.example.mealz.model.Ingredient;
@@ -19,9 +19,9 @@ public class MealsRepositoryImpl implements MealsRepository {
 
     private MealsRemoteDataSource remoteSource;
     private MealsLocalDataSource localSource;
-    private MealFileDataSource fileSource;
+    private MealFileDataSourceImpl fileSource;
 
-    public MealsRepositoryImpl(MealsRemoteDataSource remoteSource, MealsLocalDataSource localSource, MealFileDataSource fileSource) {
+    public MealsRepositoryImpl(MealsRemoteDataSource remoteSource, MealsLocalDataSource localSource, MealFileDataSourceImpl fileSource) {
         this.remoteSource = remoteSource;
         this.localSource = localSource;
         this.fileSource = fileSource;
@@ -30,7 +30,7 @@ public class MealsRepositoryImpl implements MealsRepository {
     public static MealsRepositoryImpl getInstance(
             MealsRemoteDataSource remoteSource,
             MealsLocalDataSource localSource,
-            MealFileDataSource fileSource) {
+            MealFileDataSourceImpl fileSource) {
         if (instance == null) {
             instance = new MealsRepositoryImpl(remoteSource, localSource,fileSource);
         }
@@ -113,12 +113,17 @@ public class MealsRepositoryImpl implements MealsRepository {
     }
 
     @Override
-    public void downloadMealImage(String mealImageUrl) {
+    public void downloadMealImage(Meal mealImageUrl) {
         fileSource.downloadMealImage(mealImageUrl);
     }
 
     @Override
-    public void downloadIngredientImages(List<Ingredient> ingredients) {
-        fileSource.downloadIngredientImages(ingredients);
+    public Completable downloadIngredientImages(List<Ingredient> ingredients) {
+        return fileSource.downloadIngredientImages(ingredients);
+    }
+
+    @Override
+    public String getIngredientFilePath(String imageUrl, String folder) {
+        return fileSource.getIngredientFilePath(imageUrl, folder);
     }
 }

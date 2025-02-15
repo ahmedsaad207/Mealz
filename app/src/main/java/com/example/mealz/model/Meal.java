@@ -4,10 +4,11 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Entity(tableName = "meals_table")
-public class Meal {
+public class Meal implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
     private long id;

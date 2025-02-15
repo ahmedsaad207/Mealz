@@ -4,7 +4,7 @@ public class Ingredient {
 
     private final String name;
     private final String measure;
-    private final String imageUrl;
+    private String imageUrl;
 
     public Ingredient(String name, String measure, String imageUrl) {
         this.name = name;
@@ -24,5 +24,8 @@ public class Ingredient {
         return imageUrl;
     }
 
+    public void setImageUrl(String path) {
+        this.imageUrl = path;
+    }
 
 }

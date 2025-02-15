@@ -16,7 +16,6 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.mealz.R;
 import com.example.mealz.model.Meal;
-import com.example.mealz.model.NetworkMeal;
 
 public class MealAdapter extends ListAdapter<Meal, MealAdapter.MealViewHolder> {
     OnMealItemClickListener onMealItemClickListener;
@@ -70,7 +69,7 @@ public class MealAdapter extends ListAdapter<Meal, MealAdapter.MealViewHolder> {
                     .load(meal.getUrlImage())
                     .apply(RequestOptions.bitmapTransform(new RoundedCorners(30)))
                     .into(mealImageView);
-            itemView.setOnClickListener(v -> onMealItemClickListener.onclick(meal.getNetworkId()));
+            itemView.setOnClickListener(v -> onMealItemClickListener.onclick(meal));
         }
     }
 }
