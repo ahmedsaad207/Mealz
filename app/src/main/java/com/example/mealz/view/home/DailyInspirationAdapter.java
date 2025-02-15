@@ -69,7 +69,7 @@ public class DailyInspirationAdapter extends ListAdapter<Meal, DailyInspirationA
                     .with(binding.imageViewDailyInspiration.getContext())
                     .load(networkMeal.getUrlImage())
                     .into(binding.imageViewDailyInspiration);
-            itemView.setOnClickListener(v -> onMealItemClickListener.onclick(networkMeal.getNetworkId()));
+            itemView.setOnClickListener(v -> onMealItemClickListener.onclick(networkMeal));
         }
     }
 

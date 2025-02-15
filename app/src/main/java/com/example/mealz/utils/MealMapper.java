@@ -1,7 +1,8 @@
 package com.example.mealz.utils;
 
+import static com.example.mealz.utils.Utils.getDrawableResourceForCountry;
+
 import android.content.Context;
-import android.content.res.Resources;
 
 import com.example.mealz.model.Area;
 import com.example.mealz.model.IngredientModel;
@@ -39,20 +40,12 @@ public class MealMapper {
         ArrayList<Area> areas = new ArrayList<>();
 
         for (Meal meal : meals) {
-            int imageResource = getDrawableResourceForCountry(meal.getArea(), context);
+            int imageResource = Utils.getDrawableResourceForCountry(meal.getArea(), context);
             if (imageResource != 0) {
                 areas.add(new Area(meal.getArea(), imageResource));
             }
         }
 
         return areas;
-    }
-
-    private static int getDrawableResourceForCountry(String countryName, Context context) {
-        Resources resources = context.getResources();
-        return resources.getIdentifier(
-                countryName.toLowerCase(),
-                "drawable",
-                context.getPackageName());
     }
 }

@@ -41,8 +41,10 @@ public interface MealsRepository {
 
     Single<Meal> isFavMealExist(String userId, long networkMealId);
 
-    void downloadMealImage(String mealImageUrl);
+    void downloadMealImage(Meal mealImageUrl);
 
-    void downloadIngredientImages(List<Ingredient> ingredients);
+    Completable downloadIngredientImages(List<Ingredient> ingredients);
+
+    String getIngredientFilePath(String imageUrl, String folder);
 
 }

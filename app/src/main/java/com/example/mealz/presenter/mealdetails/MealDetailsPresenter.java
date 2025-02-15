@@ -10,9 +10,9 @@ public interface MealDetailsPresenter {
     void getMealById(long id);
     void insertFavMeal(Meal meal);
     void insertPlanMeal(Meal meal);
-    void insertMeal(Meal meal, long date);
+    void insertMeal(Meal meal);
 
-    void downloadMealImage(String mealImageUrl);
+    void downloadMealImage(Meal meal);
 
     void downloadIngredientImages(List<Ingredient> ingredients);
 }

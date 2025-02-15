@@ -1,5 +1,7 @@
 package com.example.mealz.view;
 
+import com.example.mealz.model.Meal;
+
 public interface OnMealItemClickListener {
-    void onclick(long id);
+    void onclick(Meal meal);
 }

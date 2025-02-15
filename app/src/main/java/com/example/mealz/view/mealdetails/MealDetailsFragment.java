@@ -1,5 +1,7 @@
 package com.example.mealz.view.mealdetails;
 
+import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -13,13 +15,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.example.mealz.R;
-import com.example.mealz.data.file.MealFileDataSource;
 import com.example.mealz.data.MealsRepositoryImpl;
+import com.example.mealz.data.file.MealFileDataSourceImpl;
 import com.example.mealz.data.local.MealsLocalDataSourceImpl;
 import com.example.mealz.data.remote.MealsRemoteDataSourceImpl;
 import com.example.mealz.databinding.FragmentMealDetailsBinding;
@@ -28,8 +31,10 @@ import com.example.mealz.model.Meal;
 import com.example.mealz.presenter.mealdetails.MealDetailsPresenter;
 import com.example.mealz.presenter.mealdetails.MealDetailsPresenterImpl;
 import com.example.mealz.presenter.mealdetails.MealDetailsView;
+import com.example.mealz.utils.Constants;
 import com.example.mealz.utils.Utils;
 
+import java.util.Calendar;
 import java.util.List;
 
 public class MealDetailsFragment extends Fragment implements MealDetailsView {
@@ -39,9 +44,7 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
 
     Meal currentMeal;
 
-    List<Ingredient> ingredients;
     MealDetailsPresenter presenter;
-
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -63,7 +66,7 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
                 MealsRepositoryImpl.getInstance(
                         MealsRemoteDataSourceImpl.getInstance(),
                         MealsLocalDataSourceImpl.getInstance(requireActivity()),
-                        MealFileDataSource.getInstance(requireActivity())),
+                        MealFileDataSourceImpl.getInstance(requireActivity())),
                 this
         );
 
@@ -71,19 +74,29 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
 
         prepareVideoPlayer();
 
-        long mealId = MealDetailsFragmentArgs.fromBundle(getArguments()).getId();
-        presenter.getMealById(mealId);
+        Meal meal = MealDetailsFragmentArgs.fromBundle(getArguments()).getMeal();
+
+        if (meal.getDate() == Constants.TYPE_DEFAULT) {
+            presenter.getMealById(meal.getNetworkId());
+        } else if (meal.getDate() == Constants.TYPE_FAVORITE) {
+            displayMeal(meal);
+        } else {
+            displayMeal(meal);
+        }
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     private void prepareVideoPlayer() {
         binding.webView.getSettings().setJavaScriptEnabled(true);
         binding.webView.setWebChromeClient(new WebChromeClient());
-        binding.webView.setBackgroundColor(getResources().getColor(R.color.brownish_gray));
+        binding.webView.setBackgroundColor(ContextCompat.getColor(requireActivity(), R.color.brownish_gray));
     }
 
     private void displayYoutube(String youtubeUrl) {
         if (Utils.getVideoIframe(youtubeUrl) != null) {
             binding.webView.loadData(Utils.getVideoIframe(youtubeUrl), "text/html", "UTF-8");
+        } else {
+            binding.webView.setVisibility(View.GONE);
         }
     }
 
@@ -102,12 +115,34 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.action_save) {
+            currentMeal.setDate(Constants.TYPE_FAVORITE);
             presenter.insertFavMeal(currentMeal);
             return true;
         } else if (item.getItemId() == R.id.action_plan) {
-            presenter.insertPlanMeal(currentMeal);
+            showDatePickerDialog();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void showDatePickerDialog() {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog dialog = new DatePickerDialog(requireActivity(), R.style.DialogTheme, (view, year1, month1, dayOfMonth1) -> {
+            calendar.set(year1, month1, dayOfMonth1);
+            currentMeal.setDate(calendar.getTimeInMillis());
+            presenter.insertPlanMeal(currentMeal);
+        }, year, month, dayOfMonth);
+
+        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        long startOfWeek = calendar.getTimeInMillis();
+        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth + 6);
+        long endOfWeek = calendar.getTimeInMillis();
+        dialog.getDatePicker().setMinDate(startOfWeek);
+        dialog.getDatePicker().setMaxDate(endOfWeek);
+        dialog.show();
     }
 
     @Override

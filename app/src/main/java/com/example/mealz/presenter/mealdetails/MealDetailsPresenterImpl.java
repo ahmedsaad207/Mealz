@@ -1,25 +1,25 @@
 package com.example.mealz.presenter.mealdetails;
 
+import android.util.Log;
+
 import com.example.mealz.data.MealsRepositoryImpl;
 import com.example.mealz.model.Ingredient;
 import com.example.mealz.model.Meal;
-import com.example.mealz.model.NetworkMeal;
-import com.example.mealz.utils.Constants;
 import com.example.mealz.utils.MealMapper;
 
-import java.util.Calendar;
 import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.annotations.NonNull;
+import io.reactivex.rxjava3.core.CompletableObserver;
 import io.reactivex.rxjava3.core.SingleObserver;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class MealDetailsPresenterImpl implements MealDetailsPresenter {
 
-    private MealsRepositoryImpl repo;
-    private MealDetailsView view;
+    private final MealsRepositoryImpl repo;
+    private final MealDetailsView view;
 
     public MealDetailsPresenterImpl(MealsRepositoryImpl repo, MealDetailsView view) {
         this.repo = repo;
@@ -63,13 +63,12 @@ public class MealDetailsPresenterImpl implements MealDetailsPresenter {
 
                     @Override
                     public void onSuccess(@NonNull Meal meal) {
-                        downloadMealImage(meal.getUrlImage());
+                        downloadMealImage(meal);
                         downloadIngredientImages(meal.getIngredients());
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        insertMeal(meal, Constants.TYPE_FAVORITE);
                     }
                 });
 
@@ -77,44 +76,57 @@ public class MealDetailsPresenterImpl implements MealDetailsPresenter {
 
     @Override
     public void insertPlanMeal(Meal meal) {
-        Calendar calendar = Calendar.getInstance();
-        insertMeal(meal, calendar.getTime().getTime());
+        insertMeal(meal);
     }
 
     @Override
-    public void insertMeal(Meal meal, long date) {
-        meal.setDate(date);
+    public void insertMeal(Meal meal) {
         repo.insertMeal(meal)
                 .subscribeOn(Schedulers.io())
-                .subscribe();
+                .subscribe(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
 
-        downloadMealImage(meal.getUrlImage());
-//        downloadIngredientImages(new IngredientModel(meal).getIngredients());
-        downloadIngredientImages(meal.getIngredients());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        downloadMealImage(meal);
+                        downloadIngredientImages(meal.getIngredients());
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+
+                    }
+                });
     }
 
     @Override
-    public void downloadMealImage(String mealImageUrl) {
-        repo.downloadMealImage(mealImageUrl);
+    public void downloadMealImage(Meal meal) {
+        repo.downloadMealImage(meal);
     }
 
     @Override
     public void downloadIngredientImages(List<Ingredient> ingredients) {
-        repo.downloadIngredientImages(ingredients);
-    }
+        repo.downloadIngredientImages(ingredients)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
 
-    private Meal convertToMealModel(NetworkMeal networkMeal, long date) {
-        Meal meal = new Meal();
-        meal.setNetworkId(networkMeal.getMealId());
-        meal.setArea(networkMeal.getMealArea());
-        meal.setName(networkMeal.getMealName());
-        meal.setCategory(networkMeal.getMealCategory());
-        meal.setInstructions(networkMeal.getMealInstructions());
-        meal.setUrlImage(networkMeal.getMealImage());
-        meal.setUserId("ahmed");
-        meal.setDate(date);
-//        meal.setIngredients(ingredients);
+                    }
 
-        return meal;
+                    @Override
+                    public void onComplete() {
+                        Log.d("TAG", "on download images Completed: ");
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+
+                    }
+                });
     }
 }
