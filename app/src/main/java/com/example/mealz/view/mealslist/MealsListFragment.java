@@ -14,8 +14,8 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.example.mealz.R;
-import com.example.mealz.data.file.MealFileDataSourceImpl;
 import com.example.mealz.data.MealsRepositoryImpl;
+import com.example.mealz.data.file.MealFileDataSourceImpl;
 import com.example.mealz.data.local.MealsLocalDataSourceImpl;
 import com.example.mealz.data.remote.MealsRemoteDataSourceImpl;
 import com.example.mealz.databinding.FragmentMealsListBinding;
@@ -23,15 +23,16 @@ import com.example.mealz.model.Meal;
 import com.example.mealz.presenter.mealslist.MealsListPresenter;
 import com.example.mealz.presenter.mealslist.MealsListPresenterImpl;
 import com.example.mealz.presenter.mealslist.MealsListView;
+import com.example.mealz.utils.Constants;
 import com.example.mealz.view.MealAdapter;
+import com.example.mealz.view.OnMealItemClickListener;
 
 import java.util.List;
 
-public class MealsListFragment extends Fragment implements MealsListView {
+public class MealsListFragment extends Fragment implements MealsListView, OnMealItemClickListener {
     FragmentMealsListBinding binding;
-    MealAdapter adapter;
+    MealAdapter<Meal> adapter;
     MealsListPresenter presenter;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -45,22 +46,24 @@ public class MealsListFragment extends Fragment implements MealsListView {
         requireActivity().findViewById(R.id.bottomNavigationView).setVisibility(View.GONE);
         ActionBar actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
 
-        presenter = new MealsListPresenterImpl(
-                MealsRepositoryImpl.getInstance(MealsRemoteDataSourceImpl.getInstance(),
-                        MealsLocalDataSourceImpl.getInstance(requireActivity()),
-                        MealFileDataSourceImpl.getInstance(requireActivity())
-                ), this);
+        presenter = new MealsListPresenterImpl(MealsRepositoryImpl.getInstance(MealsRemoteDataSourceImpl.getInstance(), MealsLocalDataSourceImpl.getInstance(requireActivity()), MealFileDataSourceImpl.getInstance(requireActivity())), this);
 
         MealsListFragmentArgs args = MealsListFragmentArgs.fromBundle(getArguments());
         String name = args.getName();
-        boolean isCategory = args.getIsCategory();
+        int type = args.getType();
         String title;
-        if (isCategory) {
-            title = (name + " Meals");
+
+        if (type == Constants.ITEM_CATEGORY) {
+            title = ("Tasty Dishes from " + name);
             presenter.getMealsByCategory(name);
-        } else {
+        } else if (type == Constants.ITEM_AREA) {
             title = "Popular Meals in " + name;
             presenter.getMealsByArea(name);
+        } else if (type == Constants.ITEM_INGREDIENT) {
+            title = "Discover Meals with  " + name;
+            presenter.searchByIngredient(name);
+        } else {
+            title = "";
         }
 
         if (actionBar != null) {
@@ -70,10 +73,19 @@ public class MealsListFragment extends Fragment implements MealsListView {
 
     @Override
     public void displayMeals(List<Meal> meals) {
-        adapter = new MealAdapter(id -> {
-            Navigation.findNavController(binding.rvMeals).navigate(MealsListFragmentDirections.actionMealsListFragmentToMealDetailsFragment(id));
-        });
+        adapter = new MealAdapter<>(this);
         adapter.submitList(meals);
         binding.rvMeals.setAdapter(adapter);
     }
+
+    @Override
+    public void navigateToMealDetails(Meal meal) {
+        Navigation.findNavController(binding.rvMeals).navigate(MealsListFragmentDirections.actionMealsListFragmentToMealDetailsFragment(meal));
+    }
+
+    @Override
+    public void navigateToMealsList(String name, int type) {
+
+    }
+
 }

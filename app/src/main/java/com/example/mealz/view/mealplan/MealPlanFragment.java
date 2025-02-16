@@ -18,6 +18,7 @@ import com.example.mealz.data.local.MealsLocalDataSourceImpl;
 import com.example.mealz.data.remote.MealsRemoteDataSourceImpl;
 import com.example.mealz.databinding.FragmentMealPlanBinding;
 import com.example.mealz.model.Meal;
+import com.example.mealz.model.SearchItem;
 import com.example.mealz.presenter.mealplan.MealPlanPresenter;
 import com.example.mealz.presenter.mealplan.MealPlanPresenterImpl;
 import com.example.mealz.presenter.mealplan.MealPlanView;
@@ -41,7 +42,7 @@ public class MealPlanFragment extends Fragment implements OnDayItemClickListener
 
     DayAdapter dayAdapter;
     MealPlanPresenter presenter;
-    MealAdapter mealAdapter;
+    MealAdapter<Meal> mealAdapter;
     List<Integer> days;
 
 
@@ -117,14 +118,19 @@ public class MealPlanFragment extends Fragment implements OnDayItemClickListener
     @Override
     public void displayFirstDayInCurrentWeek(List<Meal> meals) {
         fillCurrentWeekList(meals);
-        mealAdapter = new MealAdapter(this);
+        mealAdapter = new MealAdapter<>(this);
         mealAdapter.submitList(currentWeekList.get(0));
         binding.rvPlannedMeals.setAdapter(mealAdapter);
     }
 
     @Override
-    public void onclick(Meal meal) {
+    public void navigateToMealDetails(Meal meal) {
         Navigation.findNavController(binding.rvPlannedMeals).navigate(
                 MealPlanFragmentDirections.actionMealPlanFragmentToMealDetailsFragment(meal));
+    }
+
+    @Override
+    public void navigateToMealsList(String name, int type) {
+
     }
 }

@@ -78,16 +78,6 @@ public class MealsRepositoryImpl implements MealsRepository {
     }
 
     @Override
-    public Single<MealzResponse> searchByCategory(String category) {
-        return remoteSource.searchByCategory(category);
-    }
-
-    @Override
-    public Single<MealzResponse> searchByArea(String area) {
-        return remoteSource.searchByArea(area);
-    }
-
-    @Override
     public Completable insertMeal(Meal meal) {
         return localSource.insertMeal(meal);
     }

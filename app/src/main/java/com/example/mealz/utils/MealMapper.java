@@ -1,10 +1,9 @@
 package com.example.mealz.utils;
 
-import static com.example.mealz.utils.Utils.getDrawableResourceForCountry;
-
 import android.content.Context;
 
 import com.example.mealz.model.Area;
+import com.example.mealz.model.Ingredient;
 import com.example.mealz.model.IngredientModel;
 import com.example.mealz.model.Meal;
 import com.example.mealz.model.NetworkMeal;
@@ -47,5 +46,17 @@ public class MealMapper {
         }
 
         return areas;
+    }
+
+    public static List<Ingredient> mapNetworkMealToIngredients(List<NetworkMeal> networkMeals) {
+
+        List<Ingredient> ingredients = new ArrayList<>();
+        for (NetworkMeal meal : networkMeals) {
+            String name = meal.getStrIngredient();
+            if (name != null && !name.isEmpty()) {
+                ingredients.add(new Ingredient(name, "", "https://www.themealdb.com/images/ingredients/" + name + "-Small.png"));
+            }
+        }
+        return ingredients;
     }
 }

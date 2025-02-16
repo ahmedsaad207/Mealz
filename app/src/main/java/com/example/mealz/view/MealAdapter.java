@@ -1,5 +1,6 @@
 package com.example.mealz.view;
 
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,6 +8,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,21 +19,29 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.mealz.R;
 import com.example.mealz.model.Meal;
+import com.example.mealz.model.SearchItem;
+import com.example.mealz.utils.Constants;
 
-public class MealAdapter extends ListAdapter<Meal, MealAdapter.MealViewHolder> {
+public class MealAdapter<T> extends ListAdapter<T, MealAdapter.MealViewHolder> {
     OnMealItemClickListener onMealItemClickListener;
 
     public MealAdapter(OnMealItemClickListener onMealItemClickListener) {
         super(new DiffUtil.ItemCallback<>() {
 
             @Override
-            public boolean areItemsTheSame(@NonNull Meal oldItem, @NonNull Meal newItem) {
-                return false;
+            public boolean areItemsTheSame(@NonNull T oldItem, @NonNull T newItem) {
+                if (oldItem instanceof SearchItem) {
+                    return ((SearchItem) oldItem).getName().equals(((SearchItem) newItem).getName());
+                }
+                return ((Meal) oldItem).getName().equals(((Meal) newItem).getName());
             }
 
             @Override
-            public boolean areContentsTheSame(@NonNull Meal oldItem, @NonNull Meal newItem) {
-                return false;
+            public boolean areContentsTheSame(@NonNull T oldItem, @NonNull T newItem) {
+                if (oldItem instanceof SearchItem) {
+                    return ((SearchItem) oldItem).getName().equals(((SearchItem) newItem).getName());
+                }
+                return ((Meal) oldItem).getName().equals(((Meal) newItem).getName());
             }
         });
         this.onMealItemClickListener = onMealItemClickListener;
@@ -44,18 +55,26 @@ public class MealAdapter extends ListAdapter<Meal, MealAdapter.MealViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull MealViewHolder holder, int position) {
-        Meal currentMeal = getItem(position);
-        holder.bind(currentMeal, onMealItemClickListener);
+        T currenT = getItem(position);
+
+        if (currenT instanceof SearchItem) {
+            holder.bindSearchItem((SearchItem) currenT, onMealItemClickListener);
+        } else {
+            holder.bind((Meal) currenT, onMealItemClickListener);
+        }
+
     }
 
     static class MealViewHolder extends RecyclerView.ViewHolder {
         TextView mealNameTextView;
         ImageView mealImageView;
+        ConstraintLayout constraintLayout;
 
         public MealViewHolder(@NonNull View view) {
             super(view);
             mealNameTextView = view.findViewById(R.id.mealNameTextView);
             mealImageView = view.findViewById(R.id.mealImageView);
+            constraintLayout = view.findViewById(R.id.constraintLayout_item);
         }
 
         public static MealViewHolder create(ViewGroup parent) {
@@ -64,12 +83,34 @@ public class MealAdapter extends ListAdapter<Meal, MealAdapter.MealViewHolder> {
         }
 
         public void bind(Meal meal, OnMealItemClickListener onMealItemClickListener) {
+            mealNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+            constraintLayout.setBackground(ContextCompat.getDrawable(constraintLayout.getContext(), R.drawable.bg_stroke_rounded));
             mealNameTextView.setText(meal.getName());
+            itemView.setOnClickListener(v -> onMealItemClickListener.navigateToMealDetails(meal));
+
+
             Glide.with(mealImageView.getContext())
                     .load(meal.getUrlImage())
                     .apply(RequestOptions.bitmapTransform(new RoundedCorners(30)))
                     .into(mealImageView);
-            itemView.setOnClickListener(v -> onMealItemClickListener.onclick(meal));
+        }
+
+        public void bindSearchItem(SearchItem item, OnMealItemClickListener onMealItemClickListener) {
+            mealNameTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+            constraintLayout.setBackground(ContextCompat.getDrawable(constraintLayout.getContext(), R.drawable.bg_stroke_sharp));
+            if (item.getType() == Constants.ITEM_AREA) {
+                Glide.with(mealImageView.getContext())
+                        .load(item.getResId())
+                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(30)))
+                        .into(mealImageView);
+            } else {
+                Glide.with(mealImageView.getContext())
+                        .load(item.getImageUrl())
+                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(30)))
+                        .into(mealImageView);
+            }
+            mealNameTextView.setText(item.getName());
+            itemView.setOnClickListener(v -> onMealItemClickListener.navigateToMealsList(item.getName(), item.getType()));
         }
     }
 }

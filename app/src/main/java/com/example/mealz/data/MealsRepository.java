@@ -27,10 +27,6 @@ public interface MealsRepository {
 
     Single<MealzResponse> searchByIngredient(String ingredient);
 
-    Single<MealzResponse> searchByCategory(String category);
-
-    Single<MealzResponse> searchByArea(String area);
-
     Completable insertMeal(Meal meal);
 
     Completable deleteMeal(Meal meal);

@@ -119,6 +119,9 @@ public class NetworkMeal {
     @SerializedName("strMeasure20")
     private String mealMeasure20;
 
+    private String strIngredient;
+
+
     public long getMealId() {
         return mealId;
     }
@@ -337,5 +340,13 @@ public class NetworkMeal {
 
     public String getMealMeasure20() {
         return mealMeasure20;
+    }
+
+    public String getStrIngredient() {
+        return strIngredient;
+    }
+
+    public void setStrIngredient(String strIngredient) {
+        this.strIngredient = strIngredient;
     }
 }

@@ -22,10 +22,20 @@ public class Meal implements Serializable {
     private String instructions;
     private String area;
 
+
     @Ignore
     private String youtubeUrl;
 
     private List<Ingredient> ingredients;
+
+    public Meal(){}
+
+    public Meal(String name, String imageUrl, int resId) {
+        setName(name);
+        setUrlImage(imageUrl);
+        setDate(resId);
+    }
+
 
     public long getDate() {
         return date;

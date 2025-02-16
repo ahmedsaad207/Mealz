@@ -52,8 +52,8 @@
             android:name="name"
             app:argType="string" />
         <argument
-            android:name="isCategory"
-            app:argType="boolean" />
+            android:name="type"
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/profileFragment"

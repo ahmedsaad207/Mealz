@@ -7,7 +7,7 @@ import io.reactivex.rxjava3.core.Single;
 public class MealsRemoteDataSourceImpl implements MealsRemoteDataSource {
 
     private static MealsRemoteDataSourceImpl remoteSource = null;
-    private MealzApiService service;
+    private final MealzApiService service;
 
     private MealsRemoteDataSourceImpl() {
         service = RetrofitClient.getInstance();
@@ -58,15 +58,5 @@ public class MealsRemoteDataSourceImpl implements MealsRemoteDataSource {
     @Override
     public Single<MealzResponse> searchByIngredient(String ingredient) {
         return service.searchByIngredient(ingredient);
-    }
-
-    @Override
-    public Single<MealzResponse> searchByCategory(String category) {
-        return service.searchByCategory(category);
-    }
-
-    @Override
-    public Single<MealzResponse> searchByArea(String area) {
-        return service.searchByArea(area);
     }
 }
