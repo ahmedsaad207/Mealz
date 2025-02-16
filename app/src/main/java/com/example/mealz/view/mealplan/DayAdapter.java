@@ -1,5 +1,6 @@
 package com.example.mealz.view.mealplan;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import java.util.List;
 
 public class DayAdapter extends ListAdapter<Integer, DayAdapter.DayViewHolder> {
     OnDayItemClickListener onDayItemClickListener;
+    int selectedDay = 0;
 
     public DayAdapter(OnDayItemClickListener onDayItemClickListener, List<Integer> days) {
         super(new DiffUtil.ItemCallback<>() {
@@ -44,6 +46,12 @@ public class DayAdapter extends ListAdapter<Integer, DayAdapter.DayViewHolder> {
     public void onBindViewHolder(@NonNull DayViewHolder holder, int position) {
         Integer currentDay = getItem(position);
         holder.bind(currentDay, onDayItemClickListener);
+
+        if (selectedDay == position) {
+            Log.i("TAG", "selected day");
+        } else {
+            Log.i("TAG", "not selected day");
+        }
     }
 
     static class DayViewHolder extends RecyclerView.ViewHolder {
@@ -60,8 +68,11 @@ public class DayAdapter extends ListAdapter<Integer, DayAdapter.DayViewHolder> {
         }
 
         public void bind(Integer day, OnDayItemClickListener onDayItemClickListener) {
-            dayTextView.setText(day+"");
-            itemView.setOnClickListener(v -> onDayItemClickListener.displayMeals(day));
+            dayTextView.setText(String.valueOf(day));
+            itemView.setOnClickListener(v -> {
+                onDayItemClickListener.displayMeals(day);
+
+            });
         }
     }
 }

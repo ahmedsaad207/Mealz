@@ -20,8 +20,4 @@ public interface MealsRemoteDataSource {
     Single<MealzResponse> getRandomMeal();
 
     Single<MealzResponse> searchByIngredient(String ingredient);
-
-    Single<MealzResponse> searchByCategory(String category);
-
-    Single<MealzResponse> searchByArea(String area);
 }

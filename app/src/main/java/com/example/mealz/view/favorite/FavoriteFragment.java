@@ -22,13 +22,14 @@ import com.example.mealz.presenter.favorite.FavoritePresenter;
 import com.example.mealz.presenter.favorite.FavoritePresenterImpl;
 import com.example.mealz.presenter.favorite.FavoriteView;
 import com.example.mealz.view.MealAdapter;
+import com.example.mealz.view.OnMealItemClickListener;
 
 import java.util.List;
 
-public class FavoriteFragment extends Fragment implements FavoriteView {
+public class FavoriteFragment extends Fragment implements FavoriteView, OnMealItemClickListener {
 
     FragmentFavoriteBinding binding;
-    MealAdapter adapter;
+    MealAdapter<Meal> adapter;
     FavoritePresenter presenter;
 
 
@@ -54,12 +55,18 @@ public class FavoriteFragment extends Fragment implements FavoriteView {
 
     @Override
     public void displayFavoriteMeals(List<Meal> meals) {
-        adapter = new MealAdapter(meal -> {
-            Navigation.findNavController(binding.rvFavMeals).navigate(
-                    FavoriteFragmentDirections.actionFavoriteFragmentToMealDetailsFragment(meal)
-            );
-        });
+        adapter = new MealAdapter<>(this);
         adapter.submitList(meals);
         binding.rvFavMeals.setAdapter(adapter);
+    }
+
+    @Override
+    public void navigateToMealDetails(Meal meal) {
+        Navigation.findNavController(binding.getRoot()).navigate(FavoriteFragmentDirections.actionFavoriteFragmentToMealDetailsFragment(meal));
+    }
+
+    @Override
+    public void navigateToMealsList(String name, int type) {
+
     }
 }

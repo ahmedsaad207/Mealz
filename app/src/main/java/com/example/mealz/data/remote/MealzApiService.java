@@ -31,11 +31,4 @@ public interface MealzApiService {
 
     @GET("filter.php")
     Single<MealzResponse> searchByIngredient(@Query("i") String ingredient);
-
-    @GET("filter.php")
-    Single<MealzResponse> searchByCategory(@Query("c") String category);
-
-    @GET("filter.php")
-    Single<MealzResponse> searchByArea(@Query("a") String area);
-
 }

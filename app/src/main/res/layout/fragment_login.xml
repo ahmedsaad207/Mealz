@@ -7,6 +7,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/brownish_gray">
@@ -68,8 +69,8 @@
                 android:id="@+id/edt_password"
                 style="@style/TextInputLayoutStyle"
                 android:hint="@string/password"
-                app:endIconTint="@color/white"
                 app:endIconMode="password_toggle"
+                app:endIconTint="@color/white"
                 app:hintTextColor="@color/white">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -97,10 +98,10 @@
             android:id="@+id/btn_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:background="@drawable/background_ripple_rounded_red"
             android:drawableEnd="@drawable/ic_arrow"
             android:text="Login"
-            android:layout_marginTop="16dp"
             android:textSize="18sp"
             app:backgroundTint="@color/reddish_orange"
             app:layout_constraintEnd_toEndOf="parent"

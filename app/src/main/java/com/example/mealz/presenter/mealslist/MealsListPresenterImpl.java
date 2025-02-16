@@ -1,11 +1,14 @@
 package com.example.mealz.presenter.mealslist;
 
-import com.example.mealz.data.MealsRepositoryImpl;
-import com.example.mealz.model.Meal;
-import com.example.mealz.model.NetworkMeal;
-import com.example.mealz.utils.MealMapper;
+import android.util.Log;
 
-import java.util.ArrayList;
+import com.example.mealz.data.MealsRepositoryImpl;
+import com.example.mealz.model.Ingredient;
+import com.example.mealz.model.Meal;
+import com.example.mealz.model.MealzResponse;
+import com.example.mealz.utils.MealMapper;
+import com.example.mealz.view.MealAdapter;
+
 import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -14,7 +17,7 @@ import io.reactivex.rxjava3.core.SingleObserver;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-public class MealsListPresenterImpl implements MealsListPresenter{
+public class MealsListPresenterImpl implements MealsListPresenter {
 
     private final MealsRepositoryImpl repo;
     private final MealsListView view;
@@ -28,7 +31,7 @@ public class MealsListPresenterImpl implements MealsListPresenter{
     public void getMealsByCategory(String category) {
         repo.getMealsByCategory(category)
                 .subscribeOn(Schedulers.io())
-                .map(mealzResponse -> MealMapper.mapNetworkMealsToMeals(mealzResponse.meals))
+                .map(mealzResponse -> MealMapper.mapNetworkMealsToMeals(mealzResponse.getMeals()))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new SingleObserver<>() {
                     @Override
@@ -52,7 +55,7 @@ public class MealsListPresenterImpl implements MealsListPresenter{
     public void getMealsByArea(String area) {
         repo.getMealsByArea(area)
                 .subscribeOn(Schedulers.io())
-                .map(mealzResponse -> MealMapper.mapNetworkMealsToMeals(mealzResponse.meals))
+                .map(mealzResponse -> MealMapper.mapNetworkMealsToMeals(mealzResponse.getMeals()))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new SingleObserver<>() {
                     @Override
@@ -62,6 +65,31 @@ public class MealsListPresenterImpl implements MealsListPresenter{
 
                     @Override
                     public void onSuccess(@NonNull List<Meal> meals) {
+                        view.displayMeals(meals);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+
+                    }
+                });
+    }
+
+    @Override
+    public void searchByIngredient(String name) {
+        repo.searchByIngredient(name)
+                .subscribeOn(Schedulers.io())
+                .map(mealzResponse -> MealMapper.mapNetworkMealsToMeals(mealzResponse.getMeals()))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<List<Meal>>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(@NonNull List<Meal> meals) {
+                        Log.i("TAG", "onSuccess: meals size: " +meals.size());
                         view.displayMeals(meals);
                     }
 

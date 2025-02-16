@@ -30,7 +30,7 @@ public class MealDetailsPresenterImpl implements MealDetailsPresenter {
     public void getMealById(long id) {
         repo.getMealById(id)
                 .subscribeOn(Schedulers.io())
-                .map(mealzResponse -> MealMapper.mapNetworkMealToMeal(mealzResponse.meals.get(0)))
+                .map(mealzResponse -> MealMapper.mapNetworkMealToMeal(mealzResponse.getMeals().get(0)))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new SingleObserver<>() {
                     @Override
@@ -69,6 +69,7 @@ public class MealDetailsPresenterImpl implements MealDetailsPresenter {
 
                     @Override
                     public void onError(@NonNull Throwable e) {
+                        insertMeal(meal);
                     }
                 });
 

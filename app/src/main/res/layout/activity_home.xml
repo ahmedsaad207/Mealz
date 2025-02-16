@@ -35,15 +35,15 @@
                 android:background="@android:color/transparent"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
-                app:navigationIcon="@drawable/ic_arrow_back"
+                app:navigationIcon="@drawable/ic_arrow_back_bg"
                 app:titleTextColor="@color/white" />
         </FrameLayout>
 
         <View
-            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="8dp"
-            android:background="@color/brownish_gray" />
+            android:background="@color/brownish_gray"
+            android:visibility="gone" />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomNavigationView"

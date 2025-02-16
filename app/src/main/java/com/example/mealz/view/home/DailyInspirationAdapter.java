@@ -13,7 +13,6 @@ import com.bumptech.glide.Glide;
 import com.example.mealz.R;
 import com.example.mealz.databinding.ItemDailyInspirationBinding;
 import com.example.mealz.model.Meal;
-import com.example.mealz.model.NetworkMeal;
 import com.example.mealz.view.OnMealItemClickListener;
 
 public class DailyInspirationAdapter extends ListAdapter<Meal, DailyInspirationAdapter.DailyInspirationViewHolder> {
@@ -69,7 +68,7 @@ public class DailyInspirationAdapter extends ListAdapter<Meal, DailyInspirationA
                     .with(binding.imageViewDailyInspiration.getContext())
                     .load(networkMeal.getUrlImage())
                     .into(binding.imageViewDailyInspiration);
-            itemView.setOnClickListener(v -> onMealItemClickListener.onclick(networkMeal));
+            itemView.setOnClickListener(v -> onMealItemClickListener.navigateToMealDetails(networkMeal));
         }
     }
 

@@ -15,16 +15,19 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:backgroundTint="@color/brownish_gray">
+        android:backgroundTint="@color/brownish_gray"
+        app:cardElevation="8dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout_item"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
             <ImageView
                 android:id="@+id/mealImageView"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:padding="4dp"
                 app:layout_constraintDimensionRatio="1"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -34,12 +37,13 @@
 
             <TextView
                 android:id="@+id/mealNameTextView"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:ellipsize="end"
                 android:maxLines="2"
                 android:paddingBottom="4dp"
+                android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold"
