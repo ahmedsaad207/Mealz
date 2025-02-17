@@ -7,174 +7,135 @@
 
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nested_scroll_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/brownish_gray"
+        android:fillViewport="true">
 
-        <androidx.core.widget.NestedScrollView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/brownish_gray"
-            android:fillViewport="true"
-            android:orientation="vertical"
-            app:layout_constraintTop_toTopOf="parent">
+            android:orientation="vertical">
 
+            <TextView
+                android:id="@+id/hello_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="56dp"
+                android:layout_marginBottom="16dp"
+                android:text="@string/hello_name"
+                android:textColor="#9C9C9C" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:text="@string/ready_to_plan_your_week"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/search_edit_text"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingBottom="56dp">
+                android:layout_height="56dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="36dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/background_search"
+                android:drawableStart="@drawable/ic_arrow_back"
+                android:drawableEnd="@drawable/ic_search"
+                android:drawablePadding="12dp"
+                android:ellipsize="end"
+                android:focusable="true"
+                android:layout_gravity="center"
+                android:hint="@string/hint_search"
+                android:importantForAccessibility="yes"
+                android:inputType="text"
+                android:maxLines="1"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:textColor="@color/white"
+                android:textColorHint="#9C9C9C" />
 
-                <androidx.constraintlayout.widget.Group
-                    android:id="@+id/home_data"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:constraint_referenced_ids="daily_inspiration_label,rv_daily_inspiration,countries_label,rv_areas,categories_label,rvCategories" />
+            <LinearLayout
+                android:id="@+id/homeData"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-                <androidx.constraintlayout.widget.Guideline
-                    android:id="@+id/guideline_start"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    app:layout_constraintGuide_begin="16dp" />
-
-
-                <androidx.constraintlayout.widget.Guideline
-                    android:id="@+id/guideline_top"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    app:layout_constraintGuide_end="1598dp" />
-
-                <TextView
-                    android:id="@+id/hello_user"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Hello, Adam!"
-                    android:textColor="#9C9C9C"
-                    app:layout_constraintStart_toStartOf="@id/guideline_start"
-                    app:layout_constraintTop_toTopOf="@id/guideline_top" />
 
                 <TextView
-                    android:id="@+id/ready_to_plan_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="Ready to plan \nyour week?"
-                    android:textColor="@color/white"
-                    android:textSize="20sp"
-                    app:layout_constraintStart_toStartOf="@id/guideline_start"
-                    app:layout_constraintTop_toBottomOf="@id/hello_user" />
-
-                <EditText
-                    android:id="@+id/search_edit_text"
-                    android:drawableStart="@drawable/ic_arrow_back"
-                    android:layout_width="0dp"
-                    android:layout_height="56dp"
-                    android:layout_marginTop="36dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="16dp"
-                    android:background="@drawable/background_search"
-                    android:drawableEnd="@drawable/ic_search"
-                    android:drawablePadding="12dp"
-                    android:ellipsize="end"
-                    android:focusable="true"
-                    android:hint="categories, areas, ingredients"
-                    android:importantForAccessibility="yes"
-                    android:inputType="text"
-                    android:maxLines="1"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
-                    android:textColor="@color/white"
-                    android:textColorHint="#9C9C9C"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@id/guideline_start"
-                    app:layout_constraintTop_toBottomOf="@id/ready_to_plan_label" />
-
-                <TextView
-                    android:id="@+id/daily_inspiration_label"
                     style="@style/RecyclerViewTitleStyle"
+                    android:layout_margin="16dp"
                     android:layout_marginTop="16dp"
-                    android:text="@string/daily_inspiration"
-                    app:layout_constraintStart_toStartOf="@id/guideline_start"
-                    app:layout_constraintTop_toBottomOf="@id/search_edit_text" />
+                    android:text="@string/motivation_of_the_day" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_daily_inspiration"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginStart="16dp"
                     android:layout_marginTop="12dp"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="16dp"
                     android:orientation="horizontal"
-                    app:layoutManager="com.google.android.material.carousel.CarouselLayoutManager"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/daily_inspiration_label"
-                    tools:itemCount="3"
-                    tools:listitem="@layout/item_category" />
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:itemCount="1"
+                    tools:listitem="@layout/item_daily_inspiration" />
 
                 <TextView
-                    android:id="@+id/countries_label"
                     style="@style/RecyclerViewTitleStyle"
-                    android:text="@string/countries"
-                    app:layout_constraintStart_toStartOf="@id/guideline_start"
-                    app:layout_constraintTop_toBottomOf="@id/rv_daily_inspiration" />
+                    android:layout_margin="16dp"
+                    android:text="@string/countries" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_areas"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="16dp"
                     android:orientation="horizontal"
-                    android:paddingStart="4dp"
-                    android:paddingEnd="0dp"
+                    android:layout_marginStart="16dp"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/countries_label"
                     tools:listitem="@layout/item_area" />
 
                 <TextView
-                    android:id="@+id/categories_label"
                     style="@style/RecyclerViewTitleStyle"
-                    android:text="@string/categories"
-                    app:layout_constraintStart_toStartOf="@id/guideline_start"
-                    app:layout_constraintTop_toBottomOf="@id/rv_areas" />
+                    android:layout_margin="16dp"
+                    android:text="@string/categories" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvCategories"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginEnd="8dp"
-                    android:orientation="vertical"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/categories_label"
-                    app:spanCount="2" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvMealsSearch"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginTop="36dp"
-                    android:layout_marginEnd="8dp"
-                    android:visibility="gone"
+                    android:layout_marginBottom="16dp"
+                    android:nestedScrollingEnabled="false"
+                    android:orientation="vertical"
                     app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/search_edit_text"
-                    app:spanCount="4"
+                    app:spanCount="2"
+                    tools:itemCount="4"
                     tools:listitem="@layout/item_category" />
 
+            </LinearLayout>
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.core.widget.NestedScrollView>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvMealsSearch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="36dp"
+                android:layout_marginEnd="8dp"
+                android:visibility="gone"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:spanCount="4"
+                tools:listitem="@layout/item_category" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
 </layout>

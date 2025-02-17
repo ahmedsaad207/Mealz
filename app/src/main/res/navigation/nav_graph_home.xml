@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/favoriteFragment"
         android:name="com.example.mealz.view.favorite.FavoriteFragment"
-        android:label="FavoriteFragment" >
+        android:label="My Favorite Meals">
         <action
             android:id="@+id/action_favoriteFragment_to_mealDetailsFragment"
             app:destination="@id/mealDetailsFragment" />

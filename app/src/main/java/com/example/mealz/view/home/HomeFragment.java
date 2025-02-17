@@ -3,11 +3,11 @@ package com.example.mealz.view.home;
 import static com.example.mealz.utils.MealMapper.mapMealsToAreas;
 
 import android.annotation.SuppressLint;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -65,7 +65,7 @@ public class HomeFragment extends Fragment implements HomeView, OnMealItemClickL
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        hideBottomNavBar();
+        showBottomNavBar();
         init();
         setupRV();
         requestData();
@@ -87,6 +87,10 @@ public class HomeFragment extends Fragment implements HomeView, OnMealItemClickL
         binding.rvDailyInspiration.setHasFixedSize(true);
         binding.rvMealsSearch.setHasFixedSize(true);
         binding.rvAreas.setHasFixedSize(true);
+
+        int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
+        int areaItemWidth = (int) ((screenWidth - 64) / 4.5);
+        areaAdapter.setItemWidth(areaItemWidth);
     }
 
     private void requestData() {
@@ -103,9 +107,10 @@ public class HomeFragment extends Fragment implements HomeView, OnMealItemClickL
         searchAdapter = new MealAdapter<>(HomeFragment.this);
         drawableSearch = ContextCompat.getDrawable(requireActivity(), R.drawable.ic_search);
         drawableArrow = ContextCompat.getDrawable(requireActivity(), R.drawable.ic_arrow_back);
+        areaAdapter = new AreaAdapter(this);
     }
 
-    private void hideBottomNavBar() {
+    private void showBottomNavBar() {
         requireActivity().findViewById(R.id.bottomNavigationView).setVisibility(View.VISIBLE);
     }
 
@@ -163,6 +168,9 @@ public class HomeFragment extends Fragment implements HomeView, OnMealItemClickL
     private void setVisibilityForSearchResult(CharSequence s) {
         if (binding.rvMealsSearch != null) {
             binding.rvMealsSearch.setVisibility(s.toString().trim().isEmpty() ? View.INVISIBLE : View.VISIBLE);
+//            ViewGroup.LayoutParams params = binding.nestedScrollView.getLayoutParams();
+//            params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+//            binding.nestedScrollView.setLayoutParams(params);
         }
     }
 
@@ -209,7 +217,6 @@ public class HomeFragment extends Fragment implements HomeView, OnMealItemClickL
 
         List<Area> areas = mapMealsToAreas(meals, requireActivity());
         areas.forEach(meal -> searchList.add(new SearchItem(meal.getAreaName().toLowerCase(), meal.getImageResourceId(), 2)));
-        areaAdapter = new AreaAdapter(this);
         binding.rvAreas.setAdapter(areaAdapter);
         areaAdapter.submitList(areas);
     }
@@ -232,9 +239,9 @@ public class HomeFragment extends Fragment implements HomeView, OnMealItemClickL
 
     @Override
     public void displaySearchItems(List<SearchItem> items) {
-        Log.i("TAG", "displaySearchItems: "+items.size());
         if (binding.rvMealsSearch != null) {
             searchAdapter.submitList(items);
+            binding.rvMealsSearch.setAdapter(searchAdapter);
         }
     }
 
@@ -246,6 +253,11 @@ public class HomeFragment extends Fragment implements HomeView, OnMealItemClickL
     @Override
     public void navigateToMealsList(String name, int type) {
         Navigation.findNavController(binding.getRoot()).navigate(HomeFragmentDirections.actionHomeFragmentToMealsListFragment(name, type));
+    }
+
+    @Override
+    public void removeMealFromFavorites(Meal meal) {
+
     }
 
     @Override

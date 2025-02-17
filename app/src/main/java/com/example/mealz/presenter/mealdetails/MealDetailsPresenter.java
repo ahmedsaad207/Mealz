@@ -15,4 +15,7 @@ public interface MealDetailsPresenter {
     void downloadMealImage(Meal meal);
 
     void downloadIngredientImages(List<Ingredient> ingredients);
+
+    void isFavMealExist(long networkId);
+
 }

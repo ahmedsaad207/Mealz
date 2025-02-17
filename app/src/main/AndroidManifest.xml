@@ -16,15 +16,6 @@
             android:name=".view.HomeActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.LoginActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activities.HomeActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activities.RegisterActivity"
-            android:exported="false" />
-        <activity
             android:name=".view.AuthActivity"
             android:exported="true">
             <intent-filter>

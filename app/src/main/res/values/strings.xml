@@ -19,7 +19,18 @@
     <string name="sign_out">Sign Out</string>
     <string name="categories">Categories</string>
     <string name="countries">Countries</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="daily_inspiration">Daily Inspiration</string>
+    <string name="hint_search">categories, areas, ingredients</string>
+    <string name="motivation_of_the_day">Motivation of the Day</string>
+    <string name="hello_name">Hello, Adam!</string>
+    <string name="ready_to_plan_your_week">Ready to plan \nyour week?</string>
+    <string name="ingredient">Ingredients</string>
+    <string name="beef_popular_in">%s | Popular in  </string>
+    <string name="title_video">Delicious %s Recipe: Step-by-Step Cooking Guide</string>
+    <string name="favorite">favorite</string>
+    <string name="instructions">Instructions</string>
+    <string name="meal_image">Meal Image</string>
+    <string name="country_image">Country Image</string>
+    <string name="remove">remove</string>
 </resources>

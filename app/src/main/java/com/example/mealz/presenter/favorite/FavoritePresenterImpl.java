@@ -10,6 +10,7 @@ import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.annotations.NonNull;
+import io.reactivex.rxjava3.core.CompletableObserver;
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -64,5 +65,28 @@ public class FavoritePresenterImpl implements FavoritePresenter {
     @Override
     public String getIngredientFilePath(String imageUrl, String folder) {
         return repo.getIngredientFilePath(imageUrl, folder);
+    }
+
+    @Override
+    public void deleteMeal(Meal meal) {
+        repo.deleteMeal(meal)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        view.showError(e.getMessage());
+                    }
+                });
     }
 }

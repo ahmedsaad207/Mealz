@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface FavoriteView {
     void displayFavoriteMeals(List<Meal> meals);
+
+    void showError(String msg);
 }

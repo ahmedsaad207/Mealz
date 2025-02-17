@@ -23,10 +23,10 @@ public interface MealDao {
     @Delete
     Completable deleteMeal(Meal meal);
 
-    @Query("SELECT * FROM meals_table WHERE date == 0 AND userId == :userId")
+    @Query("SELECT * FROM meals_table WHERE date == 0 AND userId == :userId ORDER BY id DESC")
     Observable<List<Meal>> getFavoriteMeals(String userId);
 
-    @Query("SELECT * FROM meals_table WHERE date > 0 AND userId == :userId")
+    @Query("SELECT * FROM meals_table WHERE date > 0 AND userId == :userId ORDER BY id DESC")
     Observable<List<Meal>> getPlannedMeals(String userId);
 
     @Query("SELECT * FROM meals_table WHERE date == 0 AND userId == :userId AND networkId == :networkId")

@@ -65,6 +65,7 @@ public class MealDetailsPresenterImpl implements MealDetailsPresenter {
                     public void onSuccess(@NonNull Meal meal) {
                         downloadMealImage(meal);
                         downloadIngredientImages(meal.getIngredients());
+                        //view.onSuccess();
                     }
 
                     @Override
@@ -94,6 +95,7 @@ public class MealDetailsPresenterImpl implements MealDetailsPresenter {
                     public void onComplete() {
                         downloadMealImage(meal);
                         downloadIngredientImages(meal.getIngredients());
+                        view.onSuccess();
                     }
 
                     @Override
@@ -122,6 +124,29 @@ public class MealDetailsPresenterImpl implements MealDetailsPresenter {
                     @Override
                     public void onComplete() {
                         Log.d("TAG", "on download images Completed: ");
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+
+                    }
+                });
+    }
+
+    @Override
+    public void isFavMealExist(long networkId) {
+        repo.isFavMealExist("ahmed", networkId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<Meal>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(@NonNull Meal meal) {
+                        view.changeImageResourceForFav();
                     }
 
                     @Override

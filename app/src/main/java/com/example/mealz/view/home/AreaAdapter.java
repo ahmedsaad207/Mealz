@@ -1,6 +1,5 @@
 package com.example.mealz.view.home;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -18,6 +17,7 @@ import com.example.mealz.view.OnMealItemClickListener;
 
 public class AreaAdapter extends ListAdapter<Area, AreaAdapter.AreaViewHolder> {
     OnMealItemClickListener listener;
+    int itemWidth;
 
     public AreaAdapter(OnMealItemClickListener listener) {
         super(new DiffUtil.ItemCallback<>() {
@@ -39,13 +39,17 @@ public class AreaAdapter extends ListAdapter<Area, AreaAdapter.AreaViewHolder> {
     @NonNull
     @Override
     public AreaViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return AreaViewHolder.create(parent);
+        return AreaViewHolder.create(parent, itemWidth);
     }
 
     @Override
     public void onBindViewHolder(@NonNull AreaViewHolder holder, int position) {
         Area currentArea = getItem(position);
         holder.bind(currentArea, listener);
+    }
+
+    public void setItemWidth(int itemWidth) {
+        this.itemWidth = itemWidth;
     }
 
     static class AreaViewHolder extends RecyclerView.ViewHolder {
@@ -57,9 +61,13 @@ public class AreaAdapter extends ListAdapter<Area, AreaAdapter.AreaViewHolder> {
             this.binding = binding;
         }
 
-        public static AreaViewHolder create(ViewGroup parent) {
-            return new AreaViewHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()),
-                    R.layout.item_area, parent, false));
+        public static AreaViewHolder create(ViewGroup parent, int itemWidth) {
+            ItemAreaBinding b = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()),
+                    R.layout.item_area, parent, false);
+            RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) b.getRoot().getLayoutParams();
+            params.width = itemWidth;
+            b.getRoot().setLayoutParams(params);
+            return new AreaViewHolder(b);
         }
 
         public void bind(Area area, OnMealItemClickListener listener) {

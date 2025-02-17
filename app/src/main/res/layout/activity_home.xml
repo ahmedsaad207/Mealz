@@ -35,7 +35,7 @@
                 android:background="@android:color/transparent"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
-                app:navigationIcon="@drawable/ic_arrow_back_bg"
+                app:navigationIcon="@drawable/ic_arrow_back"
                 app:titleTextColor="@color/white" />
         </FrameLayout>
 

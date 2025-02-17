@@ -23,6 +23,24 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/btnRemoveFav"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:backgroundTint="@color/white"
+                android:contentDescription="@string/remove"
+                app:elevation="8dp"
+                app:fabCustomSize="36dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:maxImageSize="18dp"
+                app:rippleColor="#E5DADA"
+                app:shapeAppearanceOverlay="@style/FloatingActionButtonStyle"
+                app:srcCompat="@drawable/ic_bookmark_remove"
+                app:tint="@color/brownish_gray" />
+
             <ImageView
                 android:id="@+id/mealImageView"
                 android:layout_width="match_parent"

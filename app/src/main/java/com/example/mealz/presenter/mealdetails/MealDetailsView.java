@@ -7,4 +7,9 @@ import java.util.List;
 
 public interface MealDetailsView {
     void displayMeal(Meal meal);
+    void onSuccess();
+
+    void insertMeal();
+
+    void changeImageResourceForFav();
 }

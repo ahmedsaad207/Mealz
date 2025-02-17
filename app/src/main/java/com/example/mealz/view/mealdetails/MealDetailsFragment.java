@@ -4,9 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
@@ -18,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import com.bumptech.glide.Glide;
 import com.example.mealz.R;
@@ -33,6 +31,7 @@ import com.example.mealz.presenter.mealdetails.MealDetailsPresenterImpl;
 import com.example.mealz.presenter.mealdetails.MealDetailsView;
 import com.example.mealz.utils.Constants;
 import com.example.mealz.utils.Utils;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Calendar;
 import java.util.List;
@@ -55,11 +54,12 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setHasOptionsMenu(true);
         ActionBar actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
+        setListeners();
         if (actionBar != null) {
             actionBar.setTitle("");
-
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(true);
         }
 
         presenter = new MealDetailsPresenterImpl(
@@ -85,6 +85,26 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
         }
     }
 
+    private void setListeners() {
+        binding.btnBack.setOnClickListener(v -> {
+            Navigation.findNavController(binding.getRoot()).navigateUp();
+        });
+
+        binding.btnPlan.setOnClickListener(v -> {
+            showDatePickerDialog();
+        });
+
+        binding.btnFav.setOnClickListener(v ->
+        {
+            if (currentMeal.getDate() == Constants.TYPE_FAVORITE) {
+                showMessage("Already Added!");
+                return;
+            }
+            currentMeal.setDate(Constants.TYPE_FAVORITE);
+            presenter.insertFavMeal(currentMeal);
+        });
+    }
+
     @SuppressLint("SetJavaScriptEnabled")
     private void prepareVideoPlayer() {
         binding.webView.getSettings().setJavaScriptEnabled(true);
@@ -97,6 +117,7 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
             binding.webView.loadData(Utils.getVideoIframe(youtubeUrl), "text/html", "UTF-8");
         } else {
             binding.webView.setVisibility(View.GONE);
+            binding.videoLabel.setVisibility(View.GONE);
         }
     }
 
@@ -104,24 +125,6 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
         adapter = new IngredientAdapter();
         adapter.submitList(ingredients);
         binding.rvIngredients.setAdapter(adapter);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_home, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.action_save) {
-            currentMeal.setDate(Constants.TYPE_FAVORITE);
-            presenter.insertFavMeal(currentMeal);
-            return true;
-        } else if (item.getItemId() == R.id.action_plan) {
-            showDatePickerDialog();
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     public void showDatePickerDialog() {
@@ -147,13 +150,51 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
 
     @Override
     public void displayMeal(Meal meal) {
+        binding.groupFab.setVisibility(View.VISIBLE);
         currentMeal = meal;
         binding.mealNameTextView.setText(meal.getName());
-        binding.mealCategoryTextView.setText(meal.getCategory());
+        binding.mealCategoryTextView.setText(getString(R.string.beef_popular_in, meal.getCategory()));
+        binding.videoLabel.setText(getString(R.string.title_video, meal.getName()));
         binding.mealInstructionsTextView.setText(meal.getInstructions());
-        binding.mealAreaTextView.setText(meal.getArea());
+        binding.areaTextView.setText(meal.getArea());
         displayYoutube(meal.getYoutubeUrl());
+        binding.areaImageView.setImageResource(Utils.getDrawableResourceForCountry(meal.getArea(), requireActivity()));
         Glide.with(binding.mealImage.getContext()).load(meal.getUrlImage()).into(binding.mealImage);
         displayIngredients(meal.getIngredients());
+
+        if (meal.getDate() == Constants.TYPE_FAVORITE) {
+            binding.btnFav.setImageResource(R.drawable.ic_bookmark_added);
+        } else {
+            presenter.isFavMealExist(meal.getNetworkId());
+        }
+    }
+
+    @Override
+    public void onSuccess() {
+        if (currentMeal.getDate() == Constants.TYPE_FAVORITE) {
+            showMessage("Added Successfully to Your Favorites!");
+            binding.btnFav.setImageResource(R.drawable.ic_bookmark_added);
+        } else if (currentMeal.getDate() == Constants.TYPE_DEFAULT) {
+
+        } else {
+            showMessage("Added Successfully to Your Plan!");
+        }
+    }
+
+    @Override
+    public void insertMeal() {
+        presenter.insertMeal(currentMeal);
+    }
+
+    @Override
+    public void changeImageResourceForFav() {
+        currentMeal.setDate(Constants.TYPE_FAVORITE);
+        binding.btnFav.setImageResource(R.drawable.ic_bookmark_added);
+    }
+
+    private void showMessage(String message) {
+        if (getView() != null) {
+            Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT).show();
+        }
     }
 }

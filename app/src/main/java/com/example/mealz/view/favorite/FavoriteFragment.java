@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
@@ -23,6 +25,7 @@ import com.example.mealz.presenter.favorite.FavoritePresenterImpl;
 import com.example.mealz.presenter.favorite.FavoriteView;
 import com.example.mealz.view.MealAdapter;
 import com.example.mealz.view.OnMealItemClickListener;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
@@ -43,21 +46,48 @@ public class FavoriteFragment extends Fragment implements FavoriteView, OnMealIt
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        showBottomNavBar();
+        setupToolBar();
+        init();
+        presenter.getFavoriteMeals("ahmed");
+
+    }
+
+    private void setupToolBar() {
+        ActionBar actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle("My Favorite Meals");
+            actionBar.setDisplayHomeAsUpEnabled(false);
+            actionBar.setDisplayShowHomeEnabled(false);
+        }
+
+    }
+
+    private void init() {
         presenter = new FavoritePresenterImpl(MealsRepositoryImpl.getInstance(
                 MealsRemoteDataSourceImpl.getInstance(),
                 MealsLocalDataSourceImpl.getInstance(requireActivity()),
                 MealFileDataSourceImpl.getInstance(requireActivity())
         ), this);
+        adapter = new MealAdapter<>(this);
 
-        presenter.getFavoriteMeals("ahmed");
+    }
 
+    private void showBottomNavBar() {
+        requireActivity().findViewById(R.id.bottomNavigationView).setVisibility(View.VISIBLE);
     }
 
     @Override
     public void displayFavoriteMeals(List<Meal> meals) {
-        adapter = new MealAdapter<>(this);
         adapter.submitList(meals);
         binding.rvFavMeals.setAdapter(adapter);
+    }
+
+    @Override
+    public void showError(String msg) {
+        if (getView() != null) {
+            Snackbar.make(getView(), msg, Snackbar.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -68,5 +98,10 @@ public class FavoriteFragment extends Fragment implements FavoriteView, OnMealIt
     @Override
     public void navigateToMealsList(String name, int type) {
 
+    }
+
+    @Override
+    public void removeMealFromFavorites(Meal meal) {
+        presenter.deleteMeal(meal);
     }
 }

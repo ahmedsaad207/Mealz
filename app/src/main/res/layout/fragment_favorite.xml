@@ -9,17 +9,18 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingTop="?attr/actionBarSize"
+        android:background="@color/brownish_gray">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_fav_meals"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/brownish_gray"
             android:padding="4dp"
-            tools:listitem="@layout/item_meal"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:spanCount="2" />
+            app:spanCount="2"
+            tools:listitem="@layout/item_meal" />
     </FrameLayout>
 
 

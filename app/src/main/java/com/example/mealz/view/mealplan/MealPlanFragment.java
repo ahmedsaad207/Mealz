@@ -18,7 +18,6 @@ import com.example.mealz.data.local.MealsLocalDataSourceImpl;
 import com.example.mealz.data.remote.MealsRemoteDataSourceImpl;
 import com.example.mealz.databinding.FragmentMealPlanBinding;
 import com.example.mealz.model.Meal;
-import com.example.mealz.model.SearchItem;
 import com.example.mealz.presenter.mealplan.MealPlanPresenter;
 import com.example.mealz.presenter.mealplan.MealPlanPresenterImpl;
 import com.example.mealz.presenter.mealplan.MealPlanView;
@@ -56,6 +55,7 @@ public class MealPlanFragment extends Fragment implements OnDayItemClickListener
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        showBottomNavBar();
 
         presenter = new MealPlanPresenterImpl(
                 MealsRepositoryImpl.getInstance(MealsRemoteDataSourceImpl.getInstance(),
@@ -73,6 +73,10 @@ public class MealPlanFragment extends Fragment implements OnDayItemClickListener
         dayAdapter = new DayAdapter(this, days);
         binding.rvDays.setAdapter(dayAdapter);
         presenter.getPlannedMeals("ahmed");
+    }
+
+    private void showBottomNavBar() {
+        requireActivity().findViewById(R.id.bottomNavigationView).setVisibility(View.VISIBLE);
     }
 
     private void fillCurrentWeekList(List<Meal> meals) {
@@ -131,6 +135,11 @@ public class MealPlanFragment extends Fragment implements OnDayItemClickListener
 
     @Override
     public void navigateToMealsList(String name, int type) {
+
+    }
+
+    @Override
+    public void removeMealFromFavorites(Meal meal) {
 
     }
 }

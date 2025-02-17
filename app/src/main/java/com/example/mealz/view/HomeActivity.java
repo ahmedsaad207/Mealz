@@ -27,6 +27,11 @@ public class HomeActivity extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
 
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.navHostFragmentHome);
+
+        if (navHostFragment == null) {
+            return;
+        }
+
         navController = navHostFragment.getNavController();
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
 
@@ -40,9 +45,8 @@ public class HomeActivity extends AppCompatActivity {
             }
             return NavigationUI.onNavDestinationSelected(item, navController);
         });
-
         navController.addOnDestinationChangedListener((nc, navDestination, bundle) -> {
-            if (navDestination.getId() == R.id.mealsListFragment || navDestination.getId() == R.id.mealDetailsFragment) {
+            if (navDestination.getId() == R.id.mealsListFragment || navDestination.getId() == R.id.favoriteFragment) {
                 toolbar.setVisibility(View.VISIBLE);
             } else {
                 toolbar.setVisibility(View.GONE);

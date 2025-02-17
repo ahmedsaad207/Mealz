@@ -1,5 +1,6 @@
 package com.example.mealz.view;
 
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,7 @@ import com.example.mealz.R;
 import com.example.mealz.model.Meal;
 import com.example.mealz.model.SearchItem;
 import com.example.mealz.utils.Constants;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class MealAdapter<T> extends ListAdapter<T, MealAdapter.MealViewHolder> {
     OnMealItemClickListener onMealItemClickListener;
@@ -50,6 +52,7 @@ public class MealAdapter<T> extends ListAdapter<T, MealAdapter.MealViewHolder> {
     @NonNull
     @Override
     public MealViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        Log.i("TAG", "onCreateViewHolder: from Meal adapter");
         return MealViewHolder.create(parent);
     }
 
@@ -69,12 +72,14 @@ public class MealAdapter<T> extends ListAdapter<T, MealAdapter.MealViewHolder> {
         TextView mealNameTextView;
         ImageView mealImageView;
         ConstraintLayout constraintLayout;
+        FloatingActionButton btnRemove;
 
         public MealViewHolder(@NonNull View view) {
             super(view);
             mealNameTextView = view.findViewById(R.id.mealNameTextView);
             mealImageView = view.findViewById(R.id.mealImageView);
             constraintLayout = view.findViewById(R.id.constraintLayout_item);
+            btnRemove = view.findViewById(R.id.btnRemoveFav);
         }
 
         public static MealViewHolder create(ViewGroup parent) {
@@ -93,6 +98,11 @@ public class MealAdapter<T> extends ListAdapter<T, MealAdapter.MealViewHolder> {
                     .load(meal.getUrlImage())
                     .apply(RequestOptions.bitmapTransform(new RoundedCorners(30)))
                     .into(mealImageView);
+
+            if (meal.getDate() == Constants.TYPE_FAVORITE) {
+                btnRemove.setVisibility(View.VISIBLE);
+                btnRemove.setOnClickListener(v -> onMealItemClickListener.removeMealFromFavorites(meal));
+            }
         }
 
         public void bindSearchItem(SearchItem item, OnMealItemClickListener onMealItemClickListener) {

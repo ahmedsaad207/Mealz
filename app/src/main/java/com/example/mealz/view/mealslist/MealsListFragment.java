@@ -43,7 +43,7 @@ public class MealsListFragment extends Fragment implements MealsListView, OnMeal
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        requireActivity().findViewById(R.id.bottomNavigationView).setVisibility(View.GONE);
+        hideBottomNavBar();
         ActionBar actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
 
         presenter = new MealsListPresenterImpl(MealsRepositoryImpl.getInstance(MealsRemoteDataSourceImpl.getInstance(), MealsLocalDataSourceImpl.getInstance(requireActivity()), MealFileDataSourceImpl.getInstance(requireActivity())), this);
@@ -66,9 +66,19 @@ public class MealsListFragment extends Fragment implements MealsListView, OnMeal
             title = "";
         }
 
+        setupToolBar(actionBar, title);
+    }
+
+    private static void setupToolBar(ActionBar actionBar, String title) {
         if (actionBar != null) {
             actionBar.setTitle(title);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(true);
         }
+    }
+
+    private void hideBottomNavBar() {
+        requireActivity().findViewById(R.id.bottomNavigationView).setVisibility(View.GONE);
     }
 
     @Override
@@ -85,6 +95,11 @@ public class MealsListFragment extends Fragment implements MealsListView, OnMeal
 
     @Override
     public void navigateToMealsList(String name, int type) {
+
+    }
+
+    @Override
+    public void removeMealFromFavorites(Meal meal) {
 
     }
 
