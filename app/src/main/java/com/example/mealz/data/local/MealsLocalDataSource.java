@@ -18,4 +18,6 @@ public interface MealsLocalDataSource {
     Observable<List<Meal>> getPlannedMeals(String userId);
 
     Single<Meal> isFavMealExist(String userId, long networkMealId);
+
+    Completable insertAllMeal(List<Meal> meal);
 }

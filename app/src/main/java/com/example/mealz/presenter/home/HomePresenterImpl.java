@@ -9,6 +9,11 @@ import com.example.mealz.model.Meal;
 import com.example.mealz.model.MealzResponse;
 import com.example.mealz.model.SearchItem;
 import com.example.mealz.utils.MealMapper;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,8 +21,12 @@ import java.util.stream.Collectors;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.annotations.NonNull;
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.CompletableObserver;
+import io.reactivex.rxjava3.core.CompletableSource;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Observer;
+import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.core.SingleObserver;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -202,5 +211,129 @@ public class HomePresenterImpl implements HomePresenter {
                     }
                 });
 
+    }
+
+    @Override
+    public void insertAllMeal(List<Meal> meals) {
+//        repo.isFavMealExist();
+
+        repo.insertAllMeal(meals)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+
+                    }
+                });
+    }
+
+    public Completable checkAndInsertMeals(List<Meal> meals, String userId, long networkId) {
+        List<Meal> mealsToInsert = new ArrayList<>();
+
+//        return Single.fromCallable(() -> {
+//                    meals.forEach(meal -> {
+//                        repo.isFavMealExist(meal.getUserId(), meal.getNetworkId())
+//                                .subscribeOn(Schedulers.io())
+//                                .observeOn(Schedulers.computation())
+//                                .subscribe(new SingleObserver<Meal>() {
+//                                    @Override
+//                                    public void onSubscribe(@NonNull Disposable d) {
+//
+//                                    }
+//
+//                                    @Override
+//                                    public void onSuccess(@NonNull Meal existingMeal) {
+//                                        if (existingMeal == null) {
+//                                            mealsToInsert.add(meal);
+//                                        }
+//                                    }
+//
+//                                    @Override
+//                                    public void onError(@NonNull Throwable e) {
+//                                        Log.d("TAG", "onError: meal already inserted, network id= " + meal.getNetworkId());
+//                                    }
+//                                });
+//
+//                    };
+//                    return mealsToInsert;
+//                })
+//                .flatMapCompletable(this::apply);
+
+        return null;
+    }
+
+
+    @Override
+    public void getUserId() {
+        repo.getUserId()
+                .subscribeOn(io.reactivex.schedulers.Schedulers.io())
+                .observeOn(io.reactivex.android.schedulers.AndroidSchedulers.mainThread())
+                .subscribe(new io.reactivex.Observer<>() {
+                    @Override
+                    public void onSubscribe(io.reactivex.disposables.Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(String userId) {
+                        // TODO
+//                        view.displayUserName(username);
+                        retrieveBackupMeals(userId);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+    public void retrieveBackupMeals(String userId) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("users");
+
+        myRef.child(userId).child("favorites").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@androidx.annotation.NonNull DataSnapshot snapshot) {
+                List<Meal> meals = new ArrayList<>();
+                for (DataSnapshot mealSnapShot : snapshot.getChildren()) {
+                    meals.add(mealSnapShot.getValue(Meal.class));
+                }
+
+                insertAllMeal(meals);
+
+                Log.d("TAG", "onDataChange: list from firebase size" + meals.size());
+            }
+
+            @Override
+            public void onCancelled(@androidx.annotation.NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
+    private CompletableSource apply(List<Meal> nonExistingMeals) {
+        if (!nonExistingMeals.isEmpty()) {
+//            return insertAllMeal(nonExistingMeals);
+        } else {
+            return Completable.complete();
+        }
     }
 }

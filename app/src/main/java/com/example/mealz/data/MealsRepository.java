@@ -58,4 +58,6 @@ public interface MealsRepository {
     void setRememberMe(boolean value);
 
     io.reactivex.Observable<Boolean> getRememberMe();
+
+    Completable insertAllMeal(List<Meal> meals);
 }

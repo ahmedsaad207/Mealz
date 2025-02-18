@@ -34,6 +34,7 @@ import com.example.mealz.model.Category;
 import com.example.mealz.model.Ingredient;
 import com.example.mealz.model.Meal;
 import com.example.mealz.model.SearchItem;
+import com.example.mealz.presenter.home.HomePresenter;
 import com.example.mealz.presenter.home.HomePresenterImpl;
 import com.example.mealz.presenter.home.HomeView;
 import com.example.mealz.utils.Constants;
@@ -52,7 +53,7 @@ public class HomeFragment extends Fragment implements HomeView, OnMealItemClickL
     CategoryAdapter categoryAdapter;
     DailyInspirationAdapter dailyInspirationAdapter;
     AreaAdapter areaAdapter;
-    HomePresenterImpl presenter;
+    HomePresenter presenter;
     MealAdapter<SearchItem> searchAdapter;
 
 
@@ -105,6 +106,7 @@ public class HomeFragment extends Fragment implements HomeView, OnMealItemClickL
     }
 
     private void requestData() {
+        presenter.getUserId();
         presenter.getRandomMeal();
         presenter.getCategories();
         presenter.getAreas();
@@ -289,8 +291,4 @@ public class HomeFragment extends Fragment implements HomeView, OnMealItemClickL
 
     }
 
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
 }

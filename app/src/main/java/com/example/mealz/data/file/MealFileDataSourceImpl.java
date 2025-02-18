@@ -29,7 +29,7 @@ public class MealFileDataSourceImpl implements MealFileDataSource {
     private final Context context;
 
     private MealFileDataSourceImpl(Context context) {
-        this.context = context;
+        this.context = context.getApplicationContext();
     }
 
     public static MealFileDataSourceImpl getInstance(Context context) {
@@ -52,7 +52,6 @@ public class MealFileDataSourceImpl implements MealFileDataSource {
         if (file.exists()) {
             return;
         }
-
 
         Glide.
                 with(context)

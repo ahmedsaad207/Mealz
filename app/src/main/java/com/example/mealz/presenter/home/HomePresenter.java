@@ -6,6 +6,7 @@ import com.example.mealz.model.SearchItem;
 
 import java.util.List;
 
+import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Single;
 
 public interface HomePresenter {
@@ -22,4 +23,8 @@ public interface HomePresenter {
     void setList(List<SearchItem> searchList);
 
     void getUsername();
+
+    void insertAllMeal(List<Meal> meals);
+
+    void getUserId();
 }

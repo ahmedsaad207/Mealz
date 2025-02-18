@@ -20,6 +20,9 @@ public interface MealDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     Completable insertMeal(Meal meal);
 
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    Completable insertAllMeal(List<Meal> meal);
+
     @Query("DELETE FROM meals_table WHERE networkId == :networkId AND userId == :userId")
     Completable deleteMeal(long networkId, String userId);
 

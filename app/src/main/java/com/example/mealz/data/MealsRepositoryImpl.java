@@ -160,4 +160,9 @@ public class MealsRepositoryImpl implements MealsRepository {
     public io.reactivex.Observable<Boolean> getRememberMe() {
         return userLocalDataSource.getRememberMe();
     }
+
+    @Override
+    public Completable insertAllMeal(List<Meal> meals) {
+        return localSource.insertAllMeal(meals);
+    }
 }
