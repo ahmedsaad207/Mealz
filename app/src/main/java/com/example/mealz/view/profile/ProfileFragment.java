@@ -2,6 +2,7 @@ package com.example.mealz.view.profile;
 
 import static android.content.Context.MODE_PRIVATE;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import com.example.mealz.R;
 import com.example.mealz.data.MealsRepositoryImpl;
@@ -25,7 +27,7 @@ import com.example.mealz.presenter.profile.ProfilePresenterImpl;
 import com.example.mealz.utils.Constants;
 import com.f2prateek.rx.preferences2.RxSharedPreferences;
 
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends Fragment implements ProfileView{
 
     FragmentProfileBinding binding;
 
@@ -59,7 +61,7 @@ public class ProfileFragment extends Fragment {
                 UserLocalDataSourceImpl.getInstance(
                         RxSharedPreferences.create(requireActivity().getSharedPreferences(Constants.SP_CREDENTIAL, MODE_PRIVATE))
                 )
-        ));
+        ),this);
 
         binding.btnLogout.setOnClickListener(v -> {
             presenter.clearUserId();
@@ -67,5 +69,23 @@ public class ProfileFragment extends Fragment {
             presenter.setRememberMe(false);
             listener.onLogout();
         });
+        presenter.getUsername();
+    }
+
+    @Override
+    public void displayUserName(String username) {
+        if (username.isEmpty()) {
+            new AlertDialog.Builder(requireActivity())
+                    .setMessage("You need to sign up to add meals to your favorites, plan and more features.")
+                    .setNegativeButton("Cancel",(dialog, which) -> {
+                        Navigation.findNavController(binding.getRoot()).navigateUp();
+                    })
+                    .setPositiveButton("Sign up", (dialog, which) -> {
+                        listener.onLogout();
+                    })
+                    .setCancelable(false)
+                    .create()
+                    .show();
+        }
     }
 }

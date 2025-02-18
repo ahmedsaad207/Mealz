@@ -55,6 +55,7 @@ public class HomeFragment extends Fragment implements HomeView, OnMealItemClickL
     HomePresenterImpl presenter;
     MealAdapter<SearchItem> searchAdapter;
 
+
     String key;
     Drawable drawableSearch, drawableArrow;
 
@@ -242,7 +243,7 @@ public class HomeFragment extends Fragment implements HomeView, OnMealItemClickL
         }
         binding.rvDailyInspiration.setAdapter(dailyInspirationAdapter);
         dailyInspirationAdapter.submitList(meals);
-        if (!meals.isEmpty() && binding.loadingHome != null && binding.homeData != null && binding.searchEditText != null){
+        if (!meals.isEmpty() && binding.loadingHome != null && binding.homeData != null && binding.searchEditText != null) {
             binding.loadingHome.setVisibility(View.GONE);
             binding.homeData.setVisibility(View.VISIBLE);
             binding.searchEditText.setVisibility(View.VISIBLE);
@@ -268,7 +269,7 @@ public class HomeFragment extends Fragment implements HomeView, OnMealItemClickL
     public void displayUserName(String username) {
         if (getContext() != null && binding.helloUser != null && !username.isEmpty()) {
             binding.helloUser.setText(getContext().getString(R.string.hello_name, username));
-        } else if (getContext() != null && binding.helloUser != null) {
+        } else if (getContext() != null && binding.helloUser != null && username.isEmpty()) {
             binding.helloUser.setText(getContext().getString(R.string.hello_name, "Guest"));
         }
     }

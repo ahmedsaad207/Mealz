@@ -9,4 +9,6 @@ public interface FavoritePresenter {
 
     String getIngredientFilePath(String imageUrl, String folder);
     void deleteMeal(Meal meal);
+
+    void getUserId();
 }

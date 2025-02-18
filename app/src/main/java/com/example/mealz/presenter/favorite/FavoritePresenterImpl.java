@@ -25,6 +25,7 @@ public class FavoritePresenterImpl implements FavoritePresenter {
     public FavoritePresenterImpl(MealsRepositoryImpl repo, FavoriteView view) {
         this.repo = repo;
         this.view = view;
+        getUserId();
     }
 
     @Override
@@ -115,6 +116,34 @@ public class FavoritePresenterImpl implements FavoritePresenter {
                     @Override
                     public void onError(@NonNull Throwable e) {
                         view.showError(e.getMessage());
+                    }
+                });
+    }
+
+    @Override
+    public void getUserId() {
+        repo.getUserId()
+                .subscribeOn(io.reactivex.schedulers.Schedulers.io())
+                .observeOn(io.reactivex.android.schedulers.AndroidSchedulers.mainThread())
+                .subscribe(new io.reactivex.Observer<>() {
+                    @Override
+                    public void onSubscribe(io.reactivex.disposables.Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(String username) {
+                        view.onUserId(username);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
                     }
                 });
     }

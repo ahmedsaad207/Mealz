@@ -2,6 +2,8 @@ package com.example.mealz.view.mealplan;
 
 import static android.content.Context.MODE_PRIVATE;
 
+import android.app.AlertDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +29,7 @@ import com.example.mealz.presenter.mealplan.MealPlanView;
 import com.example.mealz.utils.Constants;
 import com.example.mealz.view.MealAdapter;
 import com.example.mealz.view.OnMealItemClickListener;
+import com.example.mealz.view.OnSignUpClickListener;
 import com.f2prateek.rx.preferences2.RxSharedPreferences;
 
 import java.text.DateFormat;
@@ -48,6 +51,16 @@ public class MealPlanFragment extends Fragment implements OnDayItemClickListener
     MealPlanPresenter presenter;
     MealAdapter<Meal> mealAdapter;
     List<Integer> days;
+
+    OnSignUpClickListener onSignUpClickListener;
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof OnSignUpClickListener) {
+            onSignUpClickListener = (OnSignUpClickListener) context;
+        }
+    }
 
 
     @Override
@@ -160,8 +173,19 @@ public class MealPlanFragment extends Fragment implements OnDayItemClickListener
     public void displayUserName(String username) {
         if (getContext() != null && !username.isEmpty()) {
             binding.helloUser.setText(getContext().getString(R.string.hello_name, username));
-        } else if (getContext() != null) {
+        } else if (getContext() != null && username.isEmpty()) {
             binding.helloUser.setText(getContext().getString(R.string.hello_name, "Guest"));
+            new AlertDialog.Builder(requireActivity())
+                    .setMessage("You need to sign up to add meals to your favorites, plan and more features.")
+                    .setNegativeButton("Cancel", (dialog, which) -> {
+                        Navigation.findNavController(binding.getRoot()).navigateUp();
+                    })
+                    .setPositiveButton("Sign up", (dialog, which) -> {
+                        onSignUpClickListener.onSignUp();
+                    })
+                    .setCancelable(false)
+                    .create()
+                    .show();
         }
     }
 
@@ -180,4 +204,5 @@ public class MealPlanFragment extends Fragment implements OnDayItemClickListener
     public void removeMealFromFavorites(Meal meal) {
 
     }
+
 }

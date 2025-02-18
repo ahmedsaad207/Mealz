@@ -161,27 +161,28 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
 
     @Override
     public void displayMeal(Meal meal) {
-        if (meal != null ){
+        if (meal != null) {
+            presenter.getUserId();
             binding.loadingDetails.setVisibility(View.GONE);
             binding.contentDetails.setVisibility(View.VISIBLE);
-        }
+            binding.groupFab.setVisibility(View.VISIBLE);
 
-        binding.groupFab.setVisibility(View.VISIBLE);
-        currentMeal = meal;
-        binding.mealNameTextView.setText(meal.getName());
-        binding.mealCategoryTextView.setText(getString(R.string.beef_popular_in, meal.getCategory()));
-        binding.videoLabel.setText(getString(R.string.title_video, meal.getName()));
-        binding.mealInstructionsTextView.setText(meal.getInstructions());
-        binding.areaTextView.setText(meal.getArea());
-        displayYoutube(meal.getYoutubeUrl());
-        binding.areaImageView.setImageResource(Utils.getDrawableResourceForCountry(meal.getArea(), requireActivity()));
-        Glide.with(binding.mealImage.getContext()).load(meal.getUrlImage()).into(binding.mealImage);
-        displayIngredients(meal.getIngredients());
+            currentMeal = meal;
+            binding.mealNameTextView.setText(meal.getName());
+            binding.mealCategoryTextView.setText(getString(R.string.beef_popular_in, meal.getCategory()));
+            binding.videoLabel.setText(getString(R.string.title_video, meal.getName()));
+            binding.mealInstructionsTextView.setText(meal.getInstructions());
+            binding.areaTextView.setText(meal.getArea());
+            displayYoutube(meal.getYoutubeUrl());
+            binding.areaImageView.setImageResource(Utils.getDrawableResourceForCountry(meal.getArea(), requireActivity()));
+            Glide.with(binding.mealImage.getContext()).load(meal.getUrlImage()).into(binding.mealImage);
+            displayIngredients(meal.getIngredients());
 
-        if (meal.getDate() == Constants.TYPE_FAVORITE) {
-            binding.btnFav.setImageResource(R.drawable.ic_fav_added);
-        } else {
-            presenter.isFavMealExist(meal.getNetworkId());
+            if (meal.getDate() == Constants.TYPE_FAVORITE) {
+                binding.btnFav.setImageResource(R.drawable.ic_fav_added);
+            } else {
+                presenter.isFavMealExist(meal.getNetworkId());
+            }
         }
     }
 
@@ -207,6 +208,13 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
     public void changeImageResourceForFav() {
         currentMeal.setDate(Constants.TYPE_FAVORITE);
         binding.btnFav.setImageResource(R.drawable.ic_fav_added);
+    }
+
+    @Override
+    public void onUserId(String userId) {
+        if (userId.isEmpty()) {
+            binding.groupFab.setVisibility(View.GONE);
+        }
     }
 
     private void showMessage(String message) {

@@ -2,6 +2,8 @@ package com.example.mealz.view.favorite;
 
 import static android.content.Context.MODE_PRIVATE;
 
+import android.app.AlertDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,6 +32,8 @@ import com.example.mealz.presenter.favorite.FavoriteView;
 import com.example.mealz.utils.Constants;
 import com.example.mealz.view.MealAdapter;
 import com.example.mealz.view.OnMealItemClickListener;
+import com.example.mealz.view.OnSignUpClickListener;
+import com.example.mealz.view.profile.OnLogoutListener;
 import com.f2prateek.rx.preferences2.RxSharedPreferences;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -40,6 +44,16 @@ public class FavoriteFragment extends Fragment implements FavoriteView, OnMealIt
     FragmentFavoriteBinding binding;
     MealAdapter<Meal> adapter;
     FavoritePresenter presenter;
+
+    OnSignUpClickListener onSignUpClickListener;
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof OnSignUpClickListener) {
+            onSignUpClickListener = (OnSignUpClickListener) context;
+        }
+    }
 
 
     @Override
@@ -109,6 +123,23 @@ public class FavoriteFragment extends Fragment implements FavoriteView, OnMealIt
     }
 
     @Override
+    public void onUserId(String userId) {
+        if (userId.isEmpty()) {
+            new AlertDialog.Builder(requireActivity())
+                    .setMessage("You need to sign up to add meals to your favorites, plan and more features.")
+                    .setNegativeButton("Cancel",(dialog, which) -> {
+                        Navigation.findNavController(binding.getRoot()).navigateUp();
+                    })
+                    .setPositiveButton("Sign up", (dialog, which) -> {
+                        onSignUpClickListener.onSignUp();
+                    })
+                    .setCancelable(false)
+                    .create()
+                    .show();
+        }
+    }
+
+    @Override
     public void navigateToMealDetails(Meal meal) {
         Navigation.findNavController(binding.getRoot()).navigate(FavoriteFragmentDirections.actionFavoriteFragmentToMealDetailsFragment(meal));
     }
@@ -122,4 +153,5 @@ public class FavoriteFragment extends Fragment implements FavoriteView, OnMealIt
     public void removeMealFromFavorites(Meal meal) {
         presenter.deleteMeal(meal);
     }
+
 }

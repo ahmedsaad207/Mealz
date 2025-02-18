@@ -1,6 +1,11 @@
 package com.example.mealz.view.splash;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -8,12 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
-import android.os.Handler;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
 import com.example.mealz.R;
+import com.example.mealz.view.AuthActivity;
 
 public class SplashFragment extends Fragment {
 
@@ -27,9 +28,17 @@ public class SplashFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        new Handler().postDelayed(() -> {
+        boolean state = ((AuthActivity) requireActivity()).navigateToSignUp;
+
+        if (state) {
             Navigation.findNavController(view).navigate(SplashFragmentDirections.actionSplashFragmentToAuthOptionsFragment());
-        },3000);
+            return;
+        }
+
+        new Handler().postDelayed(() -> {
+
+            Navigation.findNavController(view).navigate(SplashFragmentDirections.actionSplashFragmentToAuthOptionsFragment());
+        }, 3000);
 
         ((AppCompatActivity) requireActivity()).getSupportActionBar().hide();
     }
