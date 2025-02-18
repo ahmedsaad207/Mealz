@@ -66,6 +66,9 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
             actionBar.setDisplayShowHomeEnabled(true);
         }
 
+        binding.contentDetails.setVisibility(View.GONE);
+        binding.loadingDetails.setVisibility(View.VISIBLE);
+
         presenter = new MealDetailsPresenterImpl(
                 MealsRepositoryImpl.getInstance(
                         MealsRemoteDataSourceImpl.getInstance(),
@@ -158,6 +161,11 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
 
     @Override
     public void displayMeal(Meal meal) {
+        if (meal != null ){
+            binding.loadingDetails.setVisibility(View.GONE);
+            binding.contentDetails.setVisibility(View.VISIBLE);
+        }
+
         binding.groupFab.setVisibility(View.VISIBLE);
         currentMeal = meal;
         binding.mealNameTextView.setText(meal.getName());

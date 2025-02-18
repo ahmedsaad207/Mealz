@@ -42,8 +42,6 @@ public class MealPlanPresenterImpl implements MealPlanPresenter{
 
                                  @Override
                                  public void onNext(@NonNull List<Meal> meals) {
-                                     Log.i("TAG", "plans meals size:"+meals.size());
-
                                      view.displayFirstDayInCurrentWeek(meals);
                                  }
 

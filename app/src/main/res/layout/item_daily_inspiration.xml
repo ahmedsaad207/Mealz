@@ -7,22 +7,20 @@
 
     </data>
 
-<!--    <com.google.android.material.carousel.MaskableFrameLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginStart="4dp"-->
-<!--        android:layout_marginEnd="4dp"-->
-<!--        android:foreground="?attr/selectableItemBackground"-->
-<!--        app:shapeAppearance="?attr/shapeAppearanceCornerExtraLarge">-->
+    <com.google.android.material.carousel.MaskableFrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:foreground="?attr/selectableItemBackground"
+        app:shapeAppearance="?attr/shapeAppearanceCornerExtraLarge">
 
         <ImageView
-            tools:src="@drawable/seafood"
             android:id="@+id/image_view_daily_inspiration"
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:scaleType="centerCrop"
-            android:transitionName="Daily Inspiration" />
-
-
-<!--    </com.google.android.material.carousel.MaskableFrameLayout>-->
+            android:transitionName="Daily Inspiration"
+            tools:src="@drawable/seafood" />
+    </com.google.android.material.carousel.MaskableFrameLayout>
 </layout>

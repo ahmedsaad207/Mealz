@@ -2,6 +2,7 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.Mealz" parent="Theme.Material3.Light.NoActionBar">
         <item name="android:fontFamily">@font/roboto_medium</item>
+        <item name="android:windowIsTranslucent">true</item>
     </style>
 
 

@@ -29,7 +29,7 @@ public class SplashFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         new Handler().postDelayed(() -> {
             Navigation.findNavController(view).navigate(SplashFragmentDirections.actionSplashFragmentToAuthOptionsFragment());
-        },2000);
+        },3000);
 
         ((AppCompatActivity) requireActivity()).getSupportActionBar().hide();
     }

@@ -124,6 +124,15 @@ public class MealPlanFragment extends Fragment implements OnDayItemClickListener
             int index = days.indexOf(currentDayInteger.get());
             List<Meal> meals = currentWeekList.get(index);
             mealAdapter.submitList(meals);
+
+            if (meals.isEmpty()) {
+                binding.loadingPlan.setVisibility(View.VISIBLE);
+                binding.emptyPlanTextView.setVisibility(View.VISIBLE);
+            } else {
+                binding.loadingPlan.setVisibility(View.GONE);
+                binding.emptyPlanTextView.setVisibility(View.GONE);
+                binding.rvPlannedMeals.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -133,6 +142,18 @@ public class MealPlanFragment extends Fragment implements OnDayItemClickListener
         mealAdapter = new MealAdapter<>(this);
         mealAdapter.submitList(currentWeekList.get(0));
         binding.rvPlannedMeals.setAdapter(mealAdapter);
+
+        binding.loadingPlan.setVisibility(View.GONE);
+        binding.rvPlannedMeals.setVisibility(View.VISIBLE);
+
+        if (meals.isEmpty()) {
+            binding.loadingPlan.setVisibility(View.VISIBLE);
+//            binding.emtyFavoritesTextView.setVisibility(View.VISIBLE);
+        } else {
+            binding.loadingPlan.setVisibility(View.GONE);
+//            binding.emtyFavoritesTextView.setVisibility(View.GONE);
+            binding.rvPlannedMeals.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
