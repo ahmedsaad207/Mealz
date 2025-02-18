@@ -1,5 +1,7 @@
 package com.example.mealz.view.mealplan;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +15,7 @@ import androidx.navigation.Navigation;
 
 import com.example.mealz.R;
 import com.example.mealz.data.MealsRepositoryImpl;
+import com.example.mealz.data.UserLocalDataSourceImpl;
 import com.example.mealz.data.file.MealFileDataSourceImpl;
 import com.example.mealz.data.local.MealsLocalDataSourceImpl;
 import com.example.mealz.data.remote.MealsRemoteDataSourceImpl;
@@ -21,8 +24,10 @@ import com.example.mealz.model.Meal;
 import com.example.mealz.presenter.mealplan.MealPlanPresenter;
 import com.example.mealz.presenter.mealplan.MealPlanPresenterImpl;
 import com.example.mealz.presenter.mealplan.MealPlanView;
+import com.example.mealz.utils.Constants;
 import com.example.mealz.view.MealAdapter;
 import com.example.mealz.view.OnMealItemClickListener;
+import com.f2prateek.rx.preferences2.RxSharedPreferences;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -56,23 +61,26 @@ public class MealPlanFragment extends Fragment implements OnDayItemClickListener
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         showBottomNavBar();
-
-        presenter = new MealPlanPresenterImpl(
-                MealsRepositoryImpl.getInstance(MealsRemoteDataSourceImpl.getInstance(),
-                        MealsLocalDataSourceImpl.getInstance(requireActivity()),
-                        MealFileDataSourceImpl.getInstance(requireActivity())
-                ), this);
-
-
-        calendar = Calendar.getInstance();
-        days = new ArrayList<>();
-        currentWeekList = new ArrayList<>();
-        format = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+        init();
         fillCurrentWeek();
 
         dayAdapter = new DayAdapter(this, days);
         binding.rvDays.setAdapter(dayAdapter);
-        presenter.getPlannedMeals("ahmed");
+        presenter.getPlannedMeals();
+        presenter.getUsername();
+    }
+
+    private void init() {
+        presenter = new MealPlanPresenterImpl(
+                MealsRepositoryImpl.getInstance(MealsRemoteDataSourceImpl.getInstance(),
+                        MealsLocalDataSourceImpl.getInstance(requireActivity()),
+                        MealFileDataSourceImpl.getInstance(requireActivity()),
+                        UserLocalDataSourceImpl.getInstance(RxSharedPreferences.create(requireActivity().getSharedPreferences(Constants.SP_CREDENTIAL, MODE_PRIVATE)))
+                ), this);
+        calendar = Calendar.getInstance();
+        days = new ArrayList<>();
+        currentWeekList = new ArrayList<>();
+        format = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
     }
 
     private void showBottomNavBar() {
@@ -125,6 +133,15 @@ public class MealPlanFragment extends Fragment implements OnDayItemClickListener
         mealAdapter = new MealAdapter<>(this);
         mealAdapter.submitList(currentWeekList.get(0));
         binding.rvPlannedMeals.setAdapter(mealAdapter);
+    }
+
+    @Override
+    public void displayUserName(String username) {
+        if (getContext() != null && !username.isEmpty()) {
+            binding.helloUser.setText(getContext().getString(R.string.hello_name, username));
+        } else if (getContext() != null) {
+            binding.helloUser.setText(getContext().getString(R.string.hello_name, "Guest"));
+        }
     }
 
     @Override

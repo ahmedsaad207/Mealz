@@ -17,22 +17,26 @@ public class MealsRepositoryImpl implements MealsRepository {
 
     private static MealsRepositoryImpl instance;
 
-    private MealsRemoteDataSource remoteSource;
-    private MealsLocalDataSource localSource;
-    private MealFileDataSourceImpl fileSource;
+    private final MealsRemoteDataSource remoteSource;
+    private final MealsLocalDataSource localSource;
+    private final UserLocalDataSource userLocalDataSource;
+    private final MealFileDataSourceImpl fileSource;
 
-    public MealsRepositoryImpl(MealsRemoteDataSource remoteSource, MealsLocalDataSource localSource, MealFileDataSourceImpl fileSource) {
+    public MealsRepositoryImpl(MealsRemoteDataSource remoteSource, MealsLocalDataSource localSource, MealFileDataSourceImpl fileSource,
+                               UserLocalDataSource userLocalDataSource) {
         this.remoteSource = remoteSource;
         this.localSource = localSource;
         this.fileSource = fileSource;
+        this.userLocalDataSource = userLocalDataSource;
     }
 
     public static MealsRepositoryImpl getInstance(
             MealsRemoteDataSource remoteSource,
             MealsLocalDataSource localSource,
-            MealFileDataSourceImpl fileSource) {
+            MealFileDataSourceImpl fileSource,
+            UserLocalDataSource UserLocalDataSource) {
         if (instance == null) {
-            instance = new MealsRepositoryImpl(remoteSource, localSource,fileSource);
+            instance = new MealsRepositoryImpl(remoteSource, localSource, fileSource,UserLocalDataSource);
         }
         return instance;
     }
@@ -115,5 +119,45 @@ public class MealsRepositoryImpl implements MealsRepository {
     @Override
     public String getIngredientFilePath(String imageUrl, String folder) {
         return fileSource.getIngredientFilePath(imageUrl, folder);
+    }
+
+    @Override
+    public io.reactivex.Observable<String> getUserId() {
+        return userLocalDataSource.getUserId();
+    }
+
+    @Override
+    public void setUserId(String userId) {
+        userLocalDataSource.setUserId(userId);
+    }
+
+    @Override
+    public io.reactivex.Observable<String> getUsername() {
+        return userLocalDataSource.getUsername();
+    }
+
+    @Override
+    public void setUsername(String username) {
+        userLocalDataSource.setUsername(username);
+    }
+
+    @Override
+    public void clearUserId() {
+        userLocalDataSource.clearUserId();
+    }
+
+    @Override
+    public void clearUsername() {
+        userLocalDataSource.clearUsername();
+    }
+
+    @Override
+    public void setRememberMe(boolean value) {
+        userLocalDataSource.setRememberMe(value);
+    }
+
+    @Override
+    public io.reactivex.Observable<Boolean> getRememberMe() {
+        return userLocalDataSource.getRememberMe();
     }
 }

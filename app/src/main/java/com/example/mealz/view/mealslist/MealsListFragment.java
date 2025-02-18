@@ -1,5 +1,7 @@
 package com.example.mealz.view.mealslist;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +17,7 @@ import androidx.navigation.Navigation;
 
 import com.example.mealz.R;
 import com.example.mealz.data.MealsRepositoryImpl;
+import com.example.mealz.data.UserLocalDataSourceImpl;
 import com.example.mealz.data.file.MealFileDataSourceImpl;
 import com.example.mealz.data.local.MealsLocalDataSourceImpl;
 import com.example.mealz.data.remote.MealsRemoteDataSourceImpl;
@@ -26,6 +29,7 @@ import com.example.mealz.presenter.mealslist.MealsListView;
 import com.example.mealz.utils.Constants;
 import com.example.mealz.view.MealAdapter;
 import com.example.mealz.view.OnMealItemClickListener;
+import com.f2prateek.rx.preferences2.RxSharedPreferences;
 
 import java.util.List;
 
@@ -46,7 +50,12 @@ public class MealsListFragment extends Fragment implements MealsListView, OnMeal
         hideBottomNavBar();
         ActionBar actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
 
-        presenter = new MealsListPresenterImpl(MealsRepositoryImpl.getInstance(MealsRemoteDataSourceImpl.getInstance(), MealsLocalDataSourceImpl.getInstance(requireActivity()), MealFileDataSourceImpl.getInstance(requireActivity())), this);
+        presenter = new MealsListPresenterImpl(MealsRepositoryImpl.getInstance(
+                MealsRemoteDataSourceImpl.getInstance(),
+                MealsLocalDataSourceImpl.getInstance(requireActivity()),
+                MealFileDataSourceImpl.getInstance(requireActivity()),
+                UserLocalDataSourceImpl.getInstance(RxSharedPreferences.create(requireActivity().getSharedPreferences(Constants.SP_CREDENTIAL, MODE_PRIVATE)))
+        ), this);
 
         MealsListFragmentArgs args = MealsListFragmentArgs.fromBundle(getArguments());
         String name = args.getName();

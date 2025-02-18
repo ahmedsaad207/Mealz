@@ -5,7 +5,7 @@ import com.example.mealz.model.Ingredient;
 import com.example.mealz.model.Meal;
 
 public interface FavoritePresenter {
-    void getFavoriteMeals(String userId);
+    void getFavoriteMeals();
 
     String getIngredientFilePath(String imageUrl, String folder);
     void deleteMeal(Meal meal);

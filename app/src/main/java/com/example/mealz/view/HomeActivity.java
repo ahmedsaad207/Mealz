@@ -1,5 +1,6 @@
 package com.example.mealz.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -11,9 +12,10 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.mealz.R;
+import com.example.mealz.view.profile.OnLogoutListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity implements OnLogoutListener {
     Toolbar toolbar;
     NavController navController;
 
@@ -57,5 +59,12 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     public boolean onSupportNavigateUp() {
         return navController.navigateUp() || super.onSupportNavigateUp();
+    }
+
+    @Override
+    public void onLogout() {
+        Intent intent = new Intent(HomeActivity.this, AuthActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

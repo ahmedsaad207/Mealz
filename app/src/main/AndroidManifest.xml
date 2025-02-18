@@ -16,6 +16,7 @@
             android:name=".view.HomeActivity"
             android:exported="false" />
         <activity
+            android:windowSoftInputMode="adjustResize|adjustPan"
             android:name=".view.AuthActivity"
             android:exported="true">
             <intent-filter>

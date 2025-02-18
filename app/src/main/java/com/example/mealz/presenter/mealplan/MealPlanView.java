@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface MealPlanView {
     void displayFirstDayInCurrentWeek(List<Meal> meals);
+
+    void displayUserName(String username);
 }

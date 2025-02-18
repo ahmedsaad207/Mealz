@@ -52,28 +52,53 @@ public class MealDetailsPresenterImpl implements MealDetailsPresenter {
 
     @Override
     public void insertFavMeal(Meal meal) { // TODO Data Source for Shared Preference
-        repo.isFavMealExist("ahmed", meal.getNetworkId())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleObserver<>() {
+        repo.getUserId()
+                .flatMap(userId -> {
+                    meal.setUserId(userId);
+                    repo.isFavMealExist(userId, meal.getNetworkId())
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new SingleObserver<>() {
+                                @Override
+                                public void onSubscribe(@NonNull Disposable d) {
+
+                                }
+
+                                @Override
+                                public void onSuccess(@NonNull Meal meal) {
+                                    downloadMealImage(meal);
+                                    downloadIngredientImages(meal.getIngredients());
+                                }
+
+                                @Override
+                                public void onError(@NonNull Throwable e) {
+                                    insertMeal(meal);
+                                }
+                            });
+                    return null;
+                })
+                .subscribeOn(io.reactivex.schedulers.Schedulers.io())
+                .subscribe(new io.reactivex.Observer<>() {
                     @Override
-                    public void onSubscribe(@NonNull Disposable d) {
+                    public void onSubscribe(io.reactivex.disposables.Disposable d) {
 
                     }
 
                     @Override
-                    public void onSuccess(@NonNull Meal meal) {
-                        downloadMealImage(meal);
-                        downloadIngredientImages(meal.getIngredients());
-                        //view.onSuccess();
+                    public void onNext(Object o) {
+
                     }
 
                     @Override
-                    public void onError(@NonNull Throwable e) {
-                        insertMeal(meal);
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
                     }
                 });
-
     }
 
     @Override
@@ -83,23 +108,50 @@ public class MealDetailsPresenterImpl implements MealDetailsPresenter {
 
     @Override
     public void insertMeal(Meal meal) {
-        repo.insertMeal(meal)
-                .subscribeOn(Schedulers.io())
-                .subscribe(new CompletableObserver() {
+        repo.getUserId()
+                .flatMap(userId -> {
+                    meal.setUserId(userId);
+                    repo.insertMeal(meal)
+                            .subscribeOn(Schedulers.io())
+                            .subscribe(new CompletableObserver() {
+                                @Override
+                                public void onSubscribe(@NonNull Disposable d) {
+
+                                }
+
+                                @Override
+                                public void onComplete() {
+                                    downloadMealImage(meal);
+                                    downloadIngredientImages(meal.getIngredients());
+                                    view.onSuccess();
+                                }
+
+                                @Override
+                                public void onError(@NonNull Throwable e) {
+
+                                }
+                            });
+                    return null;
+                })
+                .subscribeOn(io.reactivex.schedulers.Schedulers.io())
+                .subscribe(new io.reactivex.Observer<>() {
                     @Override
-                    public void onSubscribe(@NonNull Disposable d) {
+                    public void onSubscribe(io.reactivex.disposables.Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(Object o) {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
 
                     }
 
                     @Override
                     public void onComplete() {
-                        downloadMealImage(meal);
-                        downloadIngredientImages(meal.getIngredients());
-                        view.onSuccess();
-                    }
-
-                    @Override
-                    public void onError(@NonNull Throwable e) {
 
                     }
                 });
@@ -135,24 +187,52 @@ public class MealDetailsPresenterImpl implements MealDetailsPresenter {
 
     @Override
     public void isFavMealExist(long networkId) {
-        repo.isFavMealExist("ahmed", networkId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleObserver<Meal>() {
+        repo.getUserId()
+                .flatMap(userId -> {
+                    repo.isFavMealExist(userId, networkId)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new SingleObserver<Meal>() {
+                                @Override
+                                public void onSubscribe(@NonNull Disposable d) {
+
+                                }
+
+                                @Override
+                                public void onSuccess(@NonNull Meal meal) {
+                                    view.changeImageResourceForFav();
+                                }
+
+                                @Override
+                                public void onError(@NonNull Throwable e) {
+
+                                }
+                            });
+                    return null;
+                })
+                .subscribeOn(io.reactivex.schedulers.Schedulers.io())
+                .subscribe(new io.reactivex.Observer<>() {
                     @Override
-                    public void onSubscribe(@NonNull Disposable d) {
+                    public void onSubscribe(io.reactivex.disposables.Disposable d) {
 
                     }
 
                     @Override
-                    public void onSuccess(@NonNull Meal meal) {
-                        view.changeImageResourceForFav();
+                    public void onNext(Object o) {
+
                     }
 
                     @Override
-                    public void onError(@NonNull Throwable e) {
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
 
                     }
                 });
+
+
     }
 }

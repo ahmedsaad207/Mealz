@@ -7,5 +7,7 @@ import java.util.List;
 import io.reactivex.rxjava3.core.Observable;
 
 public interface MealPlanPresenter {
-    void getPlannedMeals(String userId);
+    void getPlannedMeals();
+
+    void getUsername();
 }

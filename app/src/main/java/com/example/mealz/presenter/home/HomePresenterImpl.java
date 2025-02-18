@@ -175,5 +175,32 @@ public class HomePresenterImpl implements HomePresenter {
         this.searchList = searchList;
     }
 
+    @Override
+    public void getUsername() {
+        repo.getUsername()
+                .subscribeOn(io.reactivex.schedulers.Schedulers.io())
+                .observeOn(io.reactivex.android.schedulers.AndroidSchedulers.mainThread())
+                .subscribe(new io.reactivex.Observer<String>() {
+                    @Override
+                    public void onSubscribe(io.reactivex.disposables.Disposable d) {
 
+                    }
+
+                    @Override
+                    public void onNext(String username) {
+                        view.displayUserName(username);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
+    }
 }

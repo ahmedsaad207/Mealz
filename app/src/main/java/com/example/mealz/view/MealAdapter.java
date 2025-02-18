@@ -22,6 +22,7 @@ import com.example.mealz.R;
 import com.example.mealz.model.Meal;
 import com.example.mealz.model.SearchItem;
 import com.example.mealz.utils.Constants;
+import com.example.mealz.utils.ItemType;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class MealAdapter<T> extends ListAdapter<T, MealAdapter.MealViewHolder> {
@@ -52,7 +53,6 @@ public class MealAdapter<T> extends ListAdapter<T, MealAdapter.MealViewHolder> {
     @NonNull
     @Override
     public MealViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Log.i("TAG", "onCreateViewHolder: from Meal adapter");
         return MealViewHolder.create(parent);
     }
 
