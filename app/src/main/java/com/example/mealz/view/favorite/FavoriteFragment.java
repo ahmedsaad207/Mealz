@@ -43,7 +43,7 @@ public class FavoriteFragment extends Fragment implements FavoriteView, OnMealIt
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_favorite, container, false);
         return binding.getRoot();
@@ -89,6 +89,16 @@ public class FavoriteFragment extends Fragment implements FavoriteView, OnMealIt
     public void displayFavoriteMeals(List<Meal> meals) {
         adapter.submitList(meals);
         binding.rvFavMeals.setAdapter(adapter);
+
+        if (meals.isEmpty()) {
+            binding.loadingFavorites.setVisibility(View.VISIBLE);
+            binding.emtyFavoritesTextView.setVisibility(View.VISIBLE);
+        } else {
+            binding.loadingFavorites.setVisibility(View.GONE);
+            binding.emtyFavoritesTextView.setVisibility(View.GONE);
+            binding.rvFavMeals.setVisibility(View.VISIBLE);
+        }
+
     }
 
     @Override

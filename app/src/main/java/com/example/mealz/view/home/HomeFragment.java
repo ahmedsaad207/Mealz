@@ -69,6 +69,13 @@ public class HomeFragment extends Fragment implements HomeView, OnMealItemClickL
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         showBottomNavBar();
+
+        if (binding.loadingHome != null) {
+            binding.loadingHome.setVisibility(View.VISIBLE);
+        }
+        if (binding.searchEditText != null) {
+            binding.searchEditText.setVisibility(View.INVISIBLE);
+        }
         init();
         setupRV();
         requestData();
@@ -235,6 +242,11 @@ public class HomeFragment extends Fragment implements HomeView, OnMealItemClickL
         }
         binding.rvDailyInspiration.setAdapter(dailyInspirationAdapter);
         dailyInspirationAdapter.submitList(meals);
+        if (!meals.isEmpty() && binding.loadingHome != null && binding.homeData != null && binding.searchEditText != null){
+            binding.loadingHome.setVisibility(View.GONE);
+            binding.homeData.setVisibility(View.VISIBLE);
+            binding.searchEditText.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

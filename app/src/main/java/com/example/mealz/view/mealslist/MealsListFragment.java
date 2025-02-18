@@ -39,7 +39,7 @@ public class MealsListFragment extends Fragment implements MealsListView, OnMeal
     MealsListPresenter presenter;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_meals_list, container, false);
         return binding.getRoot();
     }
@@ -95,6 +95,10 @@ public class MealsListFragment extends Fragment implements MealsListView, OnMeal
         adapter = new MealAdapter<>(this);
         adapter.submitList(meals);
         binding.rvMeals.setAdapter(adapter);
+        if (!meals.isEmpty() && binding.loadingMealsList != null){
+            binding.loadingMealsList.setVisibility(View.GONE);
+            binding.rvMeals.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

@@ -80,6 +80,9 @@ dependencies {
     // RXSharedPreferences
     implementation 'com.f2prateek.rx.preferences2:rx-preferences:2.0.1'
 
+    // Lottie
+    implementation "com.airbnb.android:lottie:3.5.0"
+
 
 
 }
