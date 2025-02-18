@@ -38,7 +38,7 @@
                 app:maxImageSize="18dp"
                 app:rippleColor="#E5DADA"
                 app:shapeAppearanceOverlay="@style/FloatingActionButtonStyle"
-                app:srcCompat="@drawable/ic_bookmark_remove"
+                app:srcCompat="@drawable/ic_fav_added"
                 app:tint="@color/brownish_gray" />
 
             <ImageView

@@ -88,7 +88,7 @@ public class MealsRepositoryImpl implements MealsRepository {
 
     @Override
     public Completable deleteMeal(Meal meal) {
-        return localSource.deleteMeal(meal);
+        return localSource.deleteMeal(meal.getNetworkId(), meal.getUserId());
     }
 
     @Override

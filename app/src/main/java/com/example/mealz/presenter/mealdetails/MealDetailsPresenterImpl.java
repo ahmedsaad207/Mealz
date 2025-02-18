@@ -235,4 +235,57 @@ public class MealDetailsPresenterImpl implements MealDetailsPresenter {
 
 
     }
+
+    @Override
+    public void deleteMeal(Meal meal) {
+        repo.getUserId()
+                .flatMap(userId -> {
+                    meal.setUserId(userId);
+                    repo.deleteMeal(meal)
+                            .subscribeOn(Schedulers.io())
+                            .subscribe(new CompletableObserver() {
+                                @Override
+                                public void onSubscribe(@NonNull Disposable d) {
+
+                                }
+
+                                @Override
+                                public void onComplete() {
+                                    downloadMealImage(meal);
+                                    downloadIngredientImages(meal.getIngredients());
+                                    view.onSuccess();
+                                }
+
+                                @Override
+                                public void onError(@NonNull Throwable e) {
+
+                                }
+                            });
+                    return null;
+                })
+                .subscribeOn(io.reactivex.schedulers.Schedulers.io())
+                .subscribe(new io.reactivex.Observer<>() {
+                    @Override
+                    public void onSubscribe(io.reactivex.disposables.Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(Object o) {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+
 }

@@ -104,11 +104,12 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
         binding.btnFav.setOnClickListener(v ->
         {
             if (currentMeal.getDate() == Constants.TYPE_FAVORITE) {
-                showMessage("Already Added!");
-                return;
+                currentMeal.setDate(Constants.TYPE_DEFAULT);
+                presenter.deleteMeal(currentMeal);
+            } else {
+                currentMeal.setDate(Constants.TYPE_FAVORITE);
+                presenter.insertFavMeal(currentMeal);
             }
-            currentMeal.setDate(Constants.TYPE_FAVORITE);
-            presenter.insertFavMeal(currentMeal);
         });
     }
 
@@ -170,7 +171,7 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
         displayIngredients(meal.getIngredients());
 
         if (meal.getDate() == Constants.TYPE_FAVORITE) {
-            binding.btnFav.setImageResource(R.drawable.ic_bookmark_added);
+            binding.btnFav.setImageResource(R.drawable.ic_fav_added);
         } else {
             presenter.isFavMealExist(meal.getNetworkId());
         }
@@ -180,9 +181,10 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
     public void onSuccess() {
         if (currentMeal.getDate() == Constants.TYPE_FAVORITE) {
             showMessage("Added Successfully to Your Favorites!");
-            binding.btnFav.setImageResource(R.drawable.ic_bookmark_added);
+            binding.btnFav.setImageResource(R.drawable.ic_fav_added);
         } else if (currentMeal.getDate() == Constants.TYPE_DEFAULT) {
-
+            showMessage("Deleted from Your Favorites!");
+            binding.btnFav.setImageResource(R.drawable.ic_fav_add);
         } else {
             showMessage("Added Successfully to Your Plan!");
         }
@@ -196,7 +198,7 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
     @Override
     public void changeImageResourceForFav() {
         currentMeal.setDate(Constants.TYPE_FAVORITE);
-        binding.btnFav.setImageResource(R.drawable.ic_bookmark_added);
+        binding.btnFav.setImageResource(R.drawable.ic_fav_added);
     }
 
     private void showMessage(String message) {

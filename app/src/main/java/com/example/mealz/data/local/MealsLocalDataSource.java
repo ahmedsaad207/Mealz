@@ -11,7 +11,7 @@ import io.reactivex.rxjava3.core.Single;
 public interface MealsLocalDataSource {
     Completable insertMeal(Meal meal);
 
-    Completable deleteMeal(Meal meal);
+    Completable deleteMeal(long networkId, String userId);
 
     Observable<List<Meal>> getFavoriteMeals(String userId);
 

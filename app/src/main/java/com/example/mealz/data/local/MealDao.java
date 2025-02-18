@@ -20,8 +20,8 @@ public interface MealDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     Completable insertMeal(Meal meal);
 
-    @Delete
-    Completable deleteMeal(Meal meal);
+    @Query("DELETE FROM meals_table WHERE networkId == :networkId AND userId == :userId")
+    Completable deleteMeal(long networkId, String userId);
 
     @Query("SELECT * FROM meals_table WHERE date == 0 AND userId == :userId ORDER BY id DESC")
     Observable<List<Meal>> getFavoriteMeals(String userId);

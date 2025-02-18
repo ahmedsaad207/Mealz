@@ -18,4 +18,5 @@ public interface MealDetailsPresenter {
 
     void isFavMealExist(long networkId);
 
+    void deleteMeal(Meal meal);
 }
