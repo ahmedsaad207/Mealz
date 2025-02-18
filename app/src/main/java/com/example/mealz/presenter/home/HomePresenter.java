@@ -20,4 +20,6 @@ public interface HomePresenter {
     void search(CharSequence s);
 
     void setList(List<SearchItem> searchList);
+
+    void getUsername();
 }

@@ -1,5 +1,6 @@
 package com.example.mealz.view.home;
 
+import static android.content.Context.MODE_PRIVATE;
 import static com.example.mealz.utils.MealMapper.mapMealsToAreas;
 
 import android.annotation.SuppressLint;
@@ -23,6 +24,7 @@ import androidx.navigation.Navigation;
 
 import com.example.mealz.R;
 import com.example.mealz.data.MealsRepositoryImpl;
+import com.example.mealz.data.UserLocalDataSourceImpl;
 import com.example.mealz.data.file.MealFileDataSourceImpl;
 import com.example.mealz.data.local.MealsLocalDataSourceImpl;
 import com.example.mealz.data.remote.MealsRemoteDataSourceImpl;
@@ -37,6 +39,7 @@ import com.example.mealz.presenter.home.HomeView;
 import com.example.mealz.utils.Constants;
 import com.example.mealz.view.MealAdapter;
 import com.example.mealz.view.OnMealItemClickListener;
+import com.f2prateek.rx.preferences2.RxSharedPreferences;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
@@ -98,11 +101,15 @@ public class HomeFragment extends Fragment implements HomeView, OnMealItemClickL
         presenter.getCategories();
         presenter.getAreas();
         presenter.getIngredients();
+        presenter.getUsername();
     }
 
     private void init() {
         mAuth = FirebaseAuth.getInstance();
-        presenter = new HomePresenterImpl(MealsRepositoryImpl.getInstance(MealsRemoteDataSourceImpl.getInstance(), MealsLocalDataSourceImpl.getInstance(requireActivity()), MealFileDataSourceImpl.getInstance(requireActivity())), this);
+        presenter = new HomePresenterImpl(MealsRepositoryImpl.getInstance(MealsRemoteDataSourceImpl.getInstance(), MealsLocalDataSourceImpl.getInstance(requireActivity()), MealFileDataSourceImpl.getInstance(requireActivity()),
+                UserLocalDataSourceImpl.getInstance(
+                        RxSharedPreferences.create(requireActivity().getSharedPreferences(Constants.SP_CREDENTIAL, MODE_PRIVATE))
+                )), this);
         searchList = new ArrayList<>();
         searchAdapter = new MealAdapter<>(HomeFragment.this);
         drawableSearch = ContextCompat.getDrawable(requireActivity(), R.drawable.ic_search);
@@ -242,6 +249,15 @@ public class HomeFragment extends Fragment implements HomeView, OnMealItemClickL
         if (binding.rvMealsSearch != null) {
             searchAdapter.submitList(items);
             binding.rvMealsSearch.setAdapter(searchAdapter);
+        }
+    }
+
+    @Override
+    public void displayUserName(String username) {
+        if (getContext() != null && binding.helloUser != null && !username.isEmpty()) {
+            binding.helloUser.setText(getContext().getString(R.string.hello_name, username));
+        } else if (getContext() != null && binding.helloUser != null) {
+            binding.helloUser.setText(getContext().getString(R.string.hello_name, "Guest"));
         }
     }
 

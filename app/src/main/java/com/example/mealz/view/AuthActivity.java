@@ -1,7 +1,9 @@
 package com.example.mealz.view;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -25,6 +27,13 @@ public class AuthActivity extends AppCompatActivity implements OnLoginSuccessLis
         setSupportActionBar(binding.toolbarAuth);
         navController = ((NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.navHostFragmentAuth)).getNavController();
 //        NavigationUI.setupActionBarWithNavController(this, navController);
+
+        SharedPreferences preferences = getSharedPreferences("credential",MODE_PRIVATE);
+        Log.i("TAG", "userId: "+preferences.getString("userId",""));
+
+        if (!preferences.getString("userId","").isEmpty()) {
+            onLoginSuccess();
+        }
     }
 
     @Override

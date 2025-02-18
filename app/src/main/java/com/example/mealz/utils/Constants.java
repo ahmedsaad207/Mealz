@@ -9,4 +9,10 @@ public class Constants {
     public static final String SEARCH_KEY = "key";
     public static final String FOLDER_MEALS = "meals";
     public static final String FOLDER_INGREDIENTS = "ingredients";
+
+    public static final String KEY_USER_ID = "userId";
+    public static final String KEY_USERNAME = "username";
+    public static final String KEY_REMEMBER_ME = "rememberMe";
+    public static final String SP_CREDENTIAL = "credential";
+
 }

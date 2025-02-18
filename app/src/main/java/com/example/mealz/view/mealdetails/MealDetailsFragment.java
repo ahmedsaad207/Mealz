@@ -1,5 +1,7 @@
 package com.example.mealz.view.mealdetails;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
@@ -20,6 +22,7 @@ import androidx.navigation.Navigation;
 import com.bumptech.glide.Glide;
 import com.example.mealz.R;
 import com.example.mealz.data.MealsRepositoryImpl;
+import com.example.mealz.data.UserLocalDataSourceImpl;
 import com.example.mealz.data.file.MealFileDataSourceImpl;
 import com.example.mealz.data.local.MealsLocalDataSourceImpl;
 import com.example.mealz.data.remote.MealsRemoteDataSourceImpl;
@@ -31,6 +34,7 @@ import com.example.mealz.presenter.mealdetails.MealDetailsPresenterImpl;
 import com.example.mealz.presenter.mealdetails.MealDetailsView;
 import com.example.mealz.utils.Constants;
 import com.example.mealz.utils.Utils;
+import com.f2prateek.rx.preferences2.RxSharedPreferences;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Calendar;
@@ -66,7 +70,10 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
                 MealsRepositoryImpl.getInstance(
                         MealsRemoteDataSourceImpl.getInstance(),
                         MealsLocalDataSourceImpl.getInstance(requireActivity()),
-                        MealFileDataSourceImpl.getInstance(requireActivity())),
+                        MealFileDataSourceImpl.getInstance(requireActivity()),
+                        UserLocalDataSourceImpl.getInstance(
+                                RxSharedPreferences.create(requireActivity().getSharedPreferences(Constants.SP_CREDENTIAL, MODE_PRIVATE))
+                        )),
                 this
         );
 

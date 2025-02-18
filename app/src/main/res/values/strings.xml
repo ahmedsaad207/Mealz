@@ -23,7 +23,7 @@
     <string name="daily_inspiration">Daily Inspiration</string>
     <string name="hint_search">categories, areas, ingredients</string>
     <string name="motivation_of_the_day">Motivation of the Day</string>
-    <string name="hello_name">Hello, Adam!</string>
+    <string name="hello_name">Hello, %s!</string>
     <string name="ready_to_plan_your_week">Ready to plan \nyour week?</string>
     <string name="ingredient">Ingredients</string>
     <string name="beef_popular_in">%s | Popular in  </string>

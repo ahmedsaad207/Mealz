@@ -43,4 +43,19 @@ public interface MealsRepository {
 
     String getIngredientFilePath(String imageUrl, String folder);
 
+    io.reactivex.Observable<String> getUserId();
+
+    void setUserId(String userId);
+
+    io.reactivex.Observable<String> getUsername();
+
+    void setUsername(String username);
+
+    void clearUserId();
+
+    void clearUsername();
+
+    void setRememberMe(boolean value);
+
+    io.reactivex.Observable<Boolean> getRememberMe();
 }

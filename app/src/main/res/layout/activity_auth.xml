@@ -28,7 +28,7 @@
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar_auth"
                 android:layout_gravity="start"
-                app:navigationIcon="@drawable/ic_arrow_back_bg"
+                app:navigationIcon="@drawable/ic_arrow_back"
                 android:background="@android:color/transparent"
                 app:titleTextColor="@color/white"
                 android:layout_width="match_parent"

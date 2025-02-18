@@ -17,4 +17,6 @@ public interface HomeView {
     void onIngredientsListReady(List<Ingredient> ingredients);
 
     void displaySearchItems(List<SearchItem> meals);
+
+    void displayUserName(String username);
 }

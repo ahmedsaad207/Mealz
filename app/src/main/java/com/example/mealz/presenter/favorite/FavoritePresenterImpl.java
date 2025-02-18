@@ -1,5 +1,7 @@
 package com.example.mealz.presenter.favorite;
 
+import android.util.Log;
+
 import com.example.mealz.data.MealsRepository;
 import com.example.mealz.data.MealsRepositoryImpl;
 import com.example.mealz.model.Ingredient;
@@ -26,32 +28,59 @@ public class FavoritePresenterImpl implements FavoritePresenter {
     }
 
     @Override
-    public void getFavoriteMeals(String userId) {
-        repo.getFavoriteMeals(userId)
-                .subscribeOn(Schedulers.io())
-                .map(meals -> {
-                    for (Meal meal : meals) {
-                        meal.setUrlImage(getIngredientFilePath(meal.getUrlImage(), Constants.FOLDER_MEALS));
-                        for (Ingredient ingredient: meal.getIngredients()) {
-                            ingredient.setImageUrl(getIngredientFilePath(ingredient.getImageUrl(), Constants.FOLDER_INGREDIENTS));
-                        }
-                    }
-                    return meals;
+    public void getFavoriteMeals() {
+        repo.getUserId()
+                .flatMap(userId -> {
+                    repo.getFavoriteMeals(userId)
+                            .subscribeOn(Schedulers.io())
+                            .map(meals -> {
+                                for (Meal meal : meals) {
+                                    meal.setUrlImage(getIngredientFilePath(meal.getUrlImage(), Constants.FOLDER_MEALS));
+                                    for (Ingredient ingredient : meal.getIngredients()) {
+                                        ingredient.setImageUrl(getIngredientFilePath(ingredient.getImageUrl(), Constants.FOLDER_INGREDIENTS));
+                                    }
+                                }
+                                return meals;
+                            })
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Observer<>() {
+                                @Override
+                                public void onSubscribe(@NonNull Disposable d) {
+
+                                }
+
+                                @Override
+                                public void onNext(@NonNull List<Meal> meals) {
+                                    Log.i("TAG", "from get fav: " + meals.size());
+                                    view.displayFavoriteMeals(meals);
+                                }
+
+                                @Override
+                                public void onError(@NonNull Throwable e) {
+
+                                }
+
+                                @Override
+                                public void onComplete() {
+
+                                }
+                            });
+                    return null;
                 })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<>() {
+                .subscribeOn(io.reactivex.schedulers.Schedulers.io())
+                .subscribe(new io.reactivex.Observer<Object>() {
                     @Override
-                    public void onSubscribe(@NonNull Disposable d) {
+                    public void onSubscribe(io.reactivex.disposables.Disposable d) {
 
                     }
 
                     @Override
-                    public void onNext(@NonNull List<Meal> meals) {
-                        view.displayFavoriteMeals(meals);
+                    public void onNext(Object o) {
+
                     }
 
                     @Override
-                    public void onError(@NonNull Throwable e) {
+                    public void onError(Throwable e) {
 
                     }
 
