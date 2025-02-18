@@ -5,4 +5,6 @@ public interface ProfilePresenter {
     void clearUsername();
 
     void setRememberMe(boolean value);
+
+    void getUsername();
 }

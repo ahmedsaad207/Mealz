@@ -12,4 +12,6 @@ public interface MealDetailsView {
     void insertMeal();
 
     void changeImageResourceForFav();
+
+    void onUserId(String userId);
 }
