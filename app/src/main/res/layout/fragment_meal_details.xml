@@ -241,7 +241,7 @@
             app:maxImageSize="24dp"
             app:rippleColor="#E5DADA"
             app:shapeAppearanceOverlay="@style/FloatingActionButtonStyle"
-            app:srcCompat="@drawable/ic_bookmark_add"
+            app:srcCompat="@drawable/ic_fav_add"
             app:tint="@color/brownish_gray" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton

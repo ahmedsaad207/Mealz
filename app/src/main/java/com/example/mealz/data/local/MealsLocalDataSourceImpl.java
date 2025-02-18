@@ -33,8 +33,8 @@ public class MealsLocalDataSourceImpl implements MealsLocalDataSource {
     }
 
     @Override
-    public Completable deleteMeal(Meal meal) {
-        return dao.deleteMeal(meal);
+    public Completable deleteMeal(long networkId, String userId) {
+        return dao.deleteMeal(networkId, userId);
     }
 
     @Override
