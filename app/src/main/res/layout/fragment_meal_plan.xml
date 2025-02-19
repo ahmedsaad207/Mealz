@@ -53,6 +53,7 @@
 
 
         <androidx.recyclerview.widget.RecyclerView
+            android:visibility="gone"
             android:id="@+id/rvPlannedMeals"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -63,10 +64,9 @@
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/loading_plan"
-            android:layout_width="300dp"
-            android:layout_height="300dp"
-            android:layout_gravity="center_horizontal"
-            android:visibility="gone"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_gravity="top|center_horizontal"
             app:lottie_autoPlay="true"
             app:lottie_loop="true"
             app:lottie_rawRes="@raw/empty_spirit" />
@@ -74,17 +74,13 @@
         <TextView
             android:id="@+id/empty_plan_text_view"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="4dp"
-            android:layout_weight="1"
             android:text="Your plan meals is empty!"
             android:textColor="#9C9C9C"
             android:textSize="16sp"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/loading_favorites" />
+            />
     </LinearLayout>
 
 </layout>

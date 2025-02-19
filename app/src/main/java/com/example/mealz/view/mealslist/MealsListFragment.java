@@ -17,10 +17,10 @@ import androidx.navigation.Navigation;
 
 import com.example.mealz.R;
 import com.example.mealz.data.MealsRepositoryImpl;
-import com.example.mealz.data.UserLocalDataSourceImpl;
 import com.example.mealz.data.backup.BackUpRemoteDataSourceImpl;
 import com.example.mealz.data.file.MealFileDataSourceImpl;
 import com.example.mealz.data.local.MealsLocalDataSourceImpl;
+import com.example.mealz.data.preferences.UserLocalDataSourceImpl;
 import com.example.mealz.data.remote.MealsRemoteDataSourceImpl;
 import com.example.mealz.databinding.FragmentMealsListBinding;
 import com.example.mealz.model.Meal;
@@ -28,9 +28,11 @@ import com.example.mealz.presenter.mealslist.MealsListPresenter;
 import com.example.mealz.presenter.mealslist.MealsListPresenterImpl;
 import com.example.mealz.presenter.mealslist.MealsListView;
 import com.example.mealz.utils.Constants;
+import com.example.mealz.utils.NetworkManager;
 import com.example.mealz.view.MealAdapter;
 import com.example.mealz.view.OnMealItemClickListener;
 import com.f2prateek.rx.preferences2.RxSharedPreferences;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
@@ -39,6 +41,14 @@ public class MealsListFragment extends Fragment implements MealsListView, OnMeal
     FragmentMealsListBinding binding;
     MealAdapter<Meal> adapter;
     MealsListPresenter presenter;
+
+    private static void setupToolBar(ActionBar actionBar, String title) {
+        if (actionBar != null) {
+            actionBar.setTitle(title);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(true);
+        }
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -65,28 +75,24 @@ public class MealsListFragment extends Fragment implements MealsListView, OnMeal
         int type = args.getType();
         String title;
 
-        if (type == Constants.ITEM_CATEGORY) {
-            title = ("Tasty Dishes from " + name);
-            presenter.getMealsByCategory(name);
-        } else if (type == Constants.ITEM_AREA) {
-            title = "Popular Meals in " + name;
-            presenter.getMealsByArea(name);
-        } else if (type == Constants.ITEM_INGREDIENT) {
-            title = "Discover Meals with  " + name;
-            presenter.searchByIngredient(name);
+        if (isConnected()) {
+            if (type == Constants.ITEM_CATEGORY) {
+                title = ("Tasty Dishes from " + name);
+                presenter.getMealsByCategory(name);
+            } else if (type == Constants.ITEM_AREA) {
+                title = "Popular Meals in " + name;
+                presenter.getMealsByArea(name);
+            } else if (type == Constants.ITEM_INGREDIENT) {
+                title = "Discover Meals with  " + name;
+                presenter.searchByIngredient(name);
+            } else {
+                title = "";
+            }
         } else {
-            title = "";
+            title = "No internet connection!";
         }
 
         setupToolBar(actionBar, title);
-    }
-
-    private static void setupToolBar(ActionBar actionBar, String title) {
-        if (actionBar != null) {
-            actionBar.setTitle(title);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setDisplayShowHomeEnabled(true);
-        }
     }
 
     private void hideBottomNavBar() {
@@ -98,15 +104,24 @@ public class MealsListFragment extends Fragment implements MealsListView, OnMeal
         adapter = new MealAdapter<>(this);
         adapter.submitList(meals);
         binding.rvMeals.setAdapter(adapter);
-        if (!meals.isEmpty() && binding.loadingMealsList != null){
+        if (!meals.isEmpty() && binding.loadingMealsList != null) {
             binding.loadingMealsList.setVisibility(View.GONE);
             binding.rvMeals.setVisibility(View.VISIBLE);
         }
     }
 
     @Override
+    public void onError(String error) {
+        binding.loadingMealsList.setVisibility(View.GONE);
+    }
+
+    @Override
     public void navigateToMealDetails(Meal meal) {
-        Navigation.findNavController(binding.rvMeals).navigate(MealsListFragmentDirections.actionMealsListFragmentToMealDetailsFragment(meal));
+        if (isConnected()) {
+            Navigation.findNavController(binding.rvMeals).navigate(MealsListFragmentDirections.actionMealsListFragmentToMealDetailsFragment(meal));
+        } else {
+            Snackbar.make(requireView(), "No internet connection!", Snackbar.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -117,6 +132,10 @@ public class MealsListFragment extends Fragment implements MealsListView, OnMeal
     @Override
     public void removeMealFromFavorites(Meal meal) {
 
+    }
+
+    private boolean isConnected() {
+        return NetworkManager.isConnected(requireContext());
     }
 
 }

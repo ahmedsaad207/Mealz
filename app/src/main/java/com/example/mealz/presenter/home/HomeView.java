@@ -19,4 +19,6 @@ public interface HomeView {
     void displaySearchItems(List<SearchItem> meals);
 
     void displayUserName(String username);
+
+    void onHideLoading(String error);
 }

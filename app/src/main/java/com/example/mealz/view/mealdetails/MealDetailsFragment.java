@@ -23,10 +23,10 @@ import androidx.navigation.Navigation;
 import com.bumptech.glide.Glide;
 import com.example.mealz.R;
 import com.example.mealz.data.MealsRepositoryImpl;
-import com.example.mealz.data.UserLocalDataSourceImpl;
 import com.example.mealz.data.backup.BackUpRemoteDataSourceImpl;
 import com.example.mealz.data.file.MealFileDataSourceImpl;
 import com.example.mealz.data.local.MealsLocalDataSourceImpl;
+import com.example.mealz.data.preferences.UserLocalDataSourceImpl;
 import com.example.mealz.data.remote.MealsRemoteDataSourceImpl;
 import com.example.mealz.databinding.FragmentMealDetailsBinding;
 import com.example.mealz.model.Ingredient;
@@ -35,6 +35,7 @@ import com.example.mealz.presenter.mealdetails.MealDetailsPresenter;
 import com.example.mealz.presenter.mealdetails.MealDetailsPresenterImpl;
 import com.example.mealz.presenter.mealdetails.MealDetailsView;
 import com.example.mealz.utils.Constants;
+import com.example.mealz.utils.NetworkManager;
 import com.example.mealz.utils.Utils;
 import com.f2prateek.rx.preferences2.RxSharedPreferences;
 import com.google.android.material.snackbar.Snackbar;
@@ -106,16 +107,24 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
 
         binding.btnPlan.setOnClickListener(v -> {
             showDatePickerDialog();
+
+
         });
 
         binding.btnFav.setOnClickListener(v ->
         {
-            if (currentMeal.getDate() == Constants.TYPE_FAVORITE) {
-                presenter.removeMealFromFavorites(currentMeal);
+
+
+            if (isConnected()) {
+                if (currentMeal.getDate() == Constants.TYPE_FAVORITE) {
+                    presenter.removeMealFromFavorites(currentMeal);
+                } else {
+                    presenter.insertFavMeal(currentMeal);
+                }
+                binding.btnFav.setEnabled(false);
             } else {
-                presenter.insertFavMeal(currentMeal);
+                Snackbar.make(requireView(), "No internet connection!", Snackbar.LENGTH_SHORT).show();
             }
-            binding.btnFav.setEnabled(false);
         });
     }
 
@@ -148,9 +157,14 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
         int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
 
         DatePickerDialog dialog = new DatePickerDialog(requireActivity(), R.style.DialogTheme, (view, year1, month1, dayOfMonth1) -> {
-            calendar.set(year1, month1, dayOfMonth1);
-            currentMeal.setDate(calendar.getTimeInMillis());
-            presenter.insertMeal(currentMeal);
+            if (isConnected()) {
+                calendar.set(year1, month1, dayOfMonth1);
+                currentMeal.setDate(calendar.getTimeInMillis());
+                presenter.insertMeal(currentMeal);
+            } else {
+                Snackbar.make(requireView(), "No internet connection!", Snackbar.LENGTH_SHORT).show();
+            }
+
         }, year, month, dayOfMonth);
 
         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
@@ -245,7 +259,7 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
 
     @Override
     public void onInsertPlanCompleted() {
-        Log.d("TAG", "detail plan type: when plan is pressed: "+ currentMeal.getDate());
+        Log.d("TAG", "detail plan type: when plan is pressed: " + currentMeal.getDate());
 //        currentMeal.setDate(Constants.TYPE_FAVORITE);
         binding.btnFav.setEnabled(true);
 //        binding.btnFav.setImageResource(R.drawable.ic_fav_added);
@@ -256,5 +270,9 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
         if (getView() != null) {
             Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT).show();
         }
+    }
+
+    private boolean isConnected() {
+        return NetworkManager.isConnected(requireContext());
     }
 }

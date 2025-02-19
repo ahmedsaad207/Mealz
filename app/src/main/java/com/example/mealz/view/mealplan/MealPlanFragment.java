@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mealz.R;
 import com.example.mealz.data.MealsRepositoryImpl;
-import com.example.mealz.data.UserLocalDataSourceImpl;
+import com.example.mealz.data.preferences.UserLocalDataSourceImpl;
 import com.example.mealz.data.backup.BackUpRemoteDataSourceImpl;
 import com.example.mealz.data.file.MealFileDataSourceImpl;
 import com.example.mealz.data.local.MealsLocalDataSourceImpl;
@@ -30,10 +30,12 @@ import com.example.mealz.presenter.mealplan.MealPlanPresenter;
 import com.example.mealz.presenter.mealplan.MealPlanPresenterImpl;
 import com.example.mealz.presenter.mealplan.MealPlanView;
 import com.example.mealz.utils.Constants;
+import com.example.mealz.utils.NetworkManager;
 import com.example.mealz.view.MealAdapter;
 import com.example.mealz.view.OnMealItemClickListener;
 import com.example.mealz.view.OnSignUpClickListener;
 import com.f2prateek.rx.preferences2.RxSharedPreferences;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.DateFormat;
@@ -238,15 +240,25 @@ public class MealPlanFragment extends Fragment implements OnDayItemClickListener
 
     @Override
     public void removeMealFromFavorites(Meal meal) {
-        presenter.deleteFromFirebase(meal);
-        meals.remove(meal);
-        mealAdapter.submitList(meals);
-        binding.rvPlannedMeals.setAdapter(mealAdapter);
+        isConnected(meal);
     }
+
+
 
     public void formatSelectedDay(long date) {
         String selectedDay = selectedDayFormat.format(date);
         binding.dateTextView.setText(selectedDay);
+    }
+
+    private void isConnected(Meal meal) {
+        if (NetworkManager.isConnected(requireContext())) {
+            presenter.deleteFromFirebase(meal);
+            meals.remove(meal);
+            mealAdapter.submitList(meals);
+            binding.rvPlannedMeals.setAdapter(mealAdapter);
+        } else {
+            Snackbar.make(requireView(), "No internet connection!", Snackbar.LENGTH_SHORT).show();
+        }
     }
 
 }

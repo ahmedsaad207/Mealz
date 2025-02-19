@@ -105,7 +105,7 @@ public class HomePresenterImpl implements HomePresenter, BackUpRemoteDataSourceI
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-
+                        view.onHideLoading(e.getMessage());
                     }
                 });
     }
