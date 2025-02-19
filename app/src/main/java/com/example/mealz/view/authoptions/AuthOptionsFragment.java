@@ -22,6 +22,7 @@ import androidx.navigation.Navigation;
 import com.example.mealz.R;
 import com.example.mealz.data.MealsRepositoryImpl;
 import com.example.mealz.data.UserLocalDataSourceImpl;
+import com.example.mealz.data.backup.BackUpRemoteDataSourceImpl;
 import com.example.mealz.data.file.MealFileDataSourceImpl;
 import com.example.mealz.data.local.MealsLocalDataSourceImpl;
 import com.example.mealz.data.remote.MealsRemoteDataSourceImpl;
@@ -41,6 +42,7 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class AuthOptionsFragment extends Fragment {
     private static final String TAG = "AuthOptionsFragment";
@@ -93,7 +95,8 @@ public class AuthOptionsFragment extends Fragment {
                 MealsRemoteDataSourceImpl.getInstance(),
                 MealsLocalDataSourceImpl.getInstance(requireActivity()),
                 MealFileDataSourceImpl.getInstance(requireActivity()),
-                UserLocalDataSourceImpl.getInstance(RxSharedPreferences.create(requireActivity().getSharedPreferences(Constants.SP_CREDENTIAL, MODE_PRIVATE)))
+                UserLocalDataSourceImpl.getInstance(RxSharedPreferences.create(requireActivity().getSharedPreferences(Constants.SP_CREDENTIAL, MODE_PRIVATE))),
+                BackUpRemoteDataSourceImpl.getInstance(FirebaseDatabase.getInstance())
         ));
 
         GoogleSignInOptions options = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)

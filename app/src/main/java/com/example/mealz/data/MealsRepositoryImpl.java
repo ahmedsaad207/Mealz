@@ -1,5 +1,8 @@
 package com.example.mealz.data;
 
+import com.example.mealz.data.backup.BackUpRemoteDataSource;
+import com.example.mealz.data.backup.BackUpRemoteDataSourceImpl;
+import com.example.mealz.data.file.MealFileDataSource;
 import com.example.mealz.data.file.MealFileDataSourceImpl;
 import com.example.mealz.data.local.MealsLocalDataSource;
 import com.example.mealz.data.remote.MealsRemoteDataSource;
@@ -21,22 +24,25 @@ public class MealsRepositoryImpl implements MealsRepository {
     private final MealsLocalDataSource localSource;
     private final UserLocalDataSource userLocalDataSource;
     private final MealFileDataSourceImpl fileSource;
+    private final BackUpRemoteDataSource backupDataSource;
 
     public MealsRepositoryImpl(MealsRemoteDataSource remoteSource, MealsLocalDataSource localSource, MealFileDataSourceImpl fileSource,
-                               UserLocalDataSource userLocalDataSource) {
+                               UserLocalDataSource userLocalDataSource, BackUpRemoteDataSource backupDataSource) {
         this.remoteSource = remoteSource;
         this.localSource = localSource;
         this.fileSource = fileSource;
         this.userLocalDataSource = userLocalDataSource;
+        this.backupDataSource = backupDataSource;
     }
 
     public static MealsRepositoryImpl getInstance(
             MealsRemoteDataSource remoteSource,
             MealsLocalDataSource localSource,
             MealFileDataSourceImpl fileSource,
-            UserLocalDataSource UserLocalDataSource) {
+            UserLocalDataSource UserLocalDataSource,
+            BackUpRemoteDataSource backupDataSource) {
         if (instance == null) {
-            instance = new MealsRepositoryImpl(remoteSource, localSource, fileSource,UserLocalDataSource);
+            instance = new MealsRepositoryImpl(remoteSource, localSource, fileSource,UserLocalDataSource,backupDataSource);
         }
         return instance;
     }
@@ -157,12 +163,27 @@ public class MealsRepositoryImpl implements MealsRepository {
     }
 
     @Override
-    public io.reactivex.Observable<Boolean> getRememberMe() {
-        return userLocalDataSource.getRememberMe();
+    public Completable insertAllMeal(List<Meal> meals) {
+        return localSource.insertAllMeal(meals);
     }
 
     @Override
-    public Completable insertAllMeal(List<Meal> meals) {
-        return localSource.insertAllMeal(meals);
+    public Completable deletePlanMeal(long networkId, String userId, long date) {
+        return localSource.deletePlanMeal(networkId, userId, date);
+    }
+
+    @Override
+    public void backUp(Meal meal) {
+        backupDataSource.backUp(meal);
+    }
+
+    @Override
+    public void removeMealFromFavorites(Meal meal, BackUpRemoteDataSourceImpl.OnMealRemovedListener onMealRemovedListener) {
+        backupDataSource.removeMealFromFavorites(meal, onMealRemovedListener);
+    }
+
+    @Override
+    public void retrieveBackupMeals(String userId, BackUpRemoteDataSourceImpl.OnDataReceivedListener listener) {
+        backupDataSource.retrieveBackupMeals(userId, listener);
     }
 }

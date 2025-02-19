@@ -27,7 +27,6 @@ public class AuthActivity extends AppCompatActivity implements OnLoginSuccessLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         binding = DataBindingUtil.setContentView(this, R.layout.activity_auth);
         setSupportActionBar(binding.toolbarAuth);
         navController = ((NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.navHostFragmentAuth)).getNavController();
@@ -36,10 +35,10 @@ public class AuthActivity extends AppCompatActivity implements OnLoginSuccessLis
             navigateToSignUp = intent.getBooleanExtra(Constants.KEY_SIGN_UP_STATE, false);
         }
 
-        SharedPreferences preferences = getSharedPreferences("credential",MODE_PRIVATE);
-        if (!preferences.getString("userId","").isEmpty()) {
-            onLoginSuccess();
-        }
+//        SharedPreferences preferences = getSharedPreferences("credential",MODE_PRIVATE);
+//        if (!preferences.getString("userId","").isEmpty()) {
+//            onLoginSuccess();
+//        }
     }
 
     @Override

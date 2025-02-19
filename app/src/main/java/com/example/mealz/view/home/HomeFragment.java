@@ -25,6 +25,7 @@ import androidx.navigation.Navigation;
 import com.example.mealz.R;
 import com.example.mealz.data.MealsRepositoryImpl;
 import com.example.mealz.data.UserLocalDataSourceImpl;
+import com.example.mealz.data.backup.BackUpRemoteDataSourceImpl;
 import com.example.mealz.data.file.MealFileDataSourceImpl;
 import com.example.mealz.data.local.MealsLocalDataSourceImpl;
 import com.example.mealz.data.remote.MealsRemoteDataSourceImpl;
@@ -42,6 +43,7 @@ import com.example.mealz.view.MealAdapter;
 import com.example.mealz.view.OnMealItemClickListener;
 import com.f2prateek.rx.preferences2.RxSharedPreferences;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,13 +84,6 @@ public class HomeFragment extends Fragment implements HomeView, OnMealItemClickL
         setupRV();
         requestData();
         handleSearch();
-        /*
-        binding.btnSignOut.setOnClickListener(v -> {
-            if (mAuth.getCurrentUser() != null) {
-                mAuth.signOut();
-            }
-        });
-        */
     }
 
     private void setupRV() {
@@ -119,7 +114,8 @@ public class HomeFragment extends Fragment implements HomeView, OnMealItemClickL
         presenter = new HomePresenterImpl(MealsRepositoryImpl.getInstance(MealsRemoteDataSourceImpl.getInstance(), MealsLocalDataSourceImpl.getInstance(requireActivity()), MealFileDataSourceImpl.getInstance(requireActivity()),
                 UserLocalDataSourceImpl.getInstance(
                         RxSharedPreferences.create(requireActivity().getSharedPreferences(Constants.SP_CREDENTIAL, MODE_PRIVATE))
-                )), this);
+                ),
+                BackUpRemoteDataSourceImpl.getInstance(FirebaseDatabase.getInstance())), this);
         searchList = new ArrayList<>();
         searchAdapter = new MealAdapter<>(HomeFragment.this);
         drawableSearch = ContextCompat.getDrawable(requireActivity(), R.drawable.ic_search);

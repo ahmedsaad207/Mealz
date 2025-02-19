@@ -1,5 +1,6 @@
 package com.example.mealz.data;
 
+import com.example.mealz.data.backup.BackUpRemoteDataSourceImpl;
 import com.example.mealz.model.Ingredient;
 import com.example.mealz.model.Meal;
 import com.example.mealz.model.MealzResponse;
@@ -57,7 +58,13 @@ public interface MealsRepository {
 
     void setRememberMe(boolean value);
 
-    io.reactivex.Observable<Boolean> getRememberMe();
-
     Completable insertAllMeal(List<Meal> meals);
+
+    Completable deletePlanMeal(long networkId, String userId, long date);
+
+    void backUp(Meal meal);
+
+    void removeMealFromFavorites(Meal meal, BackUpRemoteDataSourceImpl.OnMealRemovedListener onMealRemovedListener);
+
+    void retrieveBackupMeals(String userId, BackUpRemoteDataSourceImpl.OnDataReceivedListener listener);
 }

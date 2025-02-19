@@ -21,6 +21,7 @@ import androidx.navigation.Navigation;
 import com.example.mealz.R;
 import com.example.mealz.data.MealsRepositoryImpl;
 import com.example.mealz.data.UserLocalDataSourceImpl;
+import com.example.mealz.data.backup.BackUpRemoteDataSourceImpl;
 import com.example.mealz.data.file.MealFileDataSourceImpl;
 import com.example.mealz.data.local.MealsLocalDataSourceImpl;
 import com.example.mealz.data.remote.MealsRemoteDataSourceImpl;
@@ -36,6 +37,7 @@ import com.example.mealz.view.OnSignUpClickListener;
 import com.example.mealz.view.profile.OnLogoutListener;
 import com.f2prateek.rx.preferences2.RxSharedPreferences;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
@@ -87,10 +89,9 @@ public class FavoriteFragment extends Fragment implements FavoriteView, OnMealIt
                 MealsRemoteDataSourceImpl.getInstance(),
                 MealsLocalDataSourceImpl.getInstance(requireActivity()),
                 MealFileDataSourceImpl.getInstance(requireActivity()),
-                UserLocalDataSourceImpl.getInstance(
-                        RxSharedPreferences.create(requireActivity().getSharedPreferences(Constants.SP_CREDENTIAL, MODE_PRIVATE))
-                )
-        ), this);
+                UserLocalDataSourceImpl.getInstance(RxSharedPreferences.create(requireActivity().getSharedPreferences(Constants.SP_CREDENTIAL, MODE_PRIVATE))),
+                BackUpRemoteDataSourceImpl.getInstance(FirebaseDatabase.getInstance())),
+                this);
         adapter = new MealAdapter<>(this);
 
     }
@@ -151,7 +152,7 @@ public class FavoriteFragment extends Fragment implements FavoriteView, OnMealIt
 
     @Override
     public void removeMealFromFavorites(Meal meal) {
-        presenter.deleteMeal(meal);
+        presenter.deleteFromFirebase(meal);
     }
 
 }

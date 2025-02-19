@@ -20,6 +20,7 @@ import androidx.navigation.Navigation;
 import com.example.mealz.R;
 import com.example.mealz.data.MealsRepositoryImpl;
 import com.example.mealz.data.UserLocalDataSourceImpl;
+import com.example.mealz.data.backup.BackUpRemoteDataSourceImpl;
 import com.example.mealz.data.file.MealFileDataSourceImpl;
 import com.example.mealz.data.local.MealsLocalDataSourceImpl;
 import com.example.mealz.data.remote.MealsRemoteDataSourceImpl;
@@ -36,6 +37,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class LoginFragment extends Fragment {
     FirebaseAuth mAuth;
@@ -117,7 +119,8 @@ public class LoginFragment extends Fragment {
                 MealsRemoteDataSourceImpl.getInstance(),
                 MealsLocalDataSourceImpl.getInstance(requireActivity()),
                 MealFileDataSourceImpl.getInstance(requireActivity()),
-                UserLocalDataSourceImpl.getInstance(RxSharedPreferences.create(requireActivity().getSharedPreferences(Constants.SP_CREDENTIAL, MODE_PRIVATE)))
+                UserLocalDataSourceImpl.getInstance(RxSharedPreferences.create(requireActivity().getSharedPreferences(Constants.SP_CREDENTIAL, MODE_PRIVATE))),
+                BackUpRemoteDataSourceImpl.getInstance(FirebaseDatabase.getInstance())
         ));
     }
 

@@ -24,6 +24,7 @@ import com.bumptech.glide.Glide;
 import com.example.mealz.R;
 import com.example.mealz.data.MealsRepositoryImpl;
 import com.example.mealz.data.UserLocalDataSourceImpl;
+import com.example.mealz.data.backup.BackUpRemoteDataSourceImpl;
 import com.example.mealz.data.file.MealFileDataSourceImpl;
 import com.example.mealz.data.local.MealsLocalDataSourceImpl;
 import com.example.mealz.data.remote.MealsRemoteDataSourceImpl;
@@ -37,6 +38,7 @@ import com.example.mealz.utils.Constants;
 import com.example.mealz.utils.Utils;
 import com.f2prateek.rx.preferences2.RxSharedPreferences;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Calendar;
 import java.util.List;
@@ -77,7 +79,8 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
                         MealFileDataSourceImpl.getInstance(requireActivity()),
                         UserLocalDataSourceImpl.getInstance(
                                 RxSharedPreferences.create(requireActivity().getSharedPreferences(Constants.SP_CREDENTIAL, MODE_PRIVATE))
-                        )),
+                        ), BackUpRemoteDataSourceImpl.getInstance(FirebaseDatabase.getInstance())
+                ),
                 this
         );
 
@@ -108,7 +111,7 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
         binding.btnFav.setOnClickListener(v ->
         {
             if (currentMeal.getDate() == Constants.TYPE_FAVORITE) {
-                presenter.deleteMeal(currentMeal);
+                presenter.removeMealFromFavorites(currentMeal);
             } else {
                 presenter.insertFavMeal(currentMeal);
             }

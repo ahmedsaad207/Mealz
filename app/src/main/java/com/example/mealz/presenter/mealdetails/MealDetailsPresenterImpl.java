@@ -3,6 +3,7 @@ package com.example.mealz.presenter.mealdetails;
 import android.util.Log;
 
 import com.example.mealz.data.MealsRepositoryImpl;
+import com.example.mealz.data.backup.BackUpRemoteDataSourceImpl;
 import com.example.mealz.model.Ingredient;
 import com.example.mealz.model.Meal;
 import com.example.mealz.utils.Constants;
@@ -19,7 +20,7 @@ import io.reactivex.rxjava3.core.SingleObserver;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-public class MealDetailsPresenterImpl implements MealDetailsPresenter {
+public class MealDetailsPresenterImpl implements MealDetailsPresenter, BackUpRemoteDataSourceImpl.OnMealRemovedListener {
 
     private final MealsRepositoryImpl repo;
     private final MealDetailsView view;
@@ -140,7 +141,6 @@ public class MealDetailsPresenterImpl implements MealDetailsPresenter {
     @Override
     public void insertMeal(Meal meal) {
 
-//        meal.setDate(Constants.TYPE_FAVORITE);
         repo.insertMeal(meal)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -169,69 +169,8 @@ public class MealDetailsPresenterImpl implements MealDetailsPresenter {
                         view.onInsertError(e.getMessage());
                     }
                 });
-
-        /*
-        repo.getUserId()
-                .flatMap(userId -> {
-                    meal.setUserId(userId);
-                    repo.insertMeal(meal)
-                            .subscribeOn(Schedulers.io())
-                            .subscribe(new CompletableObserver() {
-                                @Override
-                                public void onSubscribe(@NonNull Disposable d) {
-
-                                }
-
-                                @Override
-                                public void onComplete() {
-                                    downloadMealImage(meal);
-                                    downloadIngredientImages(meal.getIngredients());
-                                    view.onSuccess();
-                                }
-
-                                @Override
-                                public void onError(@NonNull Throwable e) {
-
-                                }
-                            });
-                    return null;
-                })
-                .subscribeOn(io.reactivex.schedulers.Schedulers.io())
-                .subscribe(new io.reactivex.Observer<>() {
-                    @Override
-                    public void onSubscribe(io.reactivex.disposables.Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(Object o) {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-        */
     }
 
-    public void backUp(Meal meal) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference reference = database.getReference("users");
-        reference
-                .child(meal.getUserId())
-                .child(meal.getDate() == Constants.TYPE_FAVORITE ? "favorites" : "plan")
-                .child(meal.getDate() == Constants.TYPE_FAVORITE ? String.valueOf(meal.getNetworkId()) : String.valueOf(meal.getDate()))
-                .setValue(meal).addOnSuccessListener(command -> {
-                    Log.d("TAG", "added to firebase");
-                });
-    }
 
     @Override
     public void downloadMealImage(Meal meal) {
@@ -327,7 +266,7 @@ public class MealDetailsPresenterImpl implements MealDetailsPresenter {
                     public void onComplete() {
                         downloadMealImage(meal);
                         downloadIngredientImages(meal.getIngredients());
-                        deleteFromFirebase(meal);
+//                        deleteFromFirebase(meal);
                         view.onDeleteComplete();
                     }
 
@@ -388,17 +327,17 @@ public class MealDetailsPresenterImpl implements MealDetailsPresenter {
         */
     }
 
-    private void deleteFromFirebase(Meal meal) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference reference = database.getReference("users");
-        reference
-                .child(meal.getUserId())
-                .child(meal.getDate() == Constants.TYPE_FAVORITE ? "favorites" : "plans")
-                .child(meal.getDate() == Constants.TYPE_FAVORITE ? String.valueOf(meal.getNetworkId()) : String.valueOf(meal.getDate()))
-                .removeValue()
-                .addOnSuccessListener(command -> Log.d("TAG", "meal deleted from firebase"))
-                .addOnFailureListener(command -> Log.d("TAG", "meal failed to delete from firebase"));
-    }
+//    public void deleteFromFirebase(Meal meal) {
+//        FirebaseDatabase database = FirebaseDatabase.getInstance();
+//        DatabaseReference reference = database.getReference("users");
+//        reference
+//                .child(meal.getUserId())
+//                .child(meal.getDate() == Constants.TYPE_FAVORITE ? "favorites" : "plans")
+//                .child(meal.getDate() == Constants.TYPE_FAVORITE ? String.valueOf(meal.getNetworkId()) : String.valueOf(meal.getDate()))
+//                .removeValue()
+//                .addOnSuccessListener(command -> Log.d("TAG", "meal deleted from firebase"))
+//                .addOnFailureListener(command -> Log.d("TAG", "meal failed to delete from firebase"));
+//    }
 
     @Override
     public void getUserId() {
@@ -428,5 +367,20 @@ public class MealDetailsPresenterImpl implements MealDetailsPresenter {
                 });
     }
 
+    @Override
+    public void backUp(Meal meal) {
+        repo.backUp(meal);
+    }
 
+    @Override
+    public void removeMealFromFavorites(Meal meal) {
+        repo.removeMealFromFavorites(meal, this);
+    }
+
+
+    @Override
+    public void onMealRemoved(Meal meal) {
+        Log.d("TAG", "onMealRemoved: ");
+        deleteMeal(meal);
+    }
 }

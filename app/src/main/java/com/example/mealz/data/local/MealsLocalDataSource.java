@@ -20,4 +20,6 @@ public interface MealsLocalDataSource {
     Single<Meal> isFavMealExist(String userId, long networkMealId);
 
     Completable insertAllMeal(List<Meal> meal);
+
+    Completable deletePlanMeal(long networkId, String userId, long date);
 }

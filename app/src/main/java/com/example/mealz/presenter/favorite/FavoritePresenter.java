@@ -11,4 +11,6 @@ public interface FavoritePresenter {
     void deleteMeal(Meal meal);
 
     void getUserId();
+
+    void deleteFromFirebase(Meal meal);
 }

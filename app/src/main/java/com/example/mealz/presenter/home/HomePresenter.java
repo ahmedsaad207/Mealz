@@ -1,5 +1,6 @@
 package com.example.mealz.presenter.home;
 
+import com.example.mealz.data.backup.BackUpRemoteDataSourceImpl;
 import com.example.mealz.model.Meal;
 import com.example.mealz.model.MealzResponse;
 import com.example.mealz.model.SearchItem;
@@ -27,4 +28,6 @@ public interface HomePresenter {
     void insertAllMeal(List<Meal> meals);
 
     void getUserId();
+
+    void retrieveBackupMeals(String userId);
 }

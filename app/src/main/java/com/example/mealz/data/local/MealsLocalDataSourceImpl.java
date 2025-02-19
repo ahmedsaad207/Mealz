@@ -56,4 +56,9 @@ public class MealsLocalDataSourceImpl implements MealsLocalDataSource {
     public Completable insertAllMeal(List<Meal> meals) {
         return dao.insertAllMeal(meals);
     }
+
+    @Override
+    public Completable deletePlanMeal(long networkId, String userId, long date) {
+        return dao.deletePlanMeal(networkId, userId, date);
+    }
 }
