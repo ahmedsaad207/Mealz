@@ -1,5 +1,6 @@
 package com.example.mealz.presenter.mealdetails;
 
+import com.example.mealz.data.backup.BackUpRemoteDataSourceImpl;
 import com.example.mealz.model.Ingredient;
 import com.example.mealz.model.Meal;
 import com.example.mealz.model.NetworkMeal;
@@ -21,4 +22,8 @@ public interface MealDetailsPresenter {
     void deleteMeal(Meal meal);
 
     void getUserId();
+
+    void backUp(Meal meal);
+
+    void removeMealFromFavorites(Meal meal);
 }

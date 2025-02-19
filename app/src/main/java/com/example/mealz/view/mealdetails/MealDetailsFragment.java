@@ -5,6 +5,7 @@ import static android.content.Context.MODE_PRIVATE;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import com.bumptech.glide.Glide;
 import com.example.mealz.R;
 import com.example.mealz.data.MealsRepositoryImpl;
 import com.example.mealz.data.UserLocalDataSourceImpl;
+import com.example.mealz.data.backup.BackUpRemoteDataSourceImpl;
 import com.example.mealz.data.file.MealFileDataSourceImpl;
 import com.example.mealz.data.local.MealsLocalDataSourceImpl;
 import com.example.mealz.data.remote.MealsRemoteDataSourceImpl;
@@ -36,6 +38,7 @@ import com.example.mealz.utils.Constants;
 import com.example.mealz.utils.Utils;
 import com.f2prateek.rx.preferences2.RxSharedPreferences;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Calendar;
 import java.util.List;
@@ -76,7 +79,8 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
                         MealFileDataSourceImpl.getInstance(requireActivity()),
                         UserLocalDataSourceImpl.getInstance(
                                 RxSharedPreferences.create(requireActivity().getSharedPreferences(Constants.SP_CREDENTIAL, MODE_PRIVATE))
-                        )),
+                        ), BackUpRemoteDataSourceImpl.getInstance(FirebaseDatabase.getInstance())
+                ),
                 this
         );
 
@@ -86,7 +90,7 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
 
         Meal meal = MealDetailsFragmentArgs.fromBundle(getArguments()).getMeal();
 
-        if (meal.getDate() == Constants.TYPE_DEFAULT) {
+        if (meal.getDate() == Constants.TYPE_DEFAULT) { // network
             presenter.getMealById(meal.getNetworkId());
         } else if (meal.getDate() == Constants.TYPE_FAVORITE) {
             displayMeal(meal);
@@ -107,12 +111,11 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
         binding.btnFav.setOnClickListener(v ->
         {
             if (currentMeal.getDate() == Constants.TYPE_FAVORITE) {
-                currentMeal.setDate(Constants.TYPE_DEFAULT);
-                presenter.deleteMeal(currentMeal);
+                presenter.removeMealFromFavorites(currentMeal);
             } else {
-                currentMeal.setDate(Constants.TYPE_FAVORITE);
                 presenter.insertFavMeal(currentMeal);
             }
+            binding.btnFav.setEnabled(false);
         });
     }
 
@@ -147,7 +150,7 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
         DatePickerDialog dialog = new DatePickerDialog(requireActivity(), R.style.DialogTheme, (view, year1, month1, dayOfMonth1) -> {
             calendar.set(year1, month1, dayOfMonth1);
             currentMeal.setDate(calendar.getTimeInMillis());
-            presenter.insertPlanMeal(currentMeal);
+            presenter.insertMeal(currentMeal);
         }, year, month, dayOfMonth);
 
         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
@@ -162,12 +165,16 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
     @Override
     public void displayMeal(Meal meal) {
         if (meal != null) {
-            presenter.getUserId();
+            currentMeal = meal;
+            if (meal.getDate() == Constants.TYPE_FAVORITE) {
+                currentMeal.setUserId(meal.getUserId());
+                binding.groupFab.setVisibility(View.VISIBLE);
+            } else {
+                presenter.getUserId();
+            }
             binding.loadingDetails.setVisibility(View.GONE);
             binding.contentDetails.setVisibility(View.VISIBLE);
-            binding.groupFab.setVisibility(View.VISIBLE);
 
-            currentMeal = meal;
             binding.mealNameTextView.setText(meal.getName());
             binding.mealCategoryTextView.setText(getString(R.string.beef_popular_in, meal.getCategory()));
             binding.videoLabel.setText(getString(R.string.title_video, meal.getName()));
@@ -187,24 +194,6 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
     }
 
     @Override
-    public void onSuccess() {
-        if (currentMeal.getDate() == Constants.TYPE_FAVORITE) {
-            showMessage("Added Successfully to Your Favorites!");
-            binding.btnFav.setImageResource(R.drawable.ic_fav_added);
-        } else if (currentMeal.getDate() == Constants.TYPE_DEFAULT) {
-            showMessage("Deleted from Your Favorites!");
-            binding.btnFav.setImageResource(R.drawable.ic_fav_add);
-        } else {
-            showMessage("Added Successfully to Your Plan!");
-        }
-    }
-
-    @Override
-    public void insertMeal() {
-        presenter.insertMeal(currentMeal);
-    }
-
-    @Override
     public void changeImageResourceForFav() {
         currentMeal.setDate(Constants.TYPE_FAVORITE);
         binding.btnFav.setImageResource(R.drawable.ic_fav_added);
@@ -213,8 +202,54 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
     @Override
     public void onUserId(String userId) {
         if (userId.isEmpty()) {
-            binding.groupFab.setVisibility(View.GONE);
+            binding.groupFab.setVisibility(View.GONE); //Guest Mode
+        } else {
+            currentMeal.setUserId(userId);
+            binding.groupFab.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public void onDeleteComplete() {
+        currentMeal.setDate(Constants.TYPE_DEFAULT);
+        binding.btnFav.setEnabled(true);
+        binding.btnFav.setImageResource(R.drawable.ic_fav_add);
+        showMessage("Meal removed from favorites");
+    }
+
+    @Override
+    public void onDeleteError(String error) {
+        binding.btnFav.setEnabled(true);
+        showMessage("Failed to remove meal from favorites: " + error);
+    }
+
+    @Override
+    public void onInsertFavCompleted() {
+        currentMeal.setDate(Constants.TYPE_FAVORITE);
+        binding.btnFav.setEnabled(true);
+        binding.btnFav.setImageResource(R.drawable.ic_fav_added);
+        showMessage("Meal added to your favorites");
+    }
+
+    @Override
+    public void onInsertError(String error) {
+        binding.btnFav.setEnabled(true);
+        showMessage("Failed to add meal: " + error);
+    }
+
+    @Override
+    public void onFetchMealFailed(String error) {
+        showMessage(error);
+        Navigation.findNavController(binding.getRoot()).navigateUp();
+    }
+
+    @Override
+    public void onInsertPlanCompleted() {
+        Log.d("TAG", "detail plan type: when plan is pressed: "+ currentMeal.getDate());
+//        currentMeal.setDate(Constants.TYPE_FAVORITE);
+        binding.btnFav.setEnabled(true);
+//        binding.btnFav.setImageResource(R.drawable.ic_fav_added);
+        showMessage("Meal added to your plan");
     }
 
     private void showMessage(String message) {

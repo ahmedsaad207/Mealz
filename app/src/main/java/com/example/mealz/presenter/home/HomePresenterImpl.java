@@ -1,8 +1,7 @@
 package com.example.mealz.presenter.home;
 
-import android.util.Log;
-
 import com.example.mealz.data.MealsRepositoryImpl;
+import com.example.mealz.data.backup.BackUpRemoteDataSourceImpl;
 import com.example.mealz.model.Category;
 import com.example.mealz.model.Ingredient;
 import com.example.mealz.model.Meal;
@@ -16,19 +15,19 @@ import java.util.stream.Collectors;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.annotations.NonNull;
+import io.reactivex.rxjava3.core.CompletableObserver;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.core.SingleObserver;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-public class HomePresenterImpl implements HomePresenter {
+public class HomePresenterImpl implements HomePresenter, BackUpRemoteDataSourceImpl.OnDataReceivedListener {
 
     private final MealsRepositoryImpl repo;
     private final HomeView view;
 
     private List<SearchItem> searchList, filteredList;
-
 
     public HomePresenterImpl(MealsRepositoryImpl repo, HomeView view) {
         this.repo = repo;
@@ -202,5 +201,67 @@ public class HomePresenterImpl implements HomePresenter {
                     }
                 });
 
+    }
+
+    @Override
+    public void insertAllMeal(List<Meal> meals) {
+        repo.insertAllMeal(meals)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+
+                    }
+                });
+    }
+
+    @Override
+    public void getUserId() {
+        repo.getUserId()
+                .subscribeOn(io.reactivex.schedulers.Schedulers.io())
+                .observeOn(io.reactivex.android.schedulers.AndroidSchedulers.mainThread())
+                .subscribe(new io.reactivex.Observer<>() {
+                    @Override
+                    public void onSubscribe(io.reactivex.disposables.Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(String userId) {
+                        // TODO
+//                        view.displayUserName(username);
+                        retrieveBackupMeals(userId);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+    public void retrieveBackupMeals(String userId) {
+        repo.retrieveBackupMeals(userId, this);
+    }
+
+    @Override
+    public void onDataReceived(List<Meal> meals) {
+        insertAllMeal(meals);
     }
 }

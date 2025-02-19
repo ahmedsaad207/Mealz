@@ -97,6 +97,7 @@
                 app:backgroundTint="@color/white" />
 
             <androidx.appcompat.widget.AppCompatButton
+                android:visibility="gone"
                 android:drawableStart="@drawable/ic_fb"
                 style="@style/ButtonRect"
                 android:layout_width="match_parent"

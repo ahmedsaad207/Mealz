@@ -62,7 +62,8 @@ public class MealAdapter<T> extends ListAdapter<T, MealAdapter.MealViewHolder> {
 
         if (currenT instanceof SearchItem) {
             holder.bindSearchItem((SearchItem) currenT, onMealItemClickListener);
-        } else {
+        }
+        else {
             holder.bind((Meal) currenT, onMealItemClickListener);
         }
 
@@ -100,6 +101,12 @@ public class MealAdapter<T> extends ListAdapter<T, MealAdapter.MealViewHolder> {
                     .into(mealImageView);
 
             if (meal.getDate() == Constants.TYPE_FAVORITE) {
+                btnRemove.setImageResource(R.drawable.ic_fav_added);
+                btnRemove.setVisibility(View.VISIBLE);
+                btnRemove.setOnClickListener(v -> onMealItemClickListener.removeMealFromFavorites(meal));
+            } else if (meal.getDate() != Constants.TYPE_DEFAULT) {
+                btnRemove.setImageResource(android.R.drawable.ic_delete);
+                btnRemove.setColorFilter(btnRemove.getContext().getResources().getColor(R.color.brownish_gray), android.graphics.PorterDuff.Mode.SRC_IN);
                 btnRemove.setVisibility(View.VISIBLE);
                 btnRemove.setOnClickListener(v -> onMealItemClickListener.removeMealFromFavorites(meal));
             }

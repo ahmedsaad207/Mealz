@@ -9,9 +9,7 @@ import androidx.room.TypeConverters;
 
 import com.example.mealz.model.Meal;
 
-import javax.inject.Singleton;
-
-@Database(entities = {Meal.class}, version = 1)
+@Database(entities = {Meal.class}, version = 2, exportSchema = false)
 @TypeConverters(value = Converters.class)
 public abstract class MealsDatabase extends RoomDatabase {
     private volatile static MealsDatabase instance;
@@ -21,8 +19,10 @@ public abstract class MealsDatabase extends RoomDatabase {
             synchronized (RoomDatabase.class) {
                 if (instance == null) {
                     instance = Room.databaseBuilder(
-                            context.getApplicationContext(), MealsDatabase.class, "meals.db"
-                    ).build();
+                                    context.getApplicationContext(), MealsDatabase.class, "meals.db"
+                            )
+                            .fallbackToDestructiveMigration()
+                            .build();
                 }
             }
 

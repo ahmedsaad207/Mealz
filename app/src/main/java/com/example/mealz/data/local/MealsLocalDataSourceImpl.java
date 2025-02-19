@@ -51,4 +51,14 @@ public class MealsLocalDataSourceImpl implements MealsLocalDataSource {
     public Single<Meal> isFavMealExist(String userId, long networkMealId) {
         return dao.isFavMealExist(userId, networkMealId);
     }
+
+    @Override
+    public Completable insertAllMeal(List<Meal> meals) {
+        return dao.insertAllMeal(meals);
+    }
+
+    @Override
+    public Completable deletePlanMeal(long networkId, String userId, long date) {
+        return dao.deletePlanMeal(networkId, userId, date);
+    }
 }

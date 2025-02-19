@@ -14,8 +14,10 @@ public class Constants {
     public static final String KEY_USERNAME = "username";
     public static final String KEY_REMEMBER_ME = "rememberMe";
     public static final String SP_CREDENTIAL = "credential";
-
     public static final String KEY_SIGN_UP_STATE = "sign-up-state";
+    public static final String BACKUP_USERS = "users";
+    public static final String BACKUP_FAV = "favorites";
+    public static final String BACKUP_PLAN = "plan";
 
 
 }

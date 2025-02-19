@@ -18,6 +18,7 @@ import androidx.navigation.Navigation;
 import com.example.mealz.R;
 import com.example.mealz.data.MealsRepositoryImpl;
 import com.example.mealz.data.UserLocalDataSourceImpl;
+import com.example.mealz.data.backup.BackUpRemoteDataSourceImpl;
 import com.example.mealz.data.file.MealFileDataSourceImpl;
 import com.example.mealz.data.local.MealsLocalDataSourceImpl;
 import com.example.mealz.data.remote.MealsRemoteDataSourceImpl;
@@ -30,6 +31,7 @@ import com.example.mealz.utils.Constants;
 import com.example.mealz.view.MealAdapter;
 import com.example.mealz.view.OnMealItemClickListener;
 import com.f2prateek.rx.preferences2.RxSharedPreferences;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
@@ -54,7 +56,8 @@ public class MealsListFragment extends Fragment implements MealsListView, OnMeal
                 MealsRemoteDataSourceImpl.getInstance(),
                 MealsLocalDataSourceImpl.getInstance(requireActivity()),
                 MealFileDataSourceImpl.getInstance(requireActivity()),
-                UserLocalDataSourceImpl.getInstance(RxSharedPreferences.create(requireActivity().getSharedPreferences(Constants.SP_CREDENTIAL, MODE_PRIVATE)))
+                UserLocalDataSourceImpl.getInstance(RxSharedPreferences.create(requireActivity().getSharedPreferences(Constants.SP_CREDENTIAL, MODE_PRIVATE))),
+                BackUpRemoteDataSourceImpl.getInstance(FirebaseDatabase.getInstance())
         ), this);
 
         MealsListFragmentArgs args = MealsListFragmentArgs.fromBundle(getArguments());

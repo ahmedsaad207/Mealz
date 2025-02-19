@@ -18,6 +18,7 @@ import androidx.navigation.Navigation;
 import com.example.mealz.R;
 import com.example.mealz.data.MealsRepositoryImpl;
 import com.example.mealz.data.UserLocalDataSourceImpl;
+import com.example.mealz.data.backup.BackUpRemoteDataSourceImpl;
 import com.example.mealz.data.file.MealFileDataSourceImpl;
 import com.example.mealz.data.local.MealsLocalDataSourceImpl;
 import com.example.mealz.data.remote.MealsRemoteDataSourceImpl;
@@ -26,6 +27,7 @@ import com.example.mealz.presenter.profile.ProfilePresenter;
 import com.example.mealz.presenter.profile.ProfilePresenterImpl;
 import com.example.mealz.utils.Constants;
 import com.f2prateek.rx.preferences2.RxSharedPreferences;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class ProfileFragment extends Fragment implements ProfileView{
 
@@ -59,8 +61,8 @@ public class ProfileFragment extends Fragment implements ProfileView{
                 MealsLocalDataSourceImpl.getInstance(requireActivity()),
                 MealFileDataSourceImpl.getInstance(requireActivity()),
                 UserLocalDataSourceImpl.getInstance(
-                        RxSharedPreferences.create(requireActivity().getSharedPreferences(Constants.SP_CREDENTIAL, MODE_PRIVATE))
-                )
+                        RxSharedPreferences.create(requireActivity().getSharedPreferences(Constants.SP_CREDENTIAL, MODE_PRIVATE))),
+                BackUpRemoteDataSourceImpl.getInstance(FirebaseDatabase.getInstance())
         ),this);
 
         binding.btnLogout.setOnClickListener(v -> {

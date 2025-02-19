@@ -4,9 +4,12 @@ import android.util.Log;
 
 import com.example.mealz.data.MealsRepository;
 import com.example.mealz.data.MealsRepositoryImpl;
+import com.example.mealz.data.backup.BackUpRemoteDataSourceImpl;
 import com.example.mealz.model.Ingredient;
 import com.example.mealz.model.Meal;
 import com.example.mealz.utils.Constants;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
@@ -17,7 +20,7 @@ import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-public class FavoritePresenterImpl implements FavoritePresenter {
+public class FavoritePresenterImpl implements FavoritePresenter, BackUpRemoteDataSourceImpl.OnMealRemovedListener {
 
     MealsRepository repo;
     FavoriteView view;
@@ -146,5 +149,24 @@ public class FavoritePresenterImpl implements FavoritePresenter {
 
                     }
                 });
+    }
+
+    @Override
+    public void deleteFromFirebase(Meal meal) {
+        repo.removeMealFromFavorites(meal, this);
+//        FirebaseDatabase database = FirebaseDatabase.getInstance();
+//        DatabaseReference reference = database.getReference("users");
+//        reference
+//                .child(meal.getUserId())
+//                .child(meal.getDate() == Constants.TYPE_FAVORITE ? "favorites" : "plan")
+//                .child(meal.getDate() == Constants.TYPE_FAVORITE ? String.valueOf(meal.getNetworkId()) : String.valueOf(meal.getDate()))
+//                .removeValue()
+//                .addOnSuccessListener(command ->deleteMeal(meal))
+//                .addOnFailureListener(command -> Log.d("TAG", "meal failed to delete from firebase"));
+    }
+
+    @Override
+    public void onMealRemoved(Meal meal) {
+        deleteMeal(meal);
     }
 }

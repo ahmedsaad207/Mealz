@@ -1,17 +1,23 @@
 package com.example.mealz.presenter.mealdetails;
 
 import com.example.mealz.model.Meal;
-import com.example.mealz.model.NetworkMeal;
-
-import java.util.List;
 
 public interface MealDetailsView {
     void displayMeal(Meal meal);
-    void onSuccess();
-
-    void insertMeal();
 
     void changeImageResourceForFav();
 
     void onUserId(String userId);
+
+    void onDeleteComplete();
+
+    void onDeleteError(String error);
+
+    void onInsertFavCompleted();
+
+    void onInsertError(String error);
+
+    void onFetchMealFailed(String error);
+
+    void onInsertPlanCompleted();
 }

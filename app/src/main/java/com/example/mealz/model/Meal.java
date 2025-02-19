@@ -1,20 +1,23 @@
 package com.example.mealz.model;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.Ignore;
-import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
 import java.util.List;
 
-@Entity(tableName = "meals_table")
+
+@Entity(tableName = "meals_table", primaryKeys = {"userId", "networkId", "date"})
 public class Meal implements Serializable {
 
-    @PrimaryKey(autoGenerate = true)
-    private long id;
+    //    @PrimaryKey(autoGenerate = true)
+//    private long id;
+    @NonNull
     private long date;
+    @NonNull
     private String userId;
-
+    @NonNull
     private long networkId;
     private String name;
     private String urlImage;
@@ -22,35 +25,57 @@ public class Meal implements Serializable {
     private String instructions;
     private String area;
 
-
-    @Ignore
     private String youtubeUrl;
 
     private List<Ingredient> ingredients;
 
-    public Meal(){}
+    public Meal() {
+    }
 
-    public Meal(String name, String imageUrl, int resId) {
+    public Meal(@NonNull long date, @NonNull String userId,@NonNull long networkId, String name, String urlImage, String category, String instructions, String area, String youtubeUrl, List<Ingredient> ingredients) {
+        this.date = date;
+        this.userId = userId;
+        this.networkId = networkId;
+        this.name = name;
+        this.urlImage = urlImage;
+        this.category = category;
+        this.instructions = instructions;
+        this.area = area;
+        this.youtubeUrl = youtubeUrl;
+        this.ingredients = ingredients;
+    }
+
+        public Meal(String name, String imageUrl, int resId) {
         setName(name);
         setUrlImage(imageUrl);
         setDate(resId);
     }
 
 
+    @NonNull
     public long getDate() {
         return date;
     }
 
-    public void setDate(long date) {
+    public void setDate(@NonNull long date) {
         this.date = date;
     }
 
-    public String getUserId() {
+    public @NonNull String getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(@NonNull String userId) {
         this.userId = userId;
+    }
+
+    @NonNull
+    public long getNetworkId() {
+        return networkId;
+    }
+
+    public void setNetworkId(@NonNull long networkId) {
+        this.networkId = networkId;
     }
 
     public String getName() {
@@ -93,35 +118,19 @@ public class Meal implements Serializable {
         this.area = area;
     }
 
-    public List<Ingredient> getIngredients() {
-        return ingredients;
-    }
-
-    public void setIngredients(List<Ingredient> ingredients) {
-        this.ingredients = ingredients;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public long getNetworkId() {
-        return networkId;
-    }
-
-    public void setNetworkId(long networkId) {
-        this.networkId = networkId;
-    }
-
     public String getYoutubeUrl() {
         return youtubeUrl;
     }
 
     public void setYoutubeUrl(String youtubeUrl) {
         this.youtubeUrl = youtubeUrl;
+    }
+
+    public List<Ingredient> getIngredients() {
+        return ingredients;
+    }
+
+    public void setIngredients(List<Ingredient> ingredients) {
+        this.ingredients = ingredients;
     }
 }

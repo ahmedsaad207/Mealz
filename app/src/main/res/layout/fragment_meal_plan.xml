@@ -43,6 +43,15 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/item_day" />
 
+        <TextView
+            android:id="@+id/date_text_view"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            style="@style/RecyclerViewTitleStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvPlannedMeals"
             android:layout_width="match_parent"

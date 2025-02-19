@@ -2,9 +2,11 @@ package com.example.mealz.model;
 
 public class Ingredient {
 
-    private final String name;
-    private final String measure;
+    private String name;
+    private String measure;
     private String imageUrl;
+
+    public Ingredient() {}
 
     public Ingredient(String name, String measure, String imageUrl) {
         this.name = name;
