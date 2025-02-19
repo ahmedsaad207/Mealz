@@ -8,8 +8,6 @@ import com.example.mealz.model.Ingredient;
 import com.example.mealz.model.Meal;
 import com.example.mealz.utils.Constants;
 import com.example.mealz.utils.MealMapper;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
@@ -81,56 +79,6 @@ public class MealDetailsPresenterImpl implements MealDetailsPresenter, BackUpRem
                         insertMeal(meal);
                     }
                 });
-
-        /*
-        repo.getUserId()
-                .flatMap(userId -> {
-                    meal.setUserId(userId);
-                    repo.isFavMealExist(userId, meal.getNetworkId())
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(new SingleObserver<>() {
-                                @Override
-                                public void onSubscribe(@NonNull Disposable d) {
-
-                                }
-
-                                @Override
-                                public void onSuccess(@NonNull Meal meal) {
-                                    downloadMealImage(meal);
-                                    downloadIngredientImages(meal.getIngredients());
-                                }
-
-                                @Override
-                                public void onError(@NonNull Throwable e) {
-                                    insertMeal(meal);
-                                }
-                            });
-                    return null;
-                })
-                .subscribeOn(io.reactivex.schedulers.Schedulers.io())
-                .subscribe(new io.reactivex.Observer<>() {
-                    @Override
-                    public void onSubscribe(io.reactivex.disposables.Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(Object o) {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-        */
     }
 
     @Override
@@ -275,69 +223,8 @@ public class MealDetailsPresenterImpl implements MealDetailsPresenter, BackUpRem
                         view.onDeleteError(e.getMessage());
                     }
                 });
-        /*
-        repo.getUserId()
-                .flatMap(userId -> {
-                    meal.setUserId(userId);
-                    repo.deleteMeal(meal)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(new CompletableObserver() {
-                                @Override
-                                public void onSubscribe(@NonNull Disposable d) {
-
-                                }
-
-                                @Override
-                                public void onComplete() {
-                                    downloadMealImage(meal);
-                                    downloadIngredientImages(meal.getIngredients());
-//                                    view.onSuccess();
-                                    deleteFromFirebase(meal);
-                                    view.onDeleteComplete();
-                                }
-
-                                @Override
-                                public void onError(@NonNull Throwable e) {
-                                    view.onDeleteError();
-                                }
-                            });
-                    return null;
-                })
-                .subscribeOn(io.reactivex.schedulers.Schedulers.io())
-                .subscribe(new io.reactivex.Observer<>() {
-                    @Override
-                    public void onSubscribe(io.reactivex.disposables.Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(Object o) {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                    }
-
-                    @Override
-                    public void onComplete() {
-                    }
-                });
-        */
     }
 
-//    public void deleteFromFirebase(Meal meal) {
-//        FirebaseDatabase database = FirebaseDatabase.getInstance();
-//        DatabaseReference reference = database.getReference("users");
-//        reference
-//                .child(meal.getUserId())
-//                .child(meal.getDate() == Constants.TYPE_FAVORITE ? "favorites" : "plans")
-//                .child(meal.getDate() == Constants.TYPE_FAVORITE ? String.valueOf(meal.getNetworkId()) : String.valueOf(meal.getDate()))
-//                .removeValue()
-//                .addOnSuccessListener(command -> Log.d("TAG", "meal deleted from firebase"))
-//                .addOnFailureListener(command -> Log.d("TAG", "meal failed to delete from firebase"));
-//    }
 
     @Override
     public void getUserId() {
@@ -380,7 +267,6 @@ public class MealDetailsPresenterImpl implements MealDetailsPresenter, BackUpRem
 
     @Override
     public void onMealRemoved(Meal meal) {
-        Log.d("TAG", "onMealRemoved: ");
         deleteMeal(meal);
     }
 }

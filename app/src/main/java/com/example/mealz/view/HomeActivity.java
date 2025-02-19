@@ -1,10 +1,7 @@
 package com.example.mealz.view;
 
-import static com.example.mealz.utils.Constants.KEY_SIGN_UP_STATE;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,7 +13,6 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.example.mealz.R;
 import com.example.mealz.utils.Constants;
-import com.example.mealz.view.home.OnGuestModeListener;
 import com.example.mealz.view.profile.OnLogoutListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 

@@ -6,10 +6,6 @@ import com.example.mealz.data.MealsRepository;
 import com.example.mealz.data.MealsRepositoryImpl;
 import com.example.mealz.data.backup.BackUpRemoteDataSourceImpl;
 import com.example.mealz.model.Meal;
-import com.example.mealz.presenter.favorite.FavoriteView;
-import com.example.mealz.utils.Constants;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
@@ -35,33 +31,33 @@ public class MealPlanPresenterImpl implements MealPlanPresenter, BackUpRemoteDat
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .concatMap(userId -> {
-                    Log.i("TAG", "getPlannedMeals: userId:"+userId);
-                     repo.getPlannedMeals(userId)
-                             .subscribeOn(io.reactivex.rxjava3.schedulers.Schedulers.io())
-                             .observeOn(io.reactivex.rxjava3.android.schedulers.AndroidSchedulers.mainThread())
-                             .subscribe(new Observer<>() {
-                                 @Override
-                                 public void onSubscribe(@NonNull Disposable d) {
+                    Log.i("TAG", "getPlannedMeals: userId:" + userId);
+                    repo.getPlannedMeals(userId)
+                            .subscribeOn(io.reactivex.rxjava3.schedulers.Schedulers.io())
+                            .observeOn(io.reactivex.rxjava3.android.schedulers.AndroidSchedulers.mainThread())
+                            .subscribe(new Observer<>() {
+                                @Override
+                                public void onSubscribe(@NonNull Disposable d) {
 
-                                 }
+                                }
 
-                                 @Override
-                                 public void onNext(@NonNull List<Meal> meals) {
-                                     Log.i("TAG", "onNext: " + meals.size());
-                                     view.displayFirstDayInCurrentWeek(meals);
-                                 }
+                                @Override
+                                public void onNext(@NonNull List<Meal> meals) {
+                                    Log.i("TAG", "onNext: " + meals.size());
+                                    view.displayFirstDayInCurrentWeek(meals);
+                                }
 
-                                 @Override
-                                 public void onError(@NonNull Throwable e) {
+                                @Override
+                                public void onError(@NonNull Throwable e) {
 
-                                 }
+                                }
 
-                                 @Override
-                                 public void onComplete() {
-                                     Log.i("TAG", "onComplete: ");
-                                 }
-                             });
-                return null;
+                                @Override
+                                public void onComplete() {
+                                    Log.i("TAG", "onComplete: ");
+                                }
+                            });
+                    return null;
                 })
                 .subscribe(new io.reactivex.Observer<>() {
                     @Override
@@ -84,34 +80,6 @@ public class MealPlanPresenterImpl implements MealPlanPresenter, BackUpRemoteDat
 
                     }
                 });
-
-
-        /*
-        repo.getPlannedMeals(userId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<>() {
-                    @Override
-                    public void onSubscribe(@NonNull Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(@NonNull List<Meal> meals) {
-                        view.displayFirstDayInCurrentWeek(meals);
-                    }
-
-                    @Override
-                    public void onError(@NonNull Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-        */
     }
 
     @Override
@@ -145,17 +113,8 @@ public class MealPlanPresenterImpl implements MealPlanPresenter, BackUpRemoteDat
 
     public void deleteFromFirebase(Meal meal) {
         repo.removeMealFromFavorites(meal, this);
-
-//        FirebaseDatabase database = FirebaseDatabase.getInstance();
-//        DatabaseReference reference = database.getReference("users");
-//        reference
-//                .child(meal.getUserId())
-//                .child(meal.getDate() == Constants.TYPE_FAVORITE ? "favorites" : "plan")
-//                .child(meal.getDate() == Constants.TYPE_FAVORITE ? String.valueOf(meal.getNetworkId()) : String.valueOf(meal.getDate()))
-//                .removeValue()
-//                .addOnSuccessListener(command ->deletePlanMeal(meal.getNetworkId(), meal.getUserId(), meal.getDate()))
-//                .addOnFailureListener(command -> Log.d("TAG", "meal failed to delete from firebase"));
     }
+
     @Override
     public void deletePlanMeal(long networkId, String userId, long date) {
         repo.deletePlanMeal(networkId, userId, date)

@@ -73,7 +73,7 @@
                     style="@style/TextStyle_14sp_White"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Or Use Social Accounts" />
+                    android:text="@string/or_use_social_accounts" />
 
                 <com.google.android.material.divider.MaterialDivider
                     android:layout_width="0dp"

@@ -64,8 +64,6 @@ public class MealFileDataSourceImpl implements MealFileDataSource {
                         try {
                             FileOutputStream fos = new FileOutputStream(file);
                             bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
-//                            meal.setUrlImage(file.getAbsolutePath());
-
                         } catch (FileNotFoundException e) {
                             throw new RuntimeException(e);
                         }
@@ -118,7 +116,6 @@ public class MealFileDataSourceImpl implements MealFileDataSource {
                             }
                         });
             }
-//            emitter.onComplete();
         });
     }
 
@@ -126,7 +123,6 @@ public class MealFileDataSourceImpl implements MealFileDataSource {
     public String getIngredientFilePath(String imageUrl, String folder) {
         File dir = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), folder);
         if (!dir.exists()) {
-            Log.d("TAG", "folder not created");
             return imageUrl;
         }
 

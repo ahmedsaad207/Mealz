@@ -154,15 +154,6 @@ public class FavoritePresenterImpl implements FavoritePresenter, BackUpRemoteDat
     @Override
     public void deleteFromFirebase(Meal meal) {
         repo.removeMealFromFavorites(meal, this);
-//        FirebaseDatabase database = FirebaseDatabase.getInstance();
-//        DatabaseReference reference = database.getReference("users");
-//        reference
-//                .child(meal.getUserId())
-//                .child(meal.getDate() == Constants.TYPE_FAVORITE ? "favorites" : "plan")
-//                .child(meal.getDate() == Constants.TYPE_FAVORITE ? String.valueOf(meal.getNetworkId()) : String.valueOf(meal.getDate()))
-//                .removeValue()
-//                .addOnSuccessListener(command ->deleteMeal(meal))
-//                .addOnFailureListener(command -> Log.d("TAG", "meal failed to delete from firebase"));
     }
 
     @Override

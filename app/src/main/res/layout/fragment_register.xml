@@ -124,7 +124,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/background_ripple_rounded_red"
             android:drawableEnd="@drawable/ic_arrow"
-            android:text="Sign Up"
+            android:text="@string/sign_up"
             android:layout_marginTop="16dp"
             android:textSize="18sp"
             app:backgroundTint="@color/reddish_orange"

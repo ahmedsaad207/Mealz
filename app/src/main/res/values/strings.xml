@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">mealz</string>
+    <string name="app_name">Mealz</string>
     <string name="default_web_client_id">229069737713-8arm6la425gt5o9us2p2pktbmvpc1eag.apps.googleusercontent.com</string>
     <string name="sign_up_with_email">Sign Up With Email</string>
     <string name="continue_with_google">Continue With Google</string>
@@ -33,4 +33,8 @@
     <string name="meal_image">Meal Image</string>
     <string name="country_image">Country Image</string>
     <string name="remove">remove</string>
+    <string name="log_out">Log Out</string>
+    <string name="your_favorites_is_empty">Your favorites is empty!</string>
+    <string name="or_use_social_accounts">Or Use Social Accounts</string>
+    <string name="hello_adam">Hello, Adam!</string>
 </resources>

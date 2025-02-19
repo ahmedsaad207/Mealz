@@ -12,6 +12,9 @@ import com.example.mealz.model.Meal;
 @Database(entities = {Meal.class}, version = 2, exportSchema = false)
 @TypeConverters(value = Converters.class)
 public abstract class MealsDatabase extends RoomDatabase {
+
+
+    private static final String DATABASE_NAME = "meals.db";
     private volatile static MealsDatabase instance;
 
     public static MealsDatabase getInstance(Context context) {
@@ -19,7 +22,7 @@ public abstract class MealsDatabase extends RoomDatabase {
             synchronized (RoomDatabase.class) {
                 if (instance == null) {
                     instance = Room.databaseBuilder(
-                                    context.getApplicationContext(), MealsDatabase.class, "meals.db"
+                                    context.getApplicationContext(), MealsDatabase.class, DATABASE_NAME
                             )
                             .fallbackToDestructiveMigration()
                             .build();

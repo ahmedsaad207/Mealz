@@ -101,7 +101,7 @@
             android:layout_marginTop="16dp"
             android:background="@drawable/background_ripple_rounded_red"
             android:drawableEnd="@drawable/ic_arrow"
-            android:text="Login"
+            android:text="@string/login"
             android:textSize="18sp"
             app:backgroundTint="@color/reddish_orange"
             app:layout_constraintEnd_toEndOf="parent"

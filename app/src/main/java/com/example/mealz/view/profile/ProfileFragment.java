@@ -95,6 +95,8 @@ public class ProfileFragment extends Fragment implements ProfileView {
                     .setCancelable(false)
                     .create()
                     .show();
+        } else  {
+            binding.textViewUsername.setText(username);
         }
     }
 

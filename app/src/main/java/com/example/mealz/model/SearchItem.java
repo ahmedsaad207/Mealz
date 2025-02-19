@@ -1,6 +1,6 @@
 package com.example.mealz.model;
 
-public class SearchItem{
+public class SearchItem {
 
     private String name;
     private String imageUrl;

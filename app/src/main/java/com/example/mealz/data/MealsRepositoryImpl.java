@@ -42,7 +42,7 @@ public class MealsRepositoryImpl implements MealsRepository {
             UserLocalDataSource UserLocalDataSource,
             BackUpRemoteDataSource backupDataSource) {
         if (instance == null) {
-            instance = new MealsRepositoryImpl(remoteSource, localSource, fileSource,UserLocalDataSource,backupDataSource);
+            instance = new MealsRepositoryImpl(remoteSource, localSource, fileSource, UserLocalDataSource, backupDataSource);
         }
         return instance;
     }
