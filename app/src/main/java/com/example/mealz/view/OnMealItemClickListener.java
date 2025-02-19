@@ -1,5 +1,11 @@
 package com.example.mealz.view;
 
+import com.example.mealz.model.Meal;
+
 public interface OnMealItemClickListener {
-    void onclick(long id);
+    void navigateToMealDetails(Meal meal);
+
+    void navigateToMealsList(String name, int type);
+
+    void removeMealFromFavorites(Meal meal);
 }

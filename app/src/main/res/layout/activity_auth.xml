@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context=".AuthActivity">
+        tools:context=".view.AuthActivity">
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -29,7 +29,7 @@
                 android:id="@+id/toolbar_auth"
                 android:layout_gravity="start"
                 app:navigationIcon="@drawable/ic_arrow_back"
-                android:background="#1A262121"
+                android:background="@android:color/transparent"
                 app:titleTextColor="@color/white"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"/>

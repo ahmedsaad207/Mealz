@@ -8,11 +8,14 @@
 
     <LinearLayout
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:gravity="center"
-        android:orientation="vertical"
-        android:layout_height="wrap_content">
+        android:layout_margin="8dp"
+        android:orientation="vertical">
 
         <ImageView
+            android:scaleType="fitCenter"
+            tools:src="@drawable/seafood"
             android:id="@+id/ingredientImageView"
             android:layout_width="100dp"
             android:layout_height="100dp" />
@@ -21,12 +24,19 @@
             android:id="@+id/ingredientNameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
             tools:text="Measure" />
 
         <TextView
             android:id="@+id/ingredientMeasureTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="#9C9C9C"
             tools:text="Measure" />
     </LinearLayout>
 </layout>

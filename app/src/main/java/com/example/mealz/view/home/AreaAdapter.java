@@ -1,6 +1,5 @@
 package com.example.mealz.view.home;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -13,11 +12,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.mealz.R;
 import com.example.mealz.databinding.ItemAreaBinding;
 import com.example.mealz.model.Area;
+import com.example.mealz.utils.Constants;
+import com.example.mealz.view.OnMealItemClickListener;
 
 public class AreaAdapter extends ListAdapter<Area, AreaAdapter.AreaViewHolder> {
-    OnItemClickListener onItemClickListener;
+    OnMealItemClickListener listener;
+    int itemWidth;
 
-    public AreaAdapter(OnItemClickListener onItemClickListener) {
+    public AreaAdapter(OnMealItemClickListener listener) {
         super(new DiffUtil.ItemCallback<>() {
 
             @Override
@@ -30,20 +32,24 @@ public class AreaAdapter extends ListAdapter<Area, AreaAdapter.AreaViewHolder> {
                 return oldItem.getAreaName().equals(newItem.getAreaName());
             }
         });
-        this.onItemClickListener = onItemClickListener;
+        this.listener = listener;
     }
 
 
     @NonNull
     @Override
     public AreaViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return AreaViewHolder.create(parent);
+        return AreaViewHolder.create(parent, itemWidth);
     }
 
     @Override
     public void onBindViewHolder(@NonNull AreaViewHolder holder, int position) {
         Area currentArea = getItem(position);
-        holder.bind(currentArea, onItemClickListener);
+        holder.bind(currentArea, listener);
+    }
+
+    public void setItemWidth(int itemWidth) {
+        this.itemWidth = itemWidth;
     }
 
     static class AreaViewHolder extends RecyclerView.ViewHolder {
@@ -55,15 +61,19 @@ public class AreaAdapter extends ListAdapter<Area, AreaAdapter.AreaViewHolder> {
             this.binding = binding;
         }
 
-        public static AreaViewHolder create(ViewGroup parent) {
-            return new AreaViewHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()),
-                    R.layout.item_area, parent, false));
+        public static AreaViewHolder create(ViewGroup parent, int itemWidth) {
+            ItemAreaBinding b = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()),
+                    R.layout.item_area, parent, false);
+            RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) b.getRoot().getLayoutParams();
+            params.width = itemWidth;
+            b.getRoot().setLayoutParams(params);
+            return new AreaViewHolder(b);
         }
 
-        public void bind(Area area, OnItemClickListener onItemClickListener) {
+        public void bind(Area area, OnMealItemClickListener listener) {
             binding.areaTextview.setText(area.getAreaName());
             binding.areaImageview.setImageResource(area.getImageResourceId());
-            itemView.setOnClickListener(v -> onItemClickListener.onclick(area.getAreaName()));
+            itemView.setOnClickListener(v -> listener.navigateToMealsList(area.getAreaName(), Constants.ITEM_AREA));
         }
     }
 }

@@ -20,15 +20,15 @@ public class DailyInspirationAdapter extends ListAdapter<Meal, DailyInspirationA
     OnMealItemClickListener onMealItemClickListener;
 
     public DailyInspirationAdapter(OnMealItemClickListener onMealItemClickListener) {
-        super(new DiffUtil.ItemCallback<Meal>() {
+        super(new DiffUtil.ItemCallback<>() {
             @Override
             public boolean areItemsTheSame(@NonNull Meal oldItem, @NonNull Meal newItem) {
-                return oldItem.getMealId() == newItem.getMealId();
+                return oldItem.getNetworkId() == newItem.getNetworkId();
             }
 
             @Override
             public boolean areContentsTheSame(@NonNull Meal oldItem, @NonNull Meal newItem) {
-                return oldItem.getMealId() == newItem.getMealId();
+                return oldItem.getNetworkId() == newItem.getNetworkId();
             }
         });
         this.onMealItemClickListener = onMealItemClickListener;
@@ -63,12 +63,12 @@ public class DailyInspirationAdapter extends ListAdapter<Meal, DailyInspirationA
             ));
         }
 
-        public void bind(Meal meal, OnMealItemClickListener onMealItemClickListener) {
+        public void bind(Meal networkMeal, OnMealItemClickListener onMealItemClickListener) {
             Glide
                     .with(binding.imageViewDailyInspiration.getContext())
-                    .load(meal.getMealImage())
+                    .load(networkMeal.getUrlImage())
                     .into(binding.imageViewDailyInspiration);
-            itemView.setOnClickListener(v -> onMealItemClickListener.onclick(meal.getMealId()));
+            itemView.setOnClickListener(v -> onMealItemClickListener.navigateToMealDetails(networkMeal));
         }
     }
 

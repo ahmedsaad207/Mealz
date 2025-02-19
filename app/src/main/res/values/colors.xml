@@ -8,4 +8,5 @@
     <color name="sunflower_yellow">#F9D342</color>
     <color name="light_gray">#D6D6D6</color>
     <color name="darker_yellow">#D8A61F</color>
+    <color name="red">@color/red</color>
 </resources>

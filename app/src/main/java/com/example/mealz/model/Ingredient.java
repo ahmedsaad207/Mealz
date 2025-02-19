@@ -2,9 +2,12 @@ package com.example.mealz.model;
 
 public class Ingredient {
 
-    private final String name;
-    private final String measure;
-    private final String imageUrl;
+    private String name;
+    private String measure;
+    private String imageUrl;
+
+    public Ingredient() {
+    }
 
     public Ingredient(String name, String measure, String imageUrl) {
         this.name = name;
@@ -23,4 +26,9 @@ public class Ingredient {
     public String getImageUrl() {
         return imageUrl;
     }
+
+    public void setImageUrl(String path) {
+        this.imageUrl = path;
+    }
+
 }

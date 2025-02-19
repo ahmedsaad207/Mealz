@@ -65,4 +65,23 @@ dependencies {
     // Glide
     implementation 'com.github.bumptech.glide:glide:4.16.0'
 
+    // Room
+    def room_version = "2.6.1"
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
+
+    // Rx Java
+    implementation 'io.reactivex.rxjava3:rxandroid:3.0.2'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    implementation 'io.reactivex.rxjava3:rxjava:3.1.5'
+    implementation 'com.squareup.retrofit2:adapter-rxjava3:2.9.0'
+    implementation("androidx.room:room-rxjava3:$room_version")
+
+    // RXSharedPreferences
+    implementation 'com.f2prateek.rx.preferences2:rx-preferences:2.0.1'
+
+    // Lottie
+    implementation "com.airbnb.android:lottie:3.5.0"
+
+    implementation("com.google.firebase:firebase-database")
 }

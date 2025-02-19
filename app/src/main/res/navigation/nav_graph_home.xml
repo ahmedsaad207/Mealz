@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/favoriteFragment"
         android:name="com.example.mealz.view.favorite.FavoriteFragment"
-        android:label="FavoriteFragment" >
+        android:label="My Favorite Meals">
         <action
             android:id="@+id/action_favoriteFragment_to_mealDetailsFragment"
             app:destination="@id/mealDetailsFragment" />
@@ -28,9 +28,10 @@
         android:id="@+id/mealDetailsFragment"
         android:name="com.example.mealz.view.mealdetails.MealDetailsFragment"
         android:label="MealDetailsFragment" >
+
         <argument
-            android:name="id"
-            app:argType="long" />
+            android:name="meal"
+            app:argType="com.example.mealz.model.Meal" />
     </fragment>
     <fragment
         android:id="@+id/mealPlanFragment"
@@ -51,8 +52,8 @@
             android:name="name"
             app:argType="string" />
         <argument
-            android:name="isCategory"
-            app:argType="boolean" />
+            android:name="type"
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/profileFragment"

@@ -1,10 +1,8 @@
 package com.example.mealz.view.mealdetails;
 
+import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -17,15 +15,11 @@ import com.example.mealz.R;
 import com.example.mealz.databinding.ItemIngredientBinding;
 import com.example.mealz.model.Ingredient;
 
-import java.util.ArrayList;
-
-import kotlin.io.path.LinkFollowing;
-
 public class IngredientAdapter extends ListAdapter<Ingredient, IngredientAdapter.IngredientViewHolder> {
 
 
     protected IngredientAdapter() {
-        super(new DiffUtil.ItemCallback<Ingredient>() {
+        super(new DiffUtil.ItemCallback<>() {
             @Override
             public boolean areItemsTheSame(@NonNull Ingredient oldItem, @NonNull Ingredient newItem) {
                 return oldItem.getName().equals(newItem.getName());

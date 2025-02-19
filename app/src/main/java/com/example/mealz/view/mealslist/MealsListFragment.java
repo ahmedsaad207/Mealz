@@ -1,35 +1,57 @@
 package com.example.mealz.view.mealslist;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.example.mealz.R;
-import com.example.mealz.data.api.MealzApiService;
-import com.example.mealz.data.api.MealzRetrofit;
+import com.example.mealz.data.MealsRepositoryImpl;
+import com.example.mealz.data.backup.BackUpRemoteDataSourceImpl;
+import com.example.mealz.data.file.MealFileDataSourceImpl;
+import com.example.mealz.data.local.MealsLocalDataSourceImpl;
+import com.example.mealz.data.preferences.UserLocalDataSourceImpl;
+import com.example.mealz.data.remote.MealsRemoteDataSourceImpl;
 import com.example.mealz.databinding.FragmentMealsListBinding;
-import com.example.mealz.model.MealzResponse;
+import com.example.mealz.model.Meal;
+import com.example.mealz.presenter.mealslist.MealsListPresenter;
+import com.example.mealz.presenter.mealslist.MealsListPresenterImpl;
+import com.example.mealz.presenter.mealslist.MealsListView;
+import com.example.mealz.utils.Constants;
+import com.example.mealz.utils.NetworkManager;
 import com.example.mealz.view.MealAdapter;
+import com.example.mealz.view.OnMealItemClickListener;
+import com.f2prateek.rx.preferences2.RxSharedPreferences;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.database.FirebaseDatabase;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import java.util.List;
 
-public class MealsListFragment extends Fragment {
+public class MealsListFragment extends Fragment implements MealsListView, OnMealItemClickListener {
     FragmentMealsListBinding binding;
-    MealAdapter adapter;
+    MealAdapter<Meal> adapter;
+    MealsListPresenter presenter;
+
+    private static void setupToolBar(ActionBar actionBar, String title) {
+        if (actionBar != null) {
+            actionBar.setTitle(title);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(true);
+        }
+    }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_meals_list, container, false);
         return binding.getRoot();
     }
@@ -37,53 +59,83 @@ public class MealsListFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        hideBottomNavBar();
+        ActionBar actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
 
-        MealzApiService service = MealzRetrofit.getService();
+        presenter = new MealsListPresenterImpl(MealsRepositoryImpl.getInstance(
+                MealsRemoteDataSourceImpl.getInstance(),
+                MealsLocalDataSourceImpl.getInstance(requireActivity()),
+                MealFileDataSourceImpl.getInstance(requireActivity()),
+                UserLocalDataSourceImpl.getInstance(RxSharedPreferences.create(requireActivity().getSharedPreferences(Constants.SP_CREDENTIAL, MODE_PRIVATE))),
+                BackUpRemoteDataSourceImpl.getInstance(FirebaseDatabase.getInstance())
+        ), this);
 
         MealsListFragmentArgs args = MealsListFragmentArgs.fromBundle(getArguments());
         String name = args.getName();
-        boolean isCategory = args.getIsCategory();
+        int type = args.getType();
+        String title;
 
-        if (isCategory) {
-            requireActivity().setTitle(name + " Meals");
-            service.getMealsByCategory(name).enqueue(new Callback<>() {
-                @Override
-                public void onResponse(@NonNull Call<MealzResponse> call, @NonNull Response<MealzResponse> response) {
-                    if (response.body() != null && !response.body().meals.isEmpty()) {
-                        adapter = new MealAdapter(id -> {
-                            Navigation.findNavController(binding.rvMeals).navigate(MealsListFragmentDirections.actionMealsListFragmentToMealDetailsFragment(id));
-                        });
-                        adapter.submitList(response.body().meals);
-                        binding.rvMeals.setAdapter(adapter);
-                    }
-                }
-
-                @Override
-                public void onFailure(@NonNull Call<MealzResponse> call, @NonNull Throwable t) {
-                    Toast.makeText(requireActivity(), "onFailure: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
+        if (isConnected()) {
+            if (type == Constants.ITEM_CATEGORY) {
+                title = ("Tasty Dishes from " + name);
+                presenter.getMealsByCategory(name);
+            } else if (type == Constants.ITEM_AREA) {
+                title = "Popular Meals in " + name;
+                presenter.getMealsByArea(name);
+            } else if (type == Constants.ITEM_INGREDIENT) {
+                title = "Discover Meals with  " + name;
+                presenter.searchByIngredient(name);
+            } else {
+                title = "";
+            }
         } else {
-            requireActivity().setTitle("Popular Meals in " + name);
-            service.getMealsByArea(name).enqueue(new Callback<>() {
-                @Override
-                public void onResponse(@NonNull Call<MealzResponse> call, @NonNull Response<MealzResponse> response) {
-                    if (response.body() != null && !response.body().meals.isEmpty()) {
-                        adapter = new MealAdapter(id -> {
-                            Navigation.findNavController(binding.rvMeals).navigate(MealsListFragmentDirections.actionMealsListFragmentToMealDetailsFragment(id));
-                        });
-                        adapter.submitList(response.body().meals);
-                        binding.rvMeals.setAdapter(adapter);
-                    }
-                }
-
-                @Override
-                public void onFailure(@NonNull Call<MealzResponse> call, @NonNull Throwable t) {
-                    Toast.makeText(requireActivity(), "onFailure: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
+            title = "No internet connection!";
         }
 
+        setupToolBar(actionBar, title);
+    }
+
+    private void hideBottomNavBar() {
+        requireActivity().findViewById(R.id.bottomNavigationView).setVisibility(View.GONE);
+    }
+
+    @Override
+    public void displayMeals(List<Meal> meals) {
+        adapter = new MealAdapter<>(this);
+        adapter.submitList(meals);
+        binding.rvMeals.setAdapter(adapter);
+        if (!meals.isEmpty() && binding.loadingMealsList != null) {
+            binding.loadingMealsList.setVisibility(View.GONE);
+            binding.rvMeals.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void onError(String error) {
+        binding.loadingMealsList.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void navigateToMealDetails(Meal meal) {
+        if (isConnected()) {
+            Navigation.findNavController(binding.rvMeals).navigate(MealsListFragmentDirections.actionMealsListFragmentToMealDetailsFragment(meal));
+        } else {
+            Snackbar.make(requireView(), "No internet connection!", Snackbar.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void navigateToMealsList(String name, int type) {
 
     }
+
+    @Override
+    public void removeMealFromFavorites(Meal meal) {
+
+    }
+
+    private boolean isConnected() {
+        return NetworkManager.isConnected(requireContext());
+    }
+
 }

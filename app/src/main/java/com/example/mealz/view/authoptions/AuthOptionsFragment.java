@@ -1,6 +1,7 @@
 package com.example.mealz.view.authoptions;
 
 import static android.app.Activity.RESULT_OK;
+import static android.content.Context.MODE_PRIVATE;
 
 import android.content.Context;
 import android.content.Intent;
@@ -19,19 +20,29 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.example.mealz.R;
+import com.example.mealz.data.MealsRepositoryImpl;
+import com.example.mealz.data.preferences.UserLocalDataSourceImpl;
+import com.example.mealz.data.backup.BackUpRemoteDataSourceImpl;
+import com.example.mealz.data.file.MealFileDataSourceImpl;
+import com.example.mealz.data.local.MealsLocalDataSourceImpl;
+import com.example.mealz.data.remote.MealsRemoteDataSourceImpl;
 import com.example.mealz.databinding.FragmentAuthOptionsBinding;
+import com.example.mealz.presenter.authoptions.AuthOptions;
+import com.example.mealz.presenter.authoptions.AuthOptionsImpl;
+import com.example.mealz.utils.Constants;
+import com.f2prateek.rx.preferences2.RxSharedPreferences;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class AuthOptionsFragment extends Fragment {
     private static final String TAG = "AuthOptionsFragment";
@@ -41,6 +52,9 @@ public class AuthOptionsFragment extends Fragment {
     GoogleSignInClient googleSignInClient;
 
     OnLoginSuccessListener onLoginSuccessListener;
+
+    AuthOptions presenter;
+
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -57,7 +71,7 @@ public class AuthOptionsFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_auth_options, container, false);
         return binding.getRoot();
     }
@@ -75,11 +89,15 @@ public class AuthOptionsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setupToolbar();
 
-        ActionBar actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.hide();
-        }
+        presenter = new AuthOptionsImpl(new MealsRepositoryImpl(
+                MealsRemoteDataSourceImpl.getInstance(),
+                MealsLocalDataSourceImpl.getInstance(requireActivity()),
+                MealFileDataSourceImpl.getInstance(requireActivity()),
+                UserLocalDataSourceImpl.getInstance(RxSharedPreferences.create(requireActivity().getSharedPreferences(Constants.SP_CREDENTIAL, MODE_PRIVATE))),
+                BackUpRemoteDataSourceImpl.getInstance(FirebaseDatabase.getInstance())
+        ));
 
         GoogleSignInOptions options = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -106,6 +124,13 @@ public class AuthOptionsFragment extends Fragment {
         });
     }
 
+    private void setupToolbar() {
+        ActionBar actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.hide();
+        }
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -122,18 +147,27 @@ public class AuthOptionsFragment extends Fragment {
         }
     }
 
+    private void saveLogin() {
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            presenter.saveCredential(user.getUid(), user.getDisplayName());
+            presenter.setRememberMe(true);
+        }
+    }
+
     private void signInWithGoogle(String idToken) {
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
-        mAuth.signInWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()) {
-                    mAuth.signOut();
-                    googleSignInClient.signOut();
-                    navigateToHome();
-                    Toast.makeText(requireActivity(), "success", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(requireActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+        mAuth.signInWithCredential(credential).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                saveLogin();
+                mAuth.signOut();
+                googleSignInClient.signOut();
+                navigateToHome();
+                Toast.makeText(requireActivity(), "success", Toast.LENGTH_SHORT).show();
+            } else {
+                Exception e = task.getException();
+                if (e != null && e.getMessage() != null) {
+                    Snackbar.make(binding.getRoot(), e.getMessage(), Snackbar.LENGTH_SHORT).show();
                 }
             }
         });

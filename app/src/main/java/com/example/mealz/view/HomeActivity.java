@@ -1,25 +1,26 @@
-package com.example.mealz;
+package com.example.mealz.view;
 
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.NavOptions;
 import androidx.navigation.fragment.NavHostFragment;
-import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.example.mealz.R;
+import com.example.mealz.utils.Constants;
+import com.example.mealz.view.profile.OnLogoutListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationBarView;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity implements OnLogoutListener,OnSignUpClickListener {
     Toolbar toolbar;
     NavController navController;
+    BottomNavigationView bottomNavigationView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,9 +28,14 @@ public class HomeActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar_home);
         setSupportActionBar(toolbar);
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView = findViewById(R.id.bottomNavigationView);
 
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.navHostFragmentHome);
+
+        if (navHostFragment == null) {
+            return;
+        }
+
         navController = navHostFragment.getNavController();
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
 
@@ -43,9 +49,8 @@ public class HomeActivity extends AppCompatActivity {
             }
             return NavigationUI.onNavDestinationSelected(item, navController);
         });
-
         navController.addOnDestinationChangedListener((nc, navDestination, bundle) -> {
-            if (navDestination.getId() == R.id.mealsListFragment || navDestination.getId() == R.id.mealDetailsFragment) {
+            if (navDestination.getId() == R.id.mealsListFragment || navDestination.getId() == R.id.favoriteFragment) {
                 toolbar.setVisibility(View.VISIBLE);
             } else {
                 toolbar.setVisibility(View.GONE);
@@ -56,5 +61,21 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     public boolean onSupportNavigateUp() {
         return navController.navigateUp() || super.onSupportNavigateUp();
+    }
+
+    @Override
+    public void onLogout() {
+        Intent intent = new Intent(HomeActivity.this, AuthActivity.class);
+        intent.putExtra(Constants.KEY_SIGN_UP_STATE, true);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void onSignUp() {
+        Intent intent = new Intent(HomeActivity.this, AuthActivity.class);
+        intent.putExtra(Constants.KEY_SIGN_UP_STATE, true);
+        startActivity(intent);
+        finish();
     }
 }
