@@ -5,7 +5,6 @@ import static android.content.Context.MODE_PRIVATE;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,10 +19,10 @@ import androidx.navigation.Navigation;
 
 import com.example.mealz.R;
 import com.example.mealz.data.MealsRepositoryImpl;
-import com.example.mealz.data.UserLocalDataSourceImpl;
 import com.example.mealz.data.backup.BackUpRemoteDataSourceImpl;
 import com.example.mealz.data.file.MealFileDataSourceImpl;
 import com.example.mealz.data.local.MealsLocalDataSourceImpl;
+import com.example.mealz.data.preferences.UserLocalDataSourceImpl;
 import com.example.mealz.data.remote.MealsRemoteDataSourceImpl;
 import com.example.mealz.databinding.FragmentFavoriteBinding;
 import com.example.mealz.model.Meal;
@@ -31,10 +30,10 @@ import com.example.mealz.presenter.favorite.FavoritePresenter;
 import com.example.mealz.presenter.favorite.FavoritePresenterImpl;
 import com.example.mealz.presenter.favorite.FavoriteView;
 import com.example.mealz.utils.Constants;
+import com.example.mealz.utils.NetworkManager;
 import com.example.mealz.view.MealAdapter;
 import com.example.mealz.view.OnMealItemClickListener;
 import com.example.mealz.view.OnSignUpClickListener;
-import com.example.mealz.view.profile.OnLogoutListener;
 import com.f2prateek.rx.preferences2.RxSharedPreferences;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.FirebaseDatabase;
@@ -128,7 +127,7 @@ public class FavoriteFragment extends Fragment implements FavoriteView, OnMealIt
         if (userId.isEmpty()) {
             new AlertDialog.Builder(requireActivity())
                     .setMessage("You need to sign up to add meals to your favorites, plan and more features.")
-                    .setNegativeButton("Cancel",(dialog, which) -> {
+                    .setNegativeButton("Cancel", (dialog, which) -> {
                         Navigation.findNavController(binding.getRoot()).navigateUp();
                     })
                     .setPositiveButton("Sign up", (dialog, which) -> {
@@ -152,7 +151,15 @@ public class FavoriteFragment extends Fragment implements FavoriteView, OnMealIt
 
     @Override
     public void removeMealFromFavorites(Meal meal) {
-        presenter.deleteFromFirebase(meal);
+        if (isConnected()) {
+            presenter.deleteFromFirebase(meal);
+        } else {
+            Snackbar.make(requireView(), "No internet connection!", Snackbar.LENGTH_SHORT).show();
+        }
+    }
+
+    private boolean isConnected() {
+        return NetworkManager.isConnected(requireContext());
     }
 
 }

@@ -3,11 +3,8 @@ package com.example.mealz.presenter.mealslist;
 import android.util.Log;
 
 import com.example.mealz.data.MealsRepositoryImpl;
-import com.example.mealz.model.Ingredient;
 import com.example.mealz.model.Meal;
-import com.example.mealz.model.MealzResponse;
 import com.example.mealz.utils.MealMapper;
-import com.example.mealz.view.MealAdapter;
 
 import java.util.List;
 
@@ -46,7 +43,7 @@ public class MealsListPresenterImpl implements MealsListPresenter {
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-
+                        view.onError(e.getMessage());
                     }
                 });
     }
@@ -70,7 +67,7 @@ public class MealsListPresenterImpl implements MealsListPresenter {
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-
+                        view.onError(e.getMessage());
                     }
                 });
     }
@@ -89,13 +86,13 @@ public class MealsListPresenterImpl implements MealsListPresenter {
 
                     @Override
                     public void onSuccess(@NonNull List<Meal> meals) {
-                        Log.i("TAG", "onSuccess: meals size: " +meals.size());
+                        Log.i("TAG", "onSuccess: meals size: " + meals.size());
                         view.displayMeals(meals);
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-
+                        view.onError(e.getMessage());
                     }
                 });
     }

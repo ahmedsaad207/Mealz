@@ -17,19 +17,21 @@ import androidx.navigation.Navigation;
 
 import com.example.mealz.R;
 import com.example.mealz.data.MealsRepositoryImpl;
-import com.example.mealz.data.UserLocalDataSourceImpl;
 import com.example.mealz.data.backup.BackUpRemoteDataSourceImpl;
 import com.example.mealz.data.file.MealFileDataSourceImpl;
 import com.example.mealz.data.local.MealsLocalDataSourceImpl;
+import com.example.mealz.data.preferences.UserLocalDataSourceImpl;
 import com.example.mealz.data.remote.MealsRemoteDataSourceImpl;
 import com.example.mealz.databinding.FragmentProfileBinding;
 import com.example.mealz.presenter.profile.ProfilePresenter;
 import com.example.mealz.presenter.profile.ProfilePresenterImpl;
 import com.example.mealz.utils.Constants;
+import com.example.mealz.utils.NetworkManager;
 import com.f2prateek.rx.preferences2.RxSharedPreferences;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class ProfileFragment extends Fragment implements ProfileView{
+public class ProfileFragment extends Fragment implements ProfileView {
 
     FragmentProfileBinding binding;
 
@@ -63,13 +65,18 @@ public class ProfileFragment extends Fragment implements ProfileView{
                 UserLocalDataSourceImpl.getInstance(
                         RxSharedPreferences.create(requireActivity().getSharedPreferences(Constants.SP_CREDENTIAL, MODE_PRIVATE))),
                 BackUpRemoteDataSourceImpl.getInstance(FirebaseDatabase.getInstance())
-        ),this);
+        ), this);
 
         binding.btnLogout.setOnClickListener(v -> {
-            presenter.clearUserId();
-            presenter.clearUsername();
-            presenter.setRememberMe(false);
-            listener.onLogout();
+            if (isConnected()) {
+
+                presenter.clearUserId();
+                presenter.clearUsername();
+                presenter.setRememberMe(false);
+                listener.onLogout();
+            } else {
+                Snackbar.make(requireView(), "No internet connection!", Snackbar.LENGTH_SHORT).show();
+            }
         });
         presenter.getUsername();
     }
@@ -79,7 +86,7 @@ public class ProfileFragment extends Fragment implements ProfileView{
         if (username.isEmpty()) {
             new AlertDialog.Builder(requireActivity())
                     .setMessage("You need to sign up to add meals to your favorites, plan and more features.")
-                    .setNegativeButton("Cancel",(dialog, which) -> {
+                    .setNegativeButton("Cancel", (dialog, which) -> {
                         Navigation.findNavController(binding.getRoot()).navigateUp();
                     })
                     .setPositiveButton("Sign up", (dialog, which) -> {
@@ -89,5 +96,9 @@ public class ProfileFragment extends Fragment implements ProfileView{
                     .create()
                     .show();
         }
+    }
+
+    private boolean isConnected() {
+        return NetworkManager.isConnected(requireContext());
     }
 }

@@ -2,10 +2,8 @@ package com.example.mealz.data.backup;
 
 import android.util.Log;
 
-import com.example.mealz.data.UserLocalDataSourceImpl;
 import com.example.mealz.model.Meal;
 import com.example.mealz.utils.Constants;
-import com.f2prateek.rx.preferences2.RxSharedPreferences;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;

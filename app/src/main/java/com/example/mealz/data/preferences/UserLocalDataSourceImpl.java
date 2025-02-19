@@ -1,11 +1,11 @@
-package com.example.mealz.data;
+package com.example.mealz.data.preferences;
 
 import com.example.mealz.utils.Constants;
 import com.f2prateek.rx.preferences2.RxSharedPreferences;
 
 import io.reactivex.Observable;
 
-public class UserLocalDataSourceImpl implements UserLocalDataSource{
+public class UserLocalDataSourceImpl implements UserLocalDataSource {
     private final RxSharedPreferences rxSharedPreferences;
     private static UserLocalDataSourceImpl instance;
 

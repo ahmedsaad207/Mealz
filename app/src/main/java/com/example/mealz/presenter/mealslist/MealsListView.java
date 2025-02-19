@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface MealsListView {
     void displayMeals(List<Meal> meals);
+
+    void onError(String error);
 }

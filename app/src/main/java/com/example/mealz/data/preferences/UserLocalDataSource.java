@@ -1,4 +1,4 @@
-package com.example.mealz.data;
+package com.example.mealz.data.preferences;
 
 import io.reactivex.Observable;
 

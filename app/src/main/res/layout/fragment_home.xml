@@ -38,7 +38,17 @@
                 android:textColor="@color/white"
                 android:textSize="20sp" />
 
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/loading_home"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/loading_hand" />
+
             <EditText
+                android:visibility="gone"
                 android:id="@+id/search_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
@@ -64,7 +74,7 @@
 
             <LinearLayout
                 android:visibility="gone"
-                android:id="@+id/homeData"
+                android:id="@+id/content_home"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -124,13 +134,23 @@
             </LinearLayout>
 
             <com.airbnb.lottie.LottieAnimationView
-                android:id="@+id/loading_home"
+                android:id="@+id/loading_no_conn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 app:lottie_autoPlay="true"
                 app:lottie_loop="true"
-                app:lottie_rawRes="@raw/loading_hand" />
+                app:lottie_rawRes="@raw/anim_connection_lost" />
+
+            <TextView
+                android:id="@+id/error_text_view"
+                android:layout_width="match_parent"
+                android:gravity="center_horizontal"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textColor="#9C9C9C"
+                android:textSize="16sp"
+                 />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvMealsSearch"

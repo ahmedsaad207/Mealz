@@ -24,10 +24,10 @@ import androidx.navigation.Navigation;
 
 import com.example.mealz.R;
 import com.example.mealz.data.MealsRepositoryImpl;
-import com.example.mealz.data.UserLocalDataSourceImpl;
 import com.example.mealz.data.backup.BackUpRemoteDataSourceImpl;
 import com.example.mealz.data.file.MealFileDataSourceImpl;
 import com.example.mealz.data.local.MealsLocalDataSourceImpl;
+import com.example.mealz.data.preferences.UserLocalDataSourceImpl;
 import com.example.mealz.data.remote.MealsRemoteDataSourceImpl;
 import com.example.mealz.databinding.FragmentHomeBinding;
 import com.example.mealz.model.Area;
@@ -39,6 +39,7 @@ import com.example.mealz.presenter.home.HomePresenter;
 import com.example.mealz.presenter.home.HomePresenterImpl;
 import com.example.mealz.presenter.home.HomeView;
 import com.example.mealz.utils.Constants;
+import com.example.mealz.utils.NetworkManager;
 import com.example.mealz.view.MealAdapter;
 import com.example.mealz.view.OnMealItemClickListener;
 import com.f2prateek.rx.preferences2.RxSharedPreferences;
@@ -48,7 +49,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeFragment extends Fragment implements HomeView, OnMealItemClickListener {
+public class HomeFragment extends Fragment implements HomeView, OnMealItemClickListener, NetworkManager.NetworkListener {
     static List<SearchItem> searchList;
     FirebaseAuth mAuth;
     FragmentHomeBinding binding;
@@ -57,6 +58,7 @@ public class HomeFragment extends Fragment implements HomeView, OnMealItemClickL
     AreaAdapter areaAdapter;
     HomePresenter presenter;
     MealAdapter<SearchItem> searchAdapter;
+    NetworkManager networkManager;
 
 
     String key;
@@ -74,16 +76,16 @@ public class HomeFragment extends Fragment implements HomeView, OnMealItemClickL
         super.onViewCreated(view, savedInstanceState);
         showBottomNavBar();
 
-        if (binding.loadingHome != null) {
-            binding.loadingHome.setVisibility(View.VISIBLE);
-        }
-        if (binding.searchEditText != null) {
-            binding.searchEditText.setVisibility(View.INVISIBLE);
-        }
+        loading();
         init();
         setupRV();
-        requestData();
         handleSearch();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        handleConnection();
     }
 
     private void setupRV() {
@@ -101,6 +103,7 @@ public class HomeFragment extends Fragment implements HomeView, OnMealItemClickL
     }
 
     private void requestData() {
+        loading();
         presenter.getUserId();
         presenter.getRandomMeal();
         presenter.getCategories();
@@ -195,8 +198,8 @@ public class HomeFragment extends Fragment implements HomeView, OnMealItemClickL
     }
 
     private void setVisibilityForHomeContent(CharSequence s) {
-        if (binding.homeData != null) {
-            binding.homeData.setVisibility(s.toString().trim().isEmpty() ? View.VISIBLE : View.GONE);
+        if (binding.contentHome != null) {
+            binding.contentHome.setVisibility(s.toString().trim().isEmpty() ? View.VISIBLE : View.GONE);
         }
     }
 
@@ -241,9 +244,9 @@ public class HomeFragment extends Fragment implements HomeView, OnMealItemClickL
         }
         binding.rvDailyInspiration.setAdapter(dailyInspirationAdapter);
         dailyInspirationAdapter.submitList(meals);
-        if (!meals.isEmpty() && binding.loadingHome != null && binding.homeData != null && binding.searchEditText != null) {
+        if (!meals.isEmpty() && binding.loadingHome != null && binding.contentHome != null && binding.searchEditText != null) {
             binding.loadingHome.setVisibility(View.GONE);
-            binding.homeData.setVisibility(View.VISIBLE);
+            binding.contentHome.setVisibility(View.VISIBLE);
             binding.searchEditText.setVisibility(View.VISIBLE);
         }
     }
@@ -273,6 +276,15 @@ public class HomeFragment extends Fragment implements HomeView, OnMealItemClickL
     }
 
     @Override
+    public void onHideLoading(String error) {
+        binding.loadingHome.setVisibility(View.GONE);
+        binding.contentHome.setVisibility(View.GONE);
+        binding.searchEditText.setVisibility(View.GONE);
+        binding.errorTextView.setText(error);
+        binding.errorTextView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
     public void navigateToMealDetails(Meal meal) {
         Navigation.findNavController(binding.getRoot()).navigate(HomeFragmentDirections.actionHomeFragmentToMealDetailsFragment(meal));
     }
@@ -287,4 +299,62 @@ public class HomeFragment extends Fragment implements HomeView, OnMealItemClickL
 
     }
 
+    private void handleConnection() {
+
+        if (NetworkManager.isConnected(requireContext())) {
+            onlineMode();
+
+        } else {
+            offlineMode();
+        }
+        networkManager = new NetworkManager(requireActivity(), this);
+    }
+
+    private void offlineMode() {
+        binding.contentHome.setVisibility(View.GONE);
+        binding.searchEditText.setVisibility(View.GONE);
+        binding.loadingNoConn.setVisibility(View.VISIBLE);
+        binding.loadingHome.setVisibility(View.GONE);
+        binding.errorTextView.setVisibility(View.VISIBLE);
+        binding.errorTextView.setText("No internet connection!");
+    }
+
+    private void onlineMode() {
+        binding.errorTextView.setVisibility(View.GONE);
+        binding.loadingNoConn.setVisibility(View.GONE);
+        requestData();
+    }
+
+    private void loading() {
+        if (binding.loadingHome != null) {
+            binding.loadingHome.setVisibility(View.VISIBLE);
+        }
+        if (binding.searchEditText != null) {
+            binding.searchEditText.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        networkManager.registerNetworkCallback();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        networkManager.unregisterNetworkCallback();
+    }
+
+    @Override
+    public void onNetworkAvailable() {
+        requireActivity().runOnUiThread(this::onlineMode);
+        requestData();
+        loading();
+    }
+
+    @Override
+    public void onNetworkLost() {
+        requireActivity().runOnUiThread(this::offlineMode);
+    }
 }
