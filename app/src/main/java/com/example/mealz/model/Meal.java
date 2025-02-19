@@ -2,7 +2,6 @@ package com.example.mealz.model;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
-import androidx.room.Ignore;
 
 import java.io.Serializable;
 import java.util.List;
@@ -11,8 +10,6 @@ import java.util.List;
 @Entity(tableName = "meals_table", primaryKeys = {"userId", "networkId", "date"})
 public class Meal implements Serializable {
 
-    //    @PrimaryKey(autoGenerate = true)
-//    private long id;
     @NonNull
     private long date;
     @NonNull
@@ -32,7 +29,7 @@ public class Meal implements Serializable {
     public Meal() {
     }
 
-    public Meal(@NonNull long date, @NonNull String userId,@NonNull long networkId, String name, String urlImage, String category, String instructions, String area, String youtubeUrl, List<Ingredient> ingredients) {
+    public Meal(@NonNull long date, @NonNull String userId, @NonNull long networkId, String name, String urlImage, String category, String instructions, String area, String youtubeUrl, List<Ingredient> ingredients) {
         this.date = date;
         this.userId = userId;
         this.networkId = networkId;
@@ -45,7 +42,7 @@ public class Meal implements Serializable {
         this.ingredients = ingredients;
     }
 
-        public Meal(String name, String imageUrl, int resId) {
+    public Meal(String name, String imageUrl, int resId) {
         setName(name);
         setUrlImage(imageUrl);
         setDate(resId);

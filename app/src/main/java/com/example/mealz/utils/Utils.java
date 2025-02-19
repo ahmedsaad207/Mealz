@@ -9,16 +9,6 @@ public final class Utils {
     private Utils() {
     }
 
-
-    public static boolean isNetworkAvailable(Context context) {
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (cm != null) {
-            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-            return activeNetwork != null && activeNetwork.isConnected();
-        }
-        return false;
-    }
-
     public static String getVideoIframe(String youtubeUrl) {
         if (youtubeUrl != null && youtubeUrl.contains("v=")) {
             String videoId = youtubeUrl.substring(youtubeUrl.indexOf("v=") + 2);

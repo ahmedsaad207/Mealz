@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class IngredientModel {
-    String url = "https://www.themealdb.com/images/ingredients/";
-
     static List<Ingredient> ingredients;
+    String url = "https://www.themealdb.com/images/ingredients/";
 
     public IngredientModel(NetworkMeal networkMeal) {
         String[] ingredientNames = {

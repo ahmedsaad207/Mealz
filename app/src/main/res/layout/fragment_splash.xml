@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:textAlignment="center"
-        android:text="Mealz"
+        android:text="@string/app_name"
         android:fontFamily="casual"
         android:textColor="#BBB9B9"
         android:textSize="24sp"

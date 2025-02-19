@@ -30,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="Your favorites is empty!"
+            android:text="@string/your_favorites_is_empty"
             android:textColor="#9C9C9C"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"

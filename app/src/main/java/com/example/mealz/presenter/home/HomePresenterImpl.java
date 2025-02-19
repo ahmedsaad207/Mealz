@@ -116,7 +116,7 @@ public class HomePresenterImpl implements HomePresenter, BackUpRemoteDataSourceI
                 .subscribeOn(Schedulers.io())
                 .map(mealzResponse -> MealMapper.mapNetworkMealToIngredients(mealzResponse.getMeals()))
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleObserver<List<Ingredient>>() {
+                .subscribe(new SingleObserver<>() {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
 
@@ -239,8 +239,6 @@ public class HomePresenterImpl implements HomePresenter, BackUpRemoteDataSourceI
 
                     @Override
                     public void onNext(String userId) {
-                        // TODO
-//                        view.displayUserName(username);
                         retrieveBackupMeals(userId);
                     }
 

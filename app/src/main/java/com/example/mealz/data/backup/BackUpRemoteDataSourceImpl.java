@@ -90,7 +90,6 @@ public class BackUpRemoteDataSourceImpl implements BackUpRemoteDataSource {
                 .child(meal.getDate() == Constants.TYPE_FAVORITE ? Constants.BACKUP_FAV : Constants.BACKUP_PLAN)
                 .child(meal.getDate() == Constants.TYPE_FAVORITE ? String.valueOf(meal.getNetworkId()) : String.valueOf(meal.getDate()))
                 .setValue(meal).addOnSuccessListener(command -> {
-                    Log.d("TAG", "added to firebase");
                 });
     }
 

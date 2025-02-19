@@ -101,7 +101,6 @@ public class RegisterFragment extends Fragment {
             return false;
         }
 
-        // TODO
 //        "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" +
 //                "\\@" +
 //                "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +

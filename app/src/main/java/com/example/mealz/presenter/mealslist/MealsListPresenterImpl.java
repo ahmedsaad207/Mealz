@@ -86,7 +86,6 @@ public class MealsListPresenterImpl implements MealsListPresenter {
 
                     @Override
                     public void onSuccess(@NonNull List<Meal> meals) {
-                        Log.i("TAG", "onSuccess: meals size: " + meals.size());
                         view.displayMeals(meals);
                     }
 

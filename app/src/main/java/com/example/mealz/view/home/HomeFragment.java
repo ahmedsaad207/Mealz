@@ -184,9 +184,6 @@ public class HomeFragment extends Fragment implements HomeView, OnMealItemClickL
     private void setVisibilityForSearchResult(CharSequence s) {
         if (binding.rvMealsSearch != null) {
             binding.rvMealsSearch.setVisibility(s.toString().trim().isEmpty() ? View.INVISIBLE : View.VISIBLE);
-//            ViewGroup.LayoutParams params = binding.nestedScrollView.getLayoutParams();
-//            params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-//            binding.nestedScrollView.setLayoutParams(params);
         }
     }
 
@@ -213,7 +210,6 @@ public class HomeFragment extends Fragment implements HomeView, OnMealItemClickL
     @Override
     public void displayCategories(ArrayList<Category> categories) {
         if (categories == null || categories.isEmpty()) {
-            // TODO Empty List
             return;
         }
         categories.forEach(category -> searchList.add(new SearchItem(category.categoryName.toLowerCase(), category.categoryImage, 1)));
@@ -227,7 +223,6 @@ public class HomeFragment extends Fragment implements HomeView, OnMealItemClickL
     @Override
     public void displayAreas(List<Meal> meals) {
         if (meals == null || meals.isEmpty()) {
-            // TODO Empty List
             return;
         }
 

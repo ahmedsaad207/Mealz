@@ -4,18 +4,19 @@ import io.reactivex.Observable;
 
 public interface UserLocalDataSource {
 
-     Observable<String> getUserId();
+    Observable<String> getUserId();
 
-     void setUserId(String userId);
+    void setUserId(String userId);
 
-     Observable<String> getUsername();
+    Observable<String> getUsername();
 
-     void setUsername(String username);
-     void setRememberMe(boolean isLogged);
+    void setUsername(String username);
 
-     void clearUserId();
+    void clearUserId();
 
-     void clearUsername();
+    void clearUsername();
 
-     Observable<Boolean> getRememberMe();
+    Observable<Boolean> getRememberMe();
+
+    void setRememberMe(boolean isLogged);
 }

@@ -6,7 +6,8 @@ public class Ingredient {
     private String measure;
     private String imageUrl;
 
-    public Ingredient() {}
+    public Ingredient() {
+    }
 
     public Ingredient(String name, String measure, String imageUrl) {
         this.name = name;

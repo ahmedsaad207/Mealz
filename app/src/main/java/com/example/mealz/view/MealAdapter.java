@@ -1,6 +1,5 @@
 package com.example.mealz.view;
 
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +21,6 @@ import com.example.mealz.R;
 import com.example.mealz.model.Meal;
 import com.example.mealz.model.SearchItem;
 import com.example.mealz.utils.Constants;
-import com.example.mealz.utils.ItemType;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class MealAdapter<T> extends ListAdapter<T, MealAdapter.MealViewHolder> {
