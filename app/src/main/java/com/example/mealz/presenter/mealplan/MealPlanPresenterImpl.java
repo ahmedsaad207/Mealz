@@ -1,6 +1,5 @@
 package com.example.mealz.presenter.mealplan;
 
-import android.util.Log;
 
 import com.example.mealz.data.MealsRepository;
 import com.example.mealz.data.MealsRepositoryImpl;
@@ -31,7 +30,6 @@ public class MealPlanPresenterImpl implements MealPlanPresenter, BackUpRemoteDat
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .concatMap(userId -> {
-                    Log.i("TAG", "getPlannedMeals: userId:" + userId);
                     repo.getPlannedMeals(userId)
                             .subscribeOn(io.reactivex.rxjava3.schedulers.Schedulers.io())
                             .observeOn(io.reactivex.rxjava3.android.schedulers.AndroidSchedulers.mainThread())
@@ -43,7 +41,6 @@ public class MealPlanPresenterImpl implements MealPlanPresenter, BackUpRemoteDat
 
                                 @Override
                                 public void onNext(@NonNull List<Meal> meals) {
-                                    Log.i("TAG", "onNext: " + meals.size());
                                     view.displayFirstDayInCurrentWeek(meals);
                                 }
 
@@ -54,7 +51,7 @@ public class MealPlanPresenterImpl implements MealPlanPresenter, BackUpRemoteDat
 
                                 @Override
                                 public void onComplete() {
-                                    Log.i("TAG", "onComplete: ");
+
                                 }
                             });
                     return null;

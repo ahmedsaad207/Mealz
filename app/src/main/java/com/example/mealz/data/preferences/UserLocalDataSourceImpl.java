@@ -54,4 +54,5 @@ public class UserLocalDataSourceImpl implements UserLocalDataSource {
     public void setRememberMe(boolean value) {
         rxSharedPreferences.getBoolean(Constants.KEY_REMEMBER_ME, false).set(value);
     }
+
 }

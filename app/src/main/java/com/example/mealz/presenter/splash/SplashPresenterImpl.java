@@ -3,6 +3,11 @@ package com.example.mealz.presenter.splash;
 import com.example.mealz.data.MealsRepository;
 import com.example.mealz.data.MealsRepositoryImpl;
 
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+
 public class SplashPresenterImpl implements SplashPresenter {
     MealsRepository repo;
     SplashView view;
@@ -12,20 +17,22 @@ public class SplashPresenterImpl implements SplashPresenter {
         this.view = view;
     }
 
+
+
     @Override
-    public void getUserId() {
-        repo.getUserId()
-                .subscribeOn(io.reactivex.schedulers.Schedulers.io())
-                .observeOn(io.reactivex.android.schedulers.AndroidSchedulers.mainThread())
-                .subscribe(new io.reactivex.Observer<>() {
+    public void getRememberMe() {
+        repo.getRememberMe()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Boolean>() {
                     @Override
-                    public void onSubscribe(io.reactivex.disposables.Disposable d) {
+                    public void onSubscribe(Disposable d) {
 
                     }
 
                     @Override
-                    public void onNext(String username) {
-                        view.onUserId(username);
+                    public void onNext(Boolean value) {
+                        view.onUserId(value);
                     }
 
                     @Override

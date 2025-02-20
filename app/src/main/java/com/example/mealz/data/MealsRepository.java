@@ -67,4 +67,6 @@ public interface MealsRepository {
     void removeMealFromFavorites(Meal meal, BackUpRemoteDataSourceImpl.OnMealRemovedListener onMealRemovedListener);
 
     void retrieveBackupMeals(String userId, BackUpRemoteDataSourceImpl.OnDataReceivedListener listener);
+
+    io.reactivex.Observable<Boolean> getRememberMe();
 }

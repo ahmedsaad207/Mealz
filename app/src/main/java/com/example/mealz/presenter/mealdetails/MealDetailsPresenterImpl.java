@@ -1,6 +1,5 @@
 package com.example.mealz.presenter.mealdetails;
 
-import android.util.Log;
 
 import com.example.mealz.data.MealsRepositoryImpl;
 import com.example.mealz.data.backup.BackUpRemoteDataSourceImpl;
@@ -138,7 +137,6 @@ public class MealDetailsPresenterImpl implements MealDetailsPresenter, BackUpRem
 
                     @Override
                     public void onComplete() {
-                        Log.d("TAG", "on download images Completed: ");
                     }
 
                     @Override
@@ -155,7 +153,7 @@ public class MealDetailsPresenterImpl implements MealDetailsPresenter, BackUpRem
                     repo.isFavMealExist(userId, networkId)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(new SingleObserver<Meal>() {
+                            .subscribe(new SingleObserver<>() {
                                 @Override
                                 public void onSubscribe(@NonNull Disposable d) {
 

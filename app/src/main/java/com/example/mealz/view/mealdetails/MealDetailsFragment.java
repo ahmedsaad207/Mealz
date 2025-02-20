@@ -5,7 +5,6 @@ import static android.content.Context.MODE_PRIVATE;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -176,6 +175,7 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
         dialog.show();
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void displayMeal(Meal meal) {
         if (meal != null) {
@@ -259,7 +259,6 @@ public class MealDetailsFragment extends Fragment implements MealDetailsView {
 
     @Override
     public void onInsertPlanCompleted() {
-        Log.d("TAG", "detail plan type: when plan is pressed: " + currentMeal.getDate());
 //        currentMeal.setDate(Constants.TYPE_FAVORITE);
         binding.btnFav.setEnabled(true);
 //        binding.btnFav.setImageResource(R.drawable.ic_fav_added);

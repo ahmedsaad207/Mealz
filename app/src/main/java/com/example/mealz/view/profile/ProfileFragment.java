@@ -38,6 +38,7 @@ public class ProfileFragment extends Fragment implements ProfileView {
     ProfilePresenter presenter;
 
     OnLogoutListener listener;
+    AlertDialog dialog;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -55,9 +56,8 @@ public class ProfileFragment extends Fragment implements ProfileView {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         presenter = new ProfilePresenterImpl(new MealsRepositoryImpl(
                 MealsRemoteDataSourceImpl.getInstance(),
                 MealsLocalDataSourceImpl.getInstance(requireActivity()),
@@ -66,36 +66,41 @@ public class ProfileFragment extends Fragment implements ProfileView {
                         RxSharedPreferences.create(requireActivity().getSharedPreferences(Constants.SP_CREDENTIAL, MODE_PRIVATE))),
                 BackUpRemoteDataSourceImpl.getInstance(FirebaseDatabase.getInstance())
         ), this);
+        presenter.getUsername();
 
+        dialog = new AlertDialog.Builder(requireActivity())
+                .setMessage("You need to sign up to add meals to your favorites, plan and more features.")
+                .setNegativeButton("Cancel", (dialog, which) -> {
+                    Navigation.findNavController(binding.getRoot()).navigateUp();
+                })
+                .setPositiveButton("Sign up", (dialog, which) -> {
+                    listener.onLogout();
+                })
+                .setCancelable(false)
+                .create();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         binding.btnLogout.setOnClickListener(v -> {
             if (isConnected()) {
-
                 presenter.clearUserId();
-                presenter.clearUsername();
+                //presenter.clearUsername();
                 presenter.setRememberMe(false);
                 listener.onLogout();
             } else {
                 Snackbar.make(requireView(), "No internet connection!", Snackbar.LENGTH_SHORT).show();
             }
         });
-        presenter.getUsername();
     }
 
     @Override
     public void displayUserName(String username) {
+        binding.btnLogout.setVisibility(View.VISIBLE);
         if (username.isEmpty()) {
-            new AlertDialog.Builder(requireActivity())
-                    .setMessage("You need to sign up to add meals to your favorites, plan and more features.")
-                    .setNegativeButton("Cancel", (dialog, which) -> {
-                        Navigation.findNavController(binding.getRoot()).navigateUp();
-                    })
-                    .setPositiveButton("Sign up", (dialog, which) -> {
-                        listener.onLogout();
-                    })
-                    .setCancelable(false)
-                    .create()
-                    .show();
-        } else  {
+            dialog.show();
+        } else {
             binding.textViewUsername.setText(username);
         }
     }

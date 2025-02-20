@@ -26,7 +26,7 @@
         android:textAlignment="center"
         android:text="@string/app_name"
         android:fontFamily="casual"
-        android:textColor="#BBB9B9"
+        android:textColor="@color/neutral_gray"
         android:textSize="24sp"
         android:textStyle="bold" />
 

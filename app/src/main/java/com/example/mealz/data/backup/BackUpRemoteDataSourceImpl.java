@@ -1,6 +1,5 @@
 package com.example.mealz.data.backup;
 
-import android.util.Log;
 
 import com.example.mealz.model.Meal;
 import com.example.mealz.utils.Constants;
@@ -39,7 +38,7 @@ public class BackUpRemoteDataSourceImpl implements BackUpRemoteDataSource {
                 .child(meal.getDate() == Constants.TYPE_FAVORITE ? String.valueOf(meal.getNetworkId()) : String.valueOf(meal.getDate()))
                 .removeValue()
                 .addOnSuccessListener(command -> onMealRemovedListener.onMealRemoved(meal))
-                .addOnFailureListener(command -> Log.d("TAG", "meal failed to delete from firebase"));
+                .addOnFailureListener(command -> {});
 
     }
 
@@ -56,7 +55,6 @@ public class BackUpRemoteDataSourceImpl implements BackUpRemoteDataSource {
                     meals.add(mealSnapShot.getValue(Meal.class));
                 }
                 listener.onDataReceived(meals);
-                Log.d("TAG", "firebase fav meals: " + meals.size());
             }
 
             @Override
@@ -73,7 +71,6 @@ public class BackUpRemoteDataSourceImpl implements BackUpRemoteDataSource {
                     meals.add(mealSnapShot.getValue(Meal.class));
                 }
                 listener.onDataReceived(meals);
-                Log.d("TAG", "firebase plans size: " + meals.size());
             }
 
             @Override
