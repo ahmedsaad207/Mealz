@@ -5,7 +5,6 @@ import static android.content.Context.MODE_PRIVATE;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -186,7 +185,6 @@ public class MealPlanFragment extends Fragment implements OnDayItemClickListener
 
     @Override
     public void displayFirstDayInCurrentWeek(List<Meal> meals) {
-        Log.d("TAG", "displayFirstDayInCurrentWeek: ");
         fillCurrentWeekList(meals);
         mealAdapter = new MealAdapter<>(this);
         if (index == -1) {
@@ -204,7 +202,6 @@ public class MealPlanFragment extends Fragment implements OnDayItemClickListener
         }
 
         if (this.meals.isEmpty()) {
-            Log.i("TAG", "empty list: ");
             binding.loadingPlan.setVisibility(View.VISIBLE);
             binding.emptyPlanTextView.setVisibility(View.VISIBLE);
         } else {

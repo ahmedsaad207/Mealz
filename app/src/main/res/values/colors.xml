@@ -8,5 +8,9 @@
     <color name="sunflower_yellow">#F9D342</color>
     <color name="light_gray">#D6D6D6</color>
     <color name="darker_yellow">#D8A61F</color>
-    <color name="red">@color/red</color>
+    <color name="spanish_gray">#9C9C9C</color>
+    <color name="dark_background">#1C1E20</color>
+    <color name="rich_brown">#3D2F2B</color>
+    <color name="off_white">#E5DADA</color>
+    <color name="neutral_gray">#BBB9B9</color>
 </resources>

@@ -124,7 +124,7 @@ public class FavoriteFragment extends Fragment implements FavoriteView, OnMealIt
 
     @Override
     public void onUserId(String userId) {
-        if (userId.isEmpty()) {
+        if (userId.isEmpty() && getActivity() != null) {
             new AlertDialog.Builder(requireActivity())
                     .setMessage("You need to sign up to add meals to your favorites, plan and more features.")
                     .setNegativeButton("Cancel", (dialog, which) -> {

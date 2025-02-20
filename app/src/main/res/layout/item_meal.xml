@@ -36,7 +36,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:maxImageSize="18dp"
-                app:rippleColor="#E5DADA"
+                app:rippleColor="@color/off_white"
                 app:shapeAppearanceOverlay="@style/FloatingActionButtonStyle"
                 app:srcCompat="@drawable/ic_fav_added"
                 app:tint="@color/brownish_gray" />

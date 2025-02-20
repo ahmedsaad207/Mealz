@@ -36,7 +36,7 @@
             android:id="@+id/ingredientMeasureTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#9C9C9C"
+            android:textColor="@color/spanish_gray"
             tools:text="Measure" />
     </LinearLayout>
 </layout>

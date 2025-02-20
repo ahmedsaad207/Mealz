@@ -17,10 +17,10 @@ import androidx.navigation.Navigation;
 
 import com.example.mealz.R;
 import com.example.mealz.data.MealsRepositoryImpl;
-import com.example.mealz.data.preferences.UserLocalDataSourceImpl;
 import com.example.mealz.data.backup.BackUpRemoteDataSourceImpl;
 import com.example.mealz.data.file.MealFileDataSourceImpl;
 import com.example.mealz.data.local.MealsLocalDataSourceImpl;
+import com.example.mealz.data.preferences.UserLocalDataSourceImpl;
 import com.example.mealz.data.remote.MealsRemoteDataSourceImpl;
 import com.example.mealz.presenter.splash.SplashPresenter;
 import com.example.mealz.presenter.splash.SplashPresenterImpl;
@@ -70,21 +70,25 @@ public class SplashFragment extends Fragment implements SplashView {
                 BackUpRemoteDataSourceImpl.getInstance(FirebaseDatabase.getInstance())
         ), this);
 
-        presenter.getUserId();
+        presenter.getRememberMe();
 
         ((AppCompatActivity) requireActivity()).getSupportActionBar().hide();
     }
 
     @Override
-    public void onUserId(String userId) {
-        if (userId.isEmpty()) {
+    public void onUserId(boolean rememberMe) {
+        if (!rememberMe) {
             new Handler().postDelayed(() -> {
                 if (getView() != null) {
                     Navigation.findNavController(requireView()).navigate(SplashFragmentDirections.actionSplashFragmentToAuthOptionsFragment());
                 }
             }, 3000);
         } else {
-            onLoginSuccessListener.onLoginSuccess();
+            new Handler().postDelayed(() -> {
+                if (getView() != null) {
+                    onLoginSuccessListener.onLoginSuccess();
+                }
+            }, 3000);
         }
     }
 }
