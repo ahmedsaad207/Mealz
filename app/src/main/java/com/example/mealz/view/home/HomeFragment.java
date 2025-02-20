@@ -13,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -75,7 +74,6 @@ public class HomeFragment extends Fragment implements HomeView, OnMealItemClickL
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         showBottomNavBar();
-
         loading();
         init();
         setupRV();
@@ -89,9 +87,7 @@ public class HomeFragment extends Fragment implements HomeView, OnMealItemClickL
     }
 
     private void setupRV() {
-        if (binding.rvMealsSearch != null) {
-            binding.rvMealsSearch.setAdapter(searchAdapter);
-        }
+        binding.rvMealsSearch.setAdapter(searchAdapter);
         binding.rvCategories.setHasFixedSize(true);
         binding.rvDailyInspiration.setHasFixedSize(true);
         binding.rvMealsSearch.setHasFixedSize(true);
@@ -114,10 +110,10 @@ public class HomeFragment extends Fragment implements HomeView, OnMealItemClickL
 
     private void init() {
         mAuth = FirebaseAuth.getInstance();
-        presenter = new HomePresenterImpl(MealsRepositoryImpl.getInstance(MealsRemoteDataSourceImpl.getInstance(), MealsLocalDataSourceImpl.getInstance(requireActivity()), MealFileDataSourceImpl.getInstance(requireActivity()),
-                UserLocalDataSourceImpl.getInstance(
-                        RxSharedPreferences.create(requireActivity().getSharedPreferences(Constants.SP_CREDENTIAL, MODE_PRIVATE))
-                ),
+        presenter = new HomePresenterImpl(MealsRepositoryImpl.getInstance(
+                MealsRemoteDataSourceImpl.getInstance(), MealsLocalDataSourceImpl.getInstance(requireActivity()),
+                MealFileDataSourceImpl.getInstance(requireActivity()),
+                UserLocalDataSourceImpl.getInstance(RxSharedPreferences.create(requireActivity().getSharedPreferences(Constants.SP_CREDENTIAL, MODE_PRIVATE))),
                 BackUpRemoteDataSourceImpl.getInstance(FirebaseDatabase.getInstance())), this);
         searchList = new ArrayList<>();
         searchAdapter = new MealAdapter<>(HomeFragment.this);
@@ -131,17 +127,14 @@ public class HomeFragment extends Fragment implements HomeView, OnMealItemClickL
     }
 
     private void handleSearch() {
-        if (binding.searchEditText != null) {
-            hideClearIconForSearchEditText();
-            presenter.setList(searchList);
-            handleTextWatcherForSearch();
-            clearButtonListener();
-        }
+        hideClearIconForSearchEditText();
+        presenter.setList(searchList);
+        handleTextWatcherForSearch();
+        clearButtonListener();
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private void clearButtonListener() {
-        assert binding.searchEditText != null;
         binding.searchEditText.setOnTouchListener((v, event) -> {
             int arrow = binding.searchEditText.getCompoundDrawables()[0] != null ? binding.searchEditText.getCompoundDrawables()[0].getBounds().width() : 0;
 
@@ -150,7 +143,6 @@ public class HomeFragment extends Fragment implements HomeView, OnMealItemClickL
                     binding.searchEditText.setText("");
 
                     binding.searchEditText.performClick();
-                    Toast.makeText(requireActivity(), "drawable clicked", Toast.LENGTH_SHORT).show();
                     return true;
                 }
             }
@@ -160,7 +152,6 @@ public class HomeFragment extends Fragment implements HomeView, OnMealItemClickL
     }
 
     private void handleTextWatcherForSearch() {
-        assert binding.searchEditText != null;
         binding.searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -173,6 +164,7 @@ public class HomeFragment extends Fragment implements HomeView, OnMealItemClickL
                 setVisibilityForSearchResult(s);
                 key = s.toString();
                 presenter.search(s);
+
             }
 
             @Override
@@ -182,26 +174,20 @@ public class HomeFragment extends Fragment implements HomeView, OnMealItemClickL
     }
 
     private void setVisibilityForSearchResult(CharSequence s) {
-        if (binding.rvMealsSearch != null) {
-            binding.rvMealsSearch.setVisibility(s.toString().trim().isEmpty() ? View.INVISIBLE : View.VISIBLE);
-        }
+        binding.rvMealsSearch.setVisibility(s.toString().trim().isEmpty() ? View.INVISIBLE : View.VISIBLE);
     }
 
     private void setVisibilityForClearButton(CharSequence s) {
-        assert binding.searchEditText != null;
         binding.searchEditText.setCompoundDrawablesWithIntrinsicBounds(
                 s.toString().trim().isEmpty() ? null : drawableArrow,
                 null, drawableSearch, null);
     }
 
     private void setVisibilityForHomeContent(CharSequence s) {
-        if (binding.contentHome != null) {
-            binding.contentHome.setVisibility(s.toString().trim().isEmpty() ? View.VISIBLE : View.GONE);
-        }
+        binding.contentHome.setVisibility(s.toString().trim().isEmpty() ? View.VISIBLE : View.GONE);
     }
 
     private void hideClearIconForSearchEditText() {
-        assert binding.searchEditText != null;
         binding.searchEditText.setCompoundDrawablesWithIntrinsicBounds(
                 null,
                 null, drawableSearch, null);
@@ -239,7 +225,7 @@ public class HomeFragment extends Fragment implements HomeView, OnMealItemClickL
         }
         binding.rvDailyInspiration.setAdapter(dailyInspirationAdapter);
         dailyInspirationAdapter.submitList(meals);
-        if (!meals.isEmpty() && binding.loadingHome != null && binding.contentHome != null && binding.searchEditText != null) {
+        if (!meals.isEmpty()) {
             binding.loadingHome.setVisibility(View.GONE);
             binding.contentHome.setVisibility(View.VISIBLE);
             binding.searchEditText.setVisibility(View.VISIBLE);
@@ -255,17 +241,15 @@ public class HomeFragment extends Fragment implements HomeView, OnMealItemClickL
 
     @Override
     public void displaySearchItems(List<SearchItem> items) {
-        if (binding.rvMealsSearch != null) {
-            searchAdapter.submitList(items);
-            binding.rvMealsSearch.setAdapter(searchAdapter);
-        }
+        searchAdapter.submitList(items);
+        binding.rvMealsSearch.setAdapter(searchAdapter);
     }
 
     @Override
     public void displayUserName(String username) {
-        if (getContext() != null && binding.helloUser != null && !username.isEmpty()) {
+        if (getContext() != null && !username.isEmpty()) {
             binding.helloUser.setText(getContext().getString(R.string.hello_name, username));
-        } else if (getContext() != null && binding.helloUser != null && username.isEmpty()) {
+        } else if (getContext() != null && username.isEmpty()) {
             binding.helloUser.setText(getContext().getString(R.string.hello_name, "Guest"));
         }
     }
@@ -295,16 +279,10 @@ public class HomeFragment extends Fragment implements HomeView, OnMealItemClickL
     }
 
     private void handleConnection() {
-
-        if (NetworkManager.isConnected(requireContext())) {
-            onlineMode();
-
-        } else {
-            offlineMode();
-        }
         networkManager = new NetworkManager(requireActivity(), this);
     }
 
+    @SuppressLint("SetTextI18n")
     private void offlineMode() {
         binding.contentHome.setVisibility(View.GONE);
         binding.searchEditText.setVisibility(View.GONE);
@@ -321,12 +299,8 @@ public class HomeFragment extends Fragment implements HomeView, OnMealItemClickL
     }
 
     private void loading() {
-        if (binding.loadingHome != null) {
-            binding.loadingHome.setVisibility(View.VISIBLE);
-        }
-        if (binding.searchEditText != null) {
-            binding.searchEditText.setVisibility(View.INVISIBLE);
-        }
+        binding.loadingHome.setVisibility(View.VISIBLE);
+        binding.searchEditText.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -344,8 +318,6 @@ public class HomeFragment extends Fragment implements HomeView, OnMealItemClickL
     @Override
     public void onNetworkAvailable() {
         requireActivity().runOnUiThread(this::onlineMode);
-        requestData();
-        loading();
     }
 
     @Override

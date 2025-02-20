@@ -26,7 +26,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="56dp"
                 android:text="@string/hello_name"
-                android:textColor="#9C9C9C" />
+                android:textColor="@color/spanish_gray" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -70,7 +70,7 @@
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:textColor="@color/white"
-                android:textColorHint="#9C9C9C" />
+                android:textColorHint="@color/spanish_gray" />
 
             <LinearLayout
                 android:visibility="gone"
@@ -148,7 +148,7 @@
                 android:gravity="center_horizontal"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:textColor="#9C9C9C"
+                android:textColor="@color/spanish_gray"
                 android:textSize="16sp"
                  />
 

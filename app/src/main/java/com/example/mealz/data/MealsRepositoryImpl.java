@@ -186,4 +186,9 @@ public class MealsRepositoryImpl implements MealsRepository {
     public void retrieveBackupMeals(String userId, BackUpRemoteDataSourceImpl.OnDataReceivedListener listener) {
         backupDataSource.retrieveBackupMeals(userId, listener);
     }
+
+    @Override
+    public io.reactivex.Observable<Boolean> getRememberMe() {
+        return userLocalDataSource.getRememberMe();
+    }
 }

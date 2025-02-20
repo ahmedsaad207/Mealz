@@ -18,7 +18,7 @@
     <string name="confirm_password">Confirm Password</string>
     <string name="sign_out">Sign Out</string>
     <string name="categories">Categories</string>
-    <string name="countries">Countries</string>
+    <string name="countries">Areas</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="daily_inspiration">Daily Inspiration</string>
     <string name="hint_search">categories, areas, ingredients</string>
@@ -26,7 +26,7 @@
     <string name="hello_name">Hello, %s!</string>
     <string name="ready_to_plan_your_week">Ready to plan \nyour week?</string>
     <string name="ingredient">Ingredients</string>
-    <string name="beef_popular_in">%s | Popular in  </string>
+    <string name="beef_popular_in">%s | Popular</string>
     <string name="title_video">Delicious %s Recipe: Step-by-Step Cooking Guide</string>
     <string name="favorite">favorite</string>
     <string name="instructions">Instructions</string>
@@ -37,4 +37,7 @@
     <string name="your_favorites_is_empty">Your favorites is empty!</string>
     <string name="or_use_social_accounts">Or Use Social Accounts</string>
     <string name="hello_adam">Hello, Adam!</string>
+    <string name="ready_to_plan_nyour_week">Ready to plan \nyour week?</string>
+    <string name="your_plan_meals_is_empty">Your plan meals is empty!</string>
+    <string name="meal">Meal</string>
 </resources>

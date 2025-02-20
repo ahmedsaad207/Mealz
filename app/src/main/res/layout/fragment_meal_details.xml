@@ -64,22 +64,35 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="8dp"
                     android:paddingBottom="16dp"
-                    android:textColor="#9C9C9C"
+                    android:textColor="@color/spanish_gray"
                     android:textSize="16sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/mealNameTextView"
                     tools:text="@string/beef_popular_in" />
 
+<!--                area-->
                 <TextView
                     android:id="@+id/areaTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:textColor="#9C9C9C"
+                    android:layout_marginStart="4dp"
+                    android:textColor="@color/spanish_gray"
                     android:textSize="16sp"
                     app:layout_constraintStart_toEndOf="@id/mealCategoryTextView"
                     app:layout_constraintTop_toTopOf="@id/mealCategoryTextView"
                     tools:text="British" />
+
+                <TextView
+                    android:id="@+id/mealTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:textColor="@color/spanish_gray"
+                    android:textSize="16sp"
+                    android:text="@string/meal"
+                    app:layout_constraintStart_toEndOf="@id/areaTextView"
+                    app:layout_constraintTop_toTopOf="@id/mealCategoryTextView"
+                    />
 
                 <ImageView
                     android:id="@+id/areaImageView"
@@ -88,7 +101,7 @@
                     android:layout_marginStart="8dp"
                     android:contentDescription="@string/country_image"
                     app:layout_constraintBottom_toBottomOf="@id/areaTextView"
-                    app:layout_constraintStart_toEndOf="@id/areaTextView"
+                    app:layout_constraintStart_toEndOf="@id/mealTextView"
                     app:layout_constraintTop_toTopOf="@id/areaTextView"
                     tools:src="@drawable/british" />
 
@@ -210,7 +223,7 @@
                             android:id="@+id/mealInstructionsTextView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="#9C9C9C"
+                            android:textColor="@color/spanish_gray"
                             android:textSize="16sp"
                             tools:text="networkMeal InstructionnetworkMeal InstructionsnetworkMeal InstructionsnetworkMeal InstructionsnetworkMeal InstructionsnetworkMeal InstructionsnetworkMeal InstructionsnetworkMeal InstructionsnetworkMeal InstructionsnetworkMeal InstructionsnetworkMeal InstructionsnetworkMeal InstructionsnetworkMeal InstructionsnetworkMeal InstructionsnetworkMeal InstructionsnetworkMeal InstructionsnetworkMeal InstructionsnetworkMeal InstructionsnetworkMeal InstructionsnetworkMeal InstructionsnetworkMeal InstructionsnetworkMeal InstructionsnetworkMeal InstructionsnetworkMeal InstructionsnetworkMeal InstructionsnetworkMeal InstructionsnetworkMeal InstructionsnetworkMeal InstructionsnetworkMeal InstructionsnetworkMeal InstructionsnetworkMeal InstructionsnetworkMeal InstructionsnetworkMeal InstructionsnetworkMeal InstructionsnetworkMeal Instructionss" />
 
@@ -236,7 +249,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:maxImageSize="24dp"
-            app:rippleColor="#3D2F2B"
+            app:rippleColor="@color/rich_brown"
             app:shapeAppearanceOverlay="@style/FloatingActionButtonStyle"
             app:srcCompat="@drawable/ic_arrow_back"
             app:tint="@color/white" />
@@ -253,7 +266,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:maxImageSize="24dp"
-            app:rippleColor="#E5DADA"
+            app:rippleColor="@color/off_white"
             app:shapeAppearanceOverlay="@style/FloatingActionButtonStyle"
             app:srcCompat="@drawable/ic_fav_add"
             app:tint="@color/brownish_gray" />
@@ -270,7 +283,7 @@
             app:layout_constraintEnd_toStartOf="@id/btnFav"
             app:layout_constraintTop_toTopOf="parent"
             app:maxImageSize="24dp"
-            app:rippleColor="#E5DADA"
+            app:rippleColor="@color/off_white"
             app:shapeAppearanceOverlay="@style/FloatingActionButtonStyle"
             app:srcCompat="@drawable/ic_plan"
             app:tint="@color/brownish_gray" />

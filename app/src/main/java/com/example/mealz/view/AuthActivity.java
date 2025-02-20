@@ -1,9 +1,7 @@
 package com.example.mealz.view;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -18,10 +16,9 @@ import com.example.mealz.view.authoptions.OnLoginSuccessListener;
 
 public class AuthActivity extends AppCompatActivity implements OnLoginSuccessListener {
 
+    public boolean navigateToSignUp;
     ActivityAuthBinding binding;
     NavController navController;
-
-    public boolean navigateToSignUp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,16 +26,17 @@ public class AuthActivity extends AppCompatActivity implements OnLoginSuccessLis
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_auth);
         setSupportActionBar(binding.toolbarAuth);
-        navController = ((NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.navHostFragmentAuth)).getNavController();
+
+        NavHostFragment navHostFragment = ((NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.navHostFragmentAuth));
+
+        if (navHostFragment == null) {
+            return;
+        }
+        navController = navHostFragment.getNavController();
         Intent intent = getIntent();
         if (intent != null) {
             navigateToSignUp = intent.getBooleanExtra(Constants.KEY_SIGN_UP_STATE, false);
         }
-
-//        SharedPreferences preferences = getSharedPreferences("credential",MODE_PRIVATE);
-//        if (!preferences.getString("userId","").isEmpty()) {
-//            onLoginSuccess();
-//        }
     }
 
     @Override

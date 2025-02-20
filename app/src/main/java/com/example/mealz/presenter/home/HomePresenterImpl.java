@@ -2,7 +2,6 @@ package com.example.mealz.presenter.home;
 
 import com.example.mealz.data.MealsRepositoryImpl;
 import com.example.mealz.data.backup.BackUpRemoteDataSourceImpl;
-import com.example.mealz.model.Category;
 import com.example.mealz.model.Ingredient;
 import com.example.mealz.model.Meal;
 import com.example.mealz.model.MealzResponse;
@@ -11,6 +10,7 @@ import com.example.mealz.utils.MealMapper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -19,6 +19,7 @@ import io.reactivex.rxjava3.core.CompletableObserver;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.core.SingleObserver;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
@@ -29,34 +30,23 @@ public class HomePresenterImpl implements HomePresenter, BackUpRemoteDataSourceI
 
     private List<SearchItem> searchList, filteredList;
 
+    private CompositeDisposable compositeDisposable;
+
     public HomePresenterImpl(MealsRepositoryImpl repo, HomeView view) {
         this.repo = repo;
         this.view = view;
         filteredList = new ArrayList<>();
+        compositeDisposable = new CompositeDisposable();
     }
 
     @Override
     public void getCategories() {
-        repo.getCategories()
+        Disposable disposable = repo.getCategories()
                 .subscribeOn(Schedulers.io())
                 .map(MealzResponse::getCategories)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleObserver<>() {
-                    @Override
-                    public void onSubscribe(@NonNull Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onSuccess(@NonNull ArrayList<Category> categories) {
-                        view.displayCategories(categories);
-                    }
-
-                    @Override
-                    public void onError(@NonNull Throwable e) {
-
-                    }
-                });
+                .subscribe(view::displayCategories);
+        compositeDisposable.add(disposable);
     }
 
     @Override
@@ -143,7 +133,9 @@ public class HomePresenterImpl implements HomePresenter, BackUpRemoteDataSourceI
                         filteredList = searchList.stream().filter(meal -> meal.getName().contains(s.toString().toLowerCase())).collect(Collectors.toList());
                         emitter.onNext(filteredList);
                     }
-                }).subscribeOn(Schedulers.io())
+                })
+                .subscribeOn(Schedulers.io())
+                .debounce(500, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<>() {
                     @Override
@@ -261,5 +253,9 @@ public class HomePresenterImpl implements HomePresenter, BackUpRemoteDataSourceI
     @Override
     public void onDataReceived(List<Meal> meals) {
         insertAllMeal(meals);
+    }
+
+    public void clearCompositeDisposable() {
+        if (!compositeDisposable.isDisposed()) compositeDisposable.dispose();
     }
 }

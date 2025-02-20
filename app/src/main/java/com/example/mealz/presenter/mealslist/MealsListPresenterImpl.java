@@ -1,6 +1,5 @@
 package com.example.mealz.presenter.mealslist;
 
-import android.util.Log;
 
 import com.example.mealz.data.MealsRepositoryImpl;
 import com.example.mealz.model.Meal;
@@ -78,7 +77,7 @@ public class MealsListPresenterImpl implements MealsListPresenter {
                 .subscribeOn(Schedulers.io())
                 .map(mealzResponse -> MealMapper.mapNetworkMealsToMeals(mealzResponse.getMeals()))
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleObserver<List<Meal>>() {
+                .subscribe(new SingleObserver<>() {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
 
